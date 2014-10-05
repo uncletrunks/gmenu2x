@@ -24,10 +24,8 @@
 
 using namespace std;
 
-DirDialog::DirDialog(
-		GMenu2X& gmenu2x, Touchscreen &ts,
-		const string &text, const string &dir)
-	: BrowseDialog(gmenu2x, ts, "Directory Browser", text)
+DirDialog::DirDialog(GMenu2X& gmenu2x, const string &text, const string &dir)
+	: BrowseDialog(gmenu2x, "Directory Browser", text)
 {
 	fl.setShowFiles(false);
 	setPath(dir);

@@ -40,7 +40,3 @@ bool Background::handleButtonPress(InputManager::Button button) {
 			return false;
 	}
 }
-
-bool Background::handleTouchscreen(Touchscreen&) {
-	return false;
-}
