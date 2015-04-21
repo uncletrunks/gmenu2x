@@ -34,7 +34,7 @@ Font::Font(const std::string &path, unsigned int size)
 
 	font = TTF_OpenFont(path.c_str(), size);
 	if (!font) {
-		ERROR("Unable to open font\n");
+		ERROR("Unable to open font '%s'\n", TTF_FONT);
 		TTF_Quit();
 		return;
 	}
