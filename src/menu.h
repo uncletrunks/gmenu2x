@@ -54,7 +54,7 @@ private:
 		int curr;
 	};
 
-	GMenu2X *gmenu2x;
+	GMenu2X& gmenu2x;
 	Touchscreen &ts;
 	IconButton btnContextMenu;
 	int iSection, iLink;
@@ -102,7 +102,7 @@ private:
 public:
 	typedef std::function<void(void)> Action;
 
-	Menu(GMenu2X *gmenu2x, Touchscreen &ts);
+	Menu(GMenu2X& gmenu2x, Touchscreen &ts);
 	virtual ~Menu();
 
 #ifdef HAVE_LIBOPK

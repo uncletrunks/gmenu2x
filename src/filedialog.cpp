@@ -21,12 +21,11 @@
 #include "filedialog.h"
 
 #include "filelister.h"
-#include "gmenu2x.h"
 
 using namespace std;
 
 FileDialog::FileDialog(
-		GMenu2X *gmenu2x, Touchscreen &ts, const string &text,
+		GMenu2X& gmenu2x, Touchscreen &ts, const string &text,
 		const string &filter, const string &file, const string &title)
 	: BrowseDialog(gmenu2x, ts, title, text)
 {

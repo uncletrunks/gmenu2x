@@ -28,14 +28,14 @@
 using namespace std;
 
 SettingsDialog::SettingsDialog(
-		GMenu2X *gmenu2x_, InputManager &inputMgr_, Touchscreen &ts_,
+		GMenu2X& gmenu2x, InputManager &inputMgr_, Touchscreen &ts_,
 		const string &text_, const string &icon)
-	: Dialog(gmenu2x_)
+	: Dialog(gmenu2x)
 	, inputMgr(inputMgr_)
 	, ts(ts_)
 	, text(text_)
 {
-	if (!icon.empty() && gmenu2x->sc[icon] != NULL) {
+	if (!icon.empty() && gmenu2x.sc[icon] != NULL) {
 		this->icon = icon;
 	} else {
 		this->icon = "icons/generic.png";
@@ -43,46 +43,46 @@ SettingsDialog::SettingsDialog(
 }
 
 bool SettingsDialog::exec() {
-	OffscreenSurface bg(*gmenu2x->bg);
+	OffscreenSurface bg(*gmenu2x.bg);
 	bg.convertToDisplayFormat();
 
 	bool close = false, ts_pressed = false;
 	uint i, sel = 0, firstElement = 0;
 
-	const int topBarHeight = gmenu2x->skinConfInt["topBarHeight"];
+	const int topBarHeight = gmenu2x.skinConfInt["topBarHeight"];
 	SDL_Rect clipRect = {
 		0,
 		static_cast<Sint16>(topBarHeight + 1),
-		static_cast<Uint16>(gmenu2x->resX - 9),
-		static_cast<Uint16>(gmenu2x->resY - topBarHeight - 25)
+		static_cast<Uint16>(gmenu2x.resX - 9),
+		static_cast<Uint16>(gmenu2x.resY - topBarHeight - 25)
 	};
 	SDL_Rect touchRect = {
 		2,
 		static_cast<Sint16>(topBarHeight + 4),
-		static_cast<Uint16>(gmenu2x->resX - 12),
+		static_cast<Uint16>(gmenu2x.resX - 12),
 		static_cast<Uint16>(clipRect.h)
 	};
-	uint rowHeight = gmenu2x->font->getLineSpacing() + 1; // gp2x=15+1 / pandora=19+1
-	uint numRows = (gmenu2x->resY - topBarHeight - 20) / rowHeight;
+	uint rowHeight = gmenu2x.font->getLineSpacing() + 1; // gp2x=15+1 / pandora=19+1
+	uint numRows = (gmenu2x.resY - topBarHeight - 20) / rowHeight;
 
 	uint maxNameWidth = 0;
 	for (auto it = settings.begin(); it != settings.end(); it++) {
-		maxNameWidth = max(maxNameWidth, (uint) gmenu2x->font->getTextWidth((*it)->getName()));
+		maxNameWidth = max(maxNameWidth, (uint) gmenu2x.font->getTextWidth((*it)->getName()));
 	}
 
 	while (!close) {
-		OutputSurface& s = *gmenu2x->s;
+		OutputSurface& s = *gmenu2x.s;
 
 		if (ts.available()) ts.poll();
 
 		bg.blit(s, 0, 0);
 
-		gmenu2x->drawTopBar(s);
+		gmenu2x.drawTopBar(s);
 		//link icon
 		drawTitleIcon(s, icon);
 		writeTitle(s, text);
 
-		gmenu2x->drawBottomBar(s);
+		gmenu2x.drawBottomBar(s);
 
 		if (sel>firstElement+numRows-1) firstElement=sel-numRows+1;
 		if (sel<firstElement) firstElement=sel;
@@ -111,7 +111,7 @@ bool SettingsDialog::exec() {
 			}
 		}
 
-		gmenu2x->drawScrollBar(numRows, settings.size(), firstElement);
+		gmenu2x.drawScrollBar(numRows, settings.size(), firstElement);
 
 		//description
 		writeSubTitle(s, settings[sel]->getDescription());

@@ -34,7 +34,7 @@
 using namespace std;
 
 ImageDialog::ImageDialog(
-		GMenu2X *gmenu2x, Touchscreen &ts, const string &text,
+		GMenu2X& gmenu2x, Touchscreen &ts, const string &text,
 		const string &filter, const string &file)
 	: FileDialog(gmenu2x, ts, text, filter, file, "Image Browser")
 {
@@ -42,7 +42,7 @@ ImageDialog::ImageDialog(
 	string path;
 
 	if (!file.empty()) {
-		path = strreplace(file, "skin:", gmenu2x->sc.getSkinPath(gmenu2x->confStr["skin"]));
+		path = strreplace(file, "skin:", gmenu2x.sc.getSkinPath(gmenu2x.confStr["skin"]));
 		string::size_type pos = path.rfind("/");
 		if (pos != string::npos)
 			setPath(path.substr(0, pos));
@@ -55,7 +55,7 @@ ImageDialog::~ImageDialog() {
 
 void ImageDialog::beforeFileList() {
 	if (fl.isFile(selected) && fileExists(getPath()+"/"+fl[selected]))
-		previews[getPath()+"/"+fl[selected]]->blitRight(*gmenu2x->s, 310, 43);
+		previews[getPath()+"/"+fl[selected]]->blitRight(*gmenu2x.s, 310, 43);
 }
 
 void ImageDialog::onChangeDir() {

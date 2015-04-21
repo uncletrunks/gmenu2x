@@ -11,7 +11,7 @@ using std::string;
 using std::unique_ptr;
 
 BrowseDialog::BrowseDialog(
-		GMenu2X *gmenu2x, Touchscreen &ts_,
+		GMenu2X& gmenu2x, Touchscreen &ts_,
 		const string &title, const string &subtitle)
 	: Dialog(gmenu2x)
 	, ts(ts_)
@@ -23,27 +23,27 @@ BrowseDialog::BrowseDialog(
 			gmenu2x, ts, "skin:imgs/buttons/left.png")));
 	buttonBox.add(unique_ptr<IconButton>(new IconButton(
 			gmenu2x, ts, "skin:imgs/buttons/cancel.png",
-			gmenu2x->tr["Up one folder"],
+			gmenu2x.tr["Up one folder"],
 			bind(&BrowseDialog::directoryUp, this))));
 
 	buttonBox.add(unique_ptr<IconButton>(new IconButton(
 			gmenu2x, ts, "skin:imgs/buttons/accept.png",
-			gmenu2x->tr["Select"],
+			gmenu2x.tr["Select"],
 			bind(&BrowseDialog::directoryEnter, this))));
 
 	buttonBox.add(unique_ptr<IconButton>(new IconButton(
 			gmenu2x, ts, "skin:imgs/buttons/start.png",
-			gmenu2x->tr["Confirm"],
+			gmenu2x.tr["Confirm"],
 			bind(&BrowseDialog::confirm, this))));
 
 	buttonBox.add(unique_ptr<IconButton>(new IconButton(
 			gmenu2x, ts, "skin:imgs/buttons/select.png",
-			gmenu2x->tr["Exit"],
+			gmenu2x.tr["Exit"],
 			bind(&BrowseDialog::quit, this))));
 
-	iconGoUp = gmenu2x->sc.skinRes("imgs/go-up.png");
-	iconFolder = gmenu2x->sc.skinRes("imgs/folder.png");
-	iconFile = gmenu2x->sc.skinRes("imgs/file.png");
+	iconGoUp = gmenu2x.sc.skinRes("imgs/go-up.png");
+	iconFolder = gmenu2x.sc.skinRes("imgs/folder.png");
+	iconFile = gmenu2x.sc.skinRes("imgs/file.png");
 }
 
 BrowseDialog::~BrowseDialog()
@@ -57,20 +57,20 @@ bool BrowseDialog::exec()
 		|| path.compare(0, strlen(CARD_ROOT), CARD_ROOT) != 0)
 		setPath(CARD_ROOT);
 
-	const int topBarHeight = gmenu2x->skinConfInt["topBarHeight"];
-	rowHeight = gmenu2x->font->getLineSpacing() + 1; // gp2x=15+1 / pandora=19+1
+	const int topBarHeight = gmenu2x.skinConfInt["topBarHeight"];
+	rowHeight = gmenu2x.font->getLineSpacing() + 1; // gp2x=15+1 / pandora=19+1
 	rowHeight = constrain(rowHeight, 20, 40);
-	numRows = (gmenu2x->resY - topBarHeight - 20) / rowHeight;
+	numRows = (gmenu2x.resY - topBarHeight - 20) / rowHeight;
 	clipRect = (SDL_Rect) {
 		0,
 		static_cast<Sint16>(topBarHeight + 1),
-		static_cast<Uint16>(gmenu2x->resX - 9),
-		static_cast<Uint16>(gmenu2x->resY - topBarHeight - 25)
+		static_cast<Uint16>(gmenu2x.resX - 9),
+		static_cast<Uint16>(gmenu2x.resY - topBarHeight - 25)
 	};
 	touchRect = (SDL_Rect) {
 		2,
 		static_cast<Sint16>(topBarHeight + 4),
-		static_cast<Uint16>(gmenu2x->resX - 12),
+		static_cast<Uint16>(gmenu2x.resX - 12),
 		clipRect.h
 	};
 
@@ -114,7 +114,7 @@ BrowseDialog::Action BrowseDialog::getAction(InputManager::Button button)
 
 void BrowseDialog::handleInput()
 {
-	InputManager::Button button = gmenu2x->input.waitForPressedButton();
+	InputManager::Button button = gmenu2x.input.waitForPressedButton();
 
 	BrowseDialog::Action action;
 	if (ts_pressed && !ts.pressed()) {
@@ -221,17 +221,17 @@ void BrowseDialog::quit()
 
 void BrowseDialog::paint()
 {
-	OutputSurface& s = *gmenu2x->s;
+	OutputSurface& s = *gmenu2x.s;
 
 	unsigned int i, iY;
 	unsigned int firstElement, lastElement;
 	unsigned int offsetY;
 
-	OffscreenSurface bg(*gmenu2x->bg);
+	OffscreenSurface bg(*gmenu2x.bg);
 	drawTitleIcon(bg, "icons/explorer.png", true);
 	writeTitle(bg, title);
 	writeSubTitle(bg, subtitle);
-	buttonBox.paint(bg, 5, gmenu2x->resY - 1);
+	buttonBox.paint(bg, 5, gmenu2x.resY - 1);
 
 	bg.convertToDisplayFormat();
 	bg.blit(s, 0, 0);
@@ -246,10 +246,10 @@ void BrowseDialog::paint()
 	}
 
 	//Selection
-	const int topBarHeight = gmenu2x->skinConfInt["topBarHeight"];
+	const int topBarHeight = gmenu2x.skinConfInt["topBarHeight"];
 	iY = topBarHeight + 1 + (selected - firstElement) * rowHeight;
-	s.box(2, iY, gmenu2x->resX - 12, rowHeight - 1,
-			gmenu2x->skinConfColors[COLOR_SELECTION_BG]);
+	s.box(2, iY, gmenu2x.resX - 12, rowHeight - 1,
+			gmenu2x.skinConfColors[COLOR_SELECTION_BG]);
 
 	lastElement = firstElement + numRows;
 	if (lastElement > fl.size())
@@ -271,7 +271,7 @@ void BrowseDialog::paint()
 			icon = iconFile;
 		}
 		icon->blit(s, 5, offsetY);
-		gmenu2x->font->write(s, fl[i], 24, offsetY + rowHeight / 2,
+		gmenu2x.font->write(s, fl[i], 24, offsetY + rowHeight / 2,
 				Font::HAlignLeft, Font::VAlignMiddle);
 
 		if (ts.available() && ts.pressed()
@@ -284,6 +284,6 @@ void BrowseDialog::paint()
 	}
 	s.clearClipRect();
 
-	gmenu2x->drawScrollBar(numRows,fl.size(), firstElement);
+	gmenu2x.drawScrollBar(numRows,fl.size(), firstElement);
 	s.flip();
 }

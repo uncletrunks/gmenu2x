@@ -36,7 +36,7 @@ private:
 	std::vector<ManualPage> pages;
 
 public:
-	TextManualDialog(GMenu2X *gmenu2x, const std::string &title,
+	TextManualDialog(GMenu2X& gmenu2x, const std::string &title,
 			const std::string &icon, const std::string &text);
 	void exec();
 };

@@ -30,8 +30,8 @@
 
 using namespace std;
 
-bool InputManager::init(GMenu2X *gmenu2x, Menu *menu) {
-	this->gmenu2x = gmenu2x;
+bool InputManager::init(Menu *menu)
+{
 	this->menu = menu;
 
 	repeatRateChanged();
@@ -43,7 +43,7 @@ bool InputManager::init(GMenu2X *gmenu2x, Menu *menu) {
 
 	/* If a user-specified input.conf file exists, we load it;
 	 * otherwise, we load the default one. */
-	string input_file = gmenu2x->getHome() + "/input.conf";
+	string input_file = gmenu2x.getHome() + "/input.conf";
 	DEBUG("Loading user-specific input.conf file: %s.\n", input_file.c_str());
 	if (!readConfFile(input_file)) {
 		input_file = GMENU2X_SYSTEM_DIR "/input.conf";
@@ -57,8 +57,9 @@ bool InputManager::init(GMenu2X *gmenu2x, Menu *menu) {
 	return true;
 }
 
-InputManager::InputManager(PowerSaver& powerSaver)
-	: powerSaver(powerSaver)
+InputManager::InputManager(GMenu2X& gmenu2x, PowerSaver& powerSaver)
+	: gmenu2x(gmenu2x)
+	, powerSaver(powerSaver)
 {
 #ifndef SDL_JOYSTICK_DISABLED
 	int i;
@@ -152,7 +153,7 @@ static int repeatRateMs(int repeatRate)
 }
 
 void InputManager::repeatRateChanged() {
-	int ms = repeatRateMs(gmenu2x->confInt["buttonRepeatRate"]);
+	int ms = repeatRateMs(gmenu2x.confInt["buttonRepeatRate"]);
 	if (ms == 0) {
 		SDL_EnableKeyRepeat(0, 0);
 	} else {
@@ -347,7 +348,7 @@ Uint32 InputManager::joystickRepeatCallback(Uint32 timeout __attribute__((unused
 	};
 	SDL_PushEvent((SDL_Event *) &e);
 
-	return repeatRateMs(gmenu2x->confInt["buttonRepeatRate"]);
+	return repeatRateMs(gmenu2x.confInt["buttonRepeatRate"]);
 }
 
 void InputManager::stopTimer(Joystick *joystick)

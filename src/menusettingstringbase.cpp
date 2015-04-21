@@ -25,7 +25,7 @@
 using std::string;
 
 MenuSettingStringBase::MenuSettingStringBase(
-		GMenu2X *gmenu2x, const string &name,
+		GMenu2X& gmenu2x, const string &name,
 		const string &description, string *value)
 	: MenuSetting(gmenu2x, name, description)
 	, originalValue(*value)
@@ -39,9 +39,9 @@ MenuSettingStringBase::~MenuSettingStringBase()
 
 void MenuSettingStringBase::draw(int valueX, int y, int h)
 {
-	Surface& s = *gmenu2x->s;
+	Surface& s = *gmenu2x.s;
 	MenuSetting::draw(valueX, y, h);
-	gmenu2x->font->write(s, value(), valueX, y,
+	gmenu2x.font->write(s, value(), valueX, y,
 			Font::HAlignLeft, Font::VAlignTop);
 }
 

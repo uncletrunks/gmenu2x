@@ -67,11 +67,11 @@ void Menu::Animation::step()
 	}
 }
 
-Menu::Menu(GMenu2X *gmenu2x, Touchscreen &ts)
+Menu::Menu(GMenu2X& gmenu2x, Touchscreen &ts)
 	: gmenu2x(gmenu2x)
 	, ts(ts)
 	, btnContextMenu(gmenu2x, ts, "skin:imgs/menu.png", "",
-			std::bind(&GMenu2X::showContextMenu, gmenu2x))
+			std::bind(&GMenu2X::showContextMenu, &gmenu2x))
 {
 	readSections(GMENU2X_SYSTEM_DIR "/sections");
 	readSections(GMenu2X::getHome() + "/sections");
@@ -100,7 +100,7 @@ Menu::Menu(GMenu2X *gmenu2x, Touchscreen &ts)
 	}
 #endif
 
-	btnContextMenu.setPosition(gmenu2x->resX - 38, gmenu2x->bottomBarIconY);
+	btnContextMenu.setPosition(gmenu2x.resX - 38, gmenu2x.bottomBarIconY);
 }
 
 Menu::~Menu() {
@@ -130,16 +130,16 @@ void Menu::readSections(std::string parentDir)
 }
 
 void Menu::skinUpdated() {
-	ConfIntHash &skinConfInt = gmenu2x->skinConfInt;
+	ConfIntHash &skinConfInt = gmenu2x.skinConfInt;
 
 	//recalculate some coordinates based on the new element sizes
-	linkColumns = (gmenu2x->resX - 10) / skinConfInt["linkWidth"];
-	linkRows = (gmenu2x->resY - 35 - skinConfInt["topBarHeight"]) / skinConfInt["linkHeight"];
+	linkColumns = (gmenu2x.resX - 10) / skinConfInt["linkWidth"];
+	linkRows = (gmenu2x.resY - 35 - skinConfInt["topBarHeight"]) / skinConfInt["linkHeight"];
 
 	//reload section icons
 	vector<string>::size_type i = 0;
 	for (string sectionName : sections) {
-		gmenu2x->sc["skin:sections/" + sectionName + ".png"];
+		gmenu2x.sc["skin:sections/" + sectionName + ".png"];
 
 		for (Link *&link : links[i]) {
 			link->loadIcon();
@@ -150,9 +150,9 @@ void Menu::skinUpdated() {
 }
 
 void Menu::calcSectionRange(int &leftSection, int &rightSection) {
-	ConfIntHash &skinConfInt = gmenu2x->skinConfInt;
+	ConfIntHash &skinConfInt = gmenu2x.skinConfInt;
 	const int linkWidth = skinConfInt["linkWidth"];
-	const int screenWidth = gmenu2x->resX;
+	const int screenWidth = gmenu2x.resX;
 	const int numSections = sections.size();
 	rightSection = min(
 			max(1, (screenWidth - 20 - linkWidth) / (2 * linkWidth)),
@@ -171,15 +171,15 @@ bool Menu::runAnimations() {
 
 void Menu::paint(Surface &s) {
 	const uint width = s.width(), height = s.height();
-	Font &font = *gmenu2x->font;
-	SurfaceCollection &sc = gmenu2x->sc;
+	Font &font = *gmenu2x.font;
+	SurfaceCollection &sc = gmenu2x.sc;
 
-	ConfIntHash &skinConfInt = gmenu2x->skinConfInt;
+	ConfIntHash &skinConfInt = gmenu2x.skinConfInt;
 	const int topBarHeight = skinConfInt["topBarHeight"];
 	const int bottomBarHeight = skinConfInt["bottomBarHeight"];
 	const int linkWidth = skinConfInt["linkWidth"];
 	const int linkHeight = skinConfInt["linkHeight"];
-	RGBAColor &selectionBgColor = gmenu2x->skinConfColors[COLOR_SELECTION_BG];
+	RGBAColor &selectionBgColor = gmenu2x.skinConfColors[COLOR_SELECTION_BG];
 
 	// Apply section header animation.
 	int leftSection, rightSection;
@@ -221,7 +221,7 @@ void Menu::paint(Surface &s) {
 
 	vector<Link*> &sectionLinks = links[iSection];
 	const uint numLinks = sectionLinks.size();
-	gmenu2x->drawScrollBar(
+	gmenu2x.drawScrollBar(
 			linkRows, (numLinks + linkColumns - 1) / linkColumns, iFirstDispRow);
 
 	//Links
@@ -253,14 +253,14 @@ void Menu::paint(Surface &s) {
 	LinkApp *linkApp = selLinkApp();
 	if (linkApp) {
 #ifdef ENABLE_CPUFREQ
-		font.write(s, linkApp->clockStr(gmenu2x->confInt["maxClock"]),
-				gmenu2x->cpuX, gmenu2x->bottomBarTextY,
+		font.write(s, linkApp->clockStr(gmenu2x.confInt["maxClock"]),
+				gmenu2x.cpuX, gmenu2x.bottomBarTextY,
 				Font::HAlignLeft, Font::VAlignMiddle);
 #endif
 		//Manual indicator
 		if (!linkApp->getManual().empty())
 			sc.skinRes("imgs/manual.png")->blit(
-					s, gmenu2x->manualX, gmenu2x->bottomBarIconY);
+					s, gmenu2x.manualX, gmenu2x.bottomBarIconY);
 	}
 
 	if (ts.available()) {
@@ -292,7 +292,7 @@ bool Menu::handleButtonPress(InputManager::Button button) {
 			incSectionIndex();
 			return true;
 		case InputManager::MENU:
-			gmenu2x->showContextMenu();
+			gmenu2x.showContextMenu();
 			return true;
 		default:
 			return false;
@@ -302,9 +302,9 @@ bool Menu::handleButtonPress(InputManager::Button button) {
 bool Menu::handleTouchscreen(Touchscreen &ts) {
 	btnContextMenu.handleTS();
 
-	ConfIntHash &skinConfInt = gmenu2x->skinConfInt;
+	ConfIntHash &skinConfInt = gmenu2x.skinConfInt;
 	const int topBarHeight = skinConfInt["topBarHeight"];
-	const int screenWidth = gmenu2x->resX;
+	const int screenWidth = gmenu2x.resX;
 
 	if (ts.pressed() && ts.getY() < topBarHeight) {
 		int leftSection, rightSection;
@@ -391,12 +391,12 @@ void Menu::addActionLink(uint section, const string &title, Action action, const
 	assert(section < sections.size());
 
 	Link *link = new Link(gmenu2x, action);
-	link->setSize(gmenu2x->skinConfInt["linkWidth"], gmenu2x->skinConfInt["linkHeight"]);
+	link->setSize(gmenu2x.skinConfInt["linkWidth"], gmenu2x.skinConfInt["linkHeight"]);
 	link->setTitle(title);
 	link->setDescription(description);
-	if (gmenu2x->sc.exists(icon)
+	if (gmenu2x.sc.exists(icon)
 			|| (icon.substr(0,5)=="skin:"
-				&& !gmenu2x->sc.getSkinFilePath(icon.substr(5,icon.length())).empty())
+				&& !gmenu2x.sc.getSkinFilePath(icon.substr(5,icon.length())).empty())
 			|| fileExists(icon)) {
 		link->setIcon(icon);
 	}
@@ -475,8 +475,8 @@ bool Menu::addLink(string path, string file, string section) {
 	if (fileExists(exename+".png")) icon = exename+".png";
 
 	//Reduce title lenght to fit the link width
-	if (gmenu2x->font->getTextWidth(shorttitle)>gmenu2x->skinConfInt["linkWidth"]) {
-		while (gmenu2x->font->getTextWidth(shorttitle+"..")>gmenu2x->skinConfInt["linkWidth"])
+	if (gmenu2x.font->getTextWidth(shorttitle)>gmenu2x.skinConfInt["linkWidth"]) {
+		while (gmenu2x.font->getTextWidth(shorttitle+"..")>gmenu2x.skinConfInt["linkWidth"])
 			shorttitle = shorttitle.substr(0,shorttitle.length()-1);
 		shorttitle += "..";
 	}
@@ -496,7 +496,7 @@ bool Menu::addLink(string path, string file, string section) {
 			INFO("Section: '%s(%i)'\n", sections[isection].c_str(), isection);
 
 			LinkApp* link = new LinkApp(gmenu2x, linkpath, true);
-			link->setSize(gmenu2x->skinConfInt["linkWidth"],gmenu2x->skinConfInt["linkHeight"]);
+			link->setSize(gmenu2x.skinConfInt["linkWidth"], gmenu2x.skinConfInt["linkHeight"]);
 			links[isection].push_back( link );
 		}
 	} else {
@@ -543,13 +543,13 @@ void Menu::deleteSelectedLink()
 			icon_used = iconpath == (*link)->getIconPath();
 
 	if (!icon_used)
-	  gmenu2x->sc.del(iconpath);
+	  gmenu2x.sc.del(iconpath);
 }
 
 void Menu::deleteSelectedSection() {
 	INFO("Deleting section '%s'\n", selSection().c_str());
 
-	gmenu2x->sc.del("sections/"+selSection()+".png");
+	gmenu2x.sc.del("sections/"+selSection()+".png");
 	links.erase( links.begin()+selSectionIndex() );
 	sections.erase( sections.begin()+selSectionIndex() );
 	setSectionIndex(0); //reload sections
@@ -700,7 +700,7 @@ void Menu::openPackage(std::string path, bool order)
 		//       but that is not something we want to do in the menu,
 		//       so consider this link undeletable.
 		link = new LinkApp(gmenu2x, path, false, opk, name);
-		link->setSize(gmenu2x->skinConfInt["linkWidth"], gmenu2x->skinConfInt["linkHeight"]);
+		link->setSize(gmenu2x.skinConfInt["linkWidth"], gmenu2x.skinConfInt["linkHeight"]);
 
 		addSection(link->getCategory());
 		for (i = 0; i < sections.size(); i++) {
@@ -840,8 +840,8 @@ void Menu::readLinksOfSection(
 		LinkApp *link = new LinkApp(gmenu2x, linkfile, deletable);
 		if (link->targetExists()) {
 			link->setSize(
-					gmenu2x->skinConfInt["linkWidth"],
-					gmenu2x->skinConfInt["linkHeight"]);
+					gmenu2x.skinConfInt["linkWidth"],
+					gmenu2x.skinConfInt["linkHeight"]);
 			links.push_back(link);
 		} else {
 			delete link;

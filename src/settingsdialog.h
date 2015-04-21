@@ -40,7 +40,7 @@ private:
 	std::string text, icon;
 
 public:
-	SettingsDialog(GMenu2X *gmenu2x, InputManager &inputMgr, Touchscreen &ts,
+	SettingsDialog(GMenu2X& gmenu2x, InputManager &inputMgr, Touchscreen &ts,
 			const std::string &text,
 			const std::string &icon = "skin:sections/settings.png");
 

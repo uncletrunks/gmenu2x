@@ -33,7 +33,7 @@ class Touchscreen;
 
 class InputDialog : protected Dialog {
 public:
-	InputDialog(GMenu2X *gmenu2x, InputManager &inputMgr, Touchscreen &ts,
+	InputDialog(GMenu2X& gmenu2x, InputManager &inputMgr, Touchscreen &ts,
 			const std::string &text, const std::string &startvalue="",
 			const std::string &title="", const std::string &icon="");
 

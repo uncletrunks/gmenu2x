@@ -33,7 +33,7 @@ protected:
 
 public:
 	MenuSettingStringBase(
-			GMenu2X *gmenu2x, const std::string &name,
+			GMenu2X& gmenu2x, const std::string &name,
 			const std::string &description, std::string *value);
 	virtual ~MenuSettingStringBase();
 

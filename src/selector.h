@@ -44,7 +44,7 @@ private:
 	int goToParentDir(FileLister& fl);
 
 public:
-	Selector(GMenu2X *gmenu2x, LinkApp& link,
+	Selector(GMenu2X& gmenu2x, LinkApp& link,
 			const std::string &selectorDir = "");
 
 	int exec(int startSelection = 0);

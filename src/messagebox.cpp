@@ -30,15 +30,15 @@ constexpr unsigned int ICON_PADDING = 6;
 constexpr unsigned int TEXT_PADDING = 8;
 constexpr unsigned int ICON_DIMENSION = 32;
 
-MessageBox::MessageBox(GMenu2X *gmenu2x, const string &text, const string &icon) {
-	this->gmenu2x = gmenu2x;
-	this->text = text;
-	this->icon = icon;
-
+MessageBox::MessageBox(GMenu2X& gmenu2x, const string &text, const string &icon)
+	: gmenu2x(gmenu2x)
+	, text(text)
+	, icon(icon)
+{
 	for (uint i = 0; i < BUTTON_TYPE_SIZE; i++) {
 		buttons[i] = "";
 		buttonLabels[i] = "";
-		buttonPositions[i].h = gmenu2x->font->getLineSpacing();
+		buttonPositions[i].h = gmenu2x.font->getLineSpacing();
 	}
 
 	//Default enabled button
@@ -62,39 +62,39 @@ void MessageBox::setButton(InputManager::Button button, const string &label) {
 }
 
 int MessageBox::exec() {
-	OutputSurface& s = *gmenu2x->s;
+	OutputSurface& s = *gmenu2x.s;
 	OffscreenSurface bg(s);
 	//Darken background
-	bg.box(0, 0, gmenu2x->resX, gmenu2x->resY, 0,0,0,200);
+	bg.box(0, 0, gmenu2x.resX, gmenu2x.resY, 0,0,0,200);
 
 	SDL_Rect box;
-	int textHeight = gmenu2x->font->getTextHeight(text);
+	int textHeight = gmenu2x.font->getTextHeight(text);
 	box.h = textHeight + 2 * TEXT_PADDING;
-	box.w = gmenu2x->font->getTextWidth(text) + 2 * TEXT_PADDING;
-	if (gmenu2x->sc[icon]) {
+	box.w = gmenu2x.font->getTextWidth(text) + 2 * TEXT_PADDING;
+	if (gmenu2x.sc[icon]) {
 		box.h = max(box.h, (Uint16) (ICON_DIMENSION + 2 * ICON_PADDING));
 		box.w += ICON_DIMENSION + ICON_PADDING;
 	}
-	box.x = gmenu2x->halfX - box.w/2;
-	box.y = gmenu2x->halfY - box.h/2;
+	box.x = gmenu2x.halfX - box.w / 2;
+	box.y = gmenu2x.halfY - box.h / 2;
 
 	//outer box
-	bg.box(box.x - 2, box.y - 2, box.w + 4, box.h + 4, gmenu2x->skinConfColors[COLOR_MESSAGE_BOX_BG]);
+	bg.box(box.x - 2, box.y - 2, box.w + 4, box.h + 4, gmenu2x.skinConfColors[COLOR_MESSAGE_BOX_BG]);
 	//draw inner rectangle
-	bg.rectangle(box, gmenu2x->skinConfColors[COLOR_MESSAGE_BOX_BORDER]);
+	bg.rectangle(box, gmenu2x.skinConfColors[COLOR_MESSAGE_BOX_BORDER]);
 	//icon+text
-	if (gmenu2x->sc[icon]) {
-		gmenu2x->sc[icon]->blitCenter(bg, box.x + ICON_PADDING + ICON_DIMENSION / 2, box.y + ICON_PADDING + ICON_DIMENSION / 2);
+	if (gmenu2x.sc[icon]) {
+		gmenu2x.sc[icon]->blitCenter(bg, box.x + ICON_PADDING + ICON_DIMENSION / 2, box.y + ICON_PADDING + ICON_DIMENSION / 2);
 	}
-	gmenu2x->font->write(bg, text, box.x + TEXT_PADDING + (gmenu2x->sc[icon] ? ICON_PADDING + ICON_DIMENSION : 0), box.y + (box.h - textHeight) / 2, Font::HAlignLeft, Font::VAlignTop);
+	gmenu2x.font->write(bg, text, box.x + TEXT_PADDING + (gmenu2x.sc[icon] ? ICON_PADDING + ICON_DIMENSION : 0), box.y + (box.h - textHeight) / 2, Font::HAlignLeft, Font::VAlignTop);
 
-	int btnX = gmenu2x->halfX+box.w/2-6;
+	int btnX = gmenu2x.halfX + box.w / 2 - 6;
 	for (uint i = 0; i < BUTTON_TYPE_SIZE; i++) {
 		if (!buttons[i].empty()) {
 			buttonPositions[i].y = box.y+box.h+8;
 			buttonPositions[i].w = btnX;
 
-			btnX = gmenu2x->drawButtonRight(bg, buttonLabels[i], buttons[i], btnX, buttonPositions[i].y);
+			btnX = gmenu2x.drawButtonRight(bg, buttonLabels[i], buttons[i], btnX, buttonPositions[i].y);
 
 			buttonPositions[i].x = btnX;
 			buttonPositions[i].w = buttonPositions[i].x-btnX-6;
@@ -108,7 +108,7 @@ int MessageBox::exec() {
 	int result = -1;
 	while (result < 0) {
 		InputManager::Button button;
-		if (gmenu2x->input.pollButton(&button)
+		if (gmenu2x.input.pollButton(&button)
 				&& !buttons[button].empty()) {
 			result = button;
 		}

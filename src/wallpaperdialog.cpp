@@ -32,7 +32,7 @@
 
 using namespace std;
 
-WallpaperDialog::WallpaperDialog(GMenu2X *gmenu2x, Touchscreen &ts_)
+WallpaperDialog::WallpaperDialog(GMenu2X& gmenu2x, Touchscreen &ts_)
 	: Dialog(gmenu2x)
 	, ts(ts_)
 {
@@ -47,11 +47,11 @@ bool WallpaperDialog::exec()
 	fl.setFilter("png");
 
 	fl.browse(GMenu2X::getHome() + "/skins/"
-		+ gmenu2x->confStr["skin"] + "/wallpapers", true);
+		+ gmenu2x.confStr["skin"] + "/wallpapers", true);
 	fl.browse(GMENU2X_SYSTEM_DIR "/skins/"
-		+ gmenu2x->confStr["skin"] + "/wallpapers", false);
+		+ gmenu2x.confStr["skin"] + "/wallpapers", false);
 
-	if (gmenu2x->confStr["skin"] != "Default") {
+	if (gmenu2x.confStr["skin"] != "Default") {
 		fl.browse(GMenu2X::getHome() + "/skins/Default/wallpapers", false);
 		fl.browse(GMENU2X_SYSTEM_DIR "/skins/Default/wallpapers", false);
 	}
@@ -63,17 +63,17 @@ bool WallpaperDialog::exec()
 	uint i, selected = 0, firstElement = 0, iY;
 
 	ButtonBox buttonbox;
-	buttonbox.add(unique_ptr<IconButton>(new IconButton(gmenu2x, ts, "skin:imgs/buttons/accept.png", gmenu2x->tr["Select"])));
-	buttonbox.add(unique_ptr<IconButton>(new IconButton(gmenu2x, ts, "skin:imgs/buttons/cancel.png", gmenu2x->tr["Exit"])));
+	buttonbox.add(unique_ptr<IconButton>(new IconButton(gmenu2x, ts, "skin:imgs/buttons/accept.png", gmenu2x.tr["Select"])));
+	buttonbox.add(unique_ptr<IconButton>(new IconButton(gmenu2x, ts, "skin:imgs/buttons/cancel.png", gmenu2x.tr["Exit"])));
 
 	unsigned int top, height;
-	tie(top, height) = gmenu2x->getContentArea();
+	tie(top, height) = gmenu2x.getContentArea();
 
-	int fontheight = gmenu2x->font->getLineSpacing();
+	int fontheight = gmenu2x.font->getLineSpacing();
 	unsigned int nb_elements = height / fontheight;
 
 	while (!close) {
-		OutputSurface& s = *gmenu2x->s;
+		OutputSurface& s = *gmenu2x.s;
 
 		if (selected > firstElement + nb_elements - 1)
 			firstElement = selected - nb_elements + 1;
@@ -81,37 +81,37 @@ bool WallpaperDialog::exec()
 			firstElement = selected;
 
 		//Wallpaper
-		gmenu2x->sc[((string)"skin:wallpapers/" + wallpapers[selected]).c_str()]->blit(s, 0, 0);
+		gmenu2x.sc[((string)"skin:wallpapers/" + wallpapers[selected]).c_str()]->blit(s, 0, 0);
 
-		gmenu2x->drawTopBar(s);
-		gmenu2x->drawBottomBar(s);
+		gmenu2x.drawTopBar(s);
+		gmenu2x.drawBottomBar(s);
 
 		drawTitleIcon(s, "icons/wallpaper.png", true);
-		writeTitle(s, gmenu2x->tr["Wallpaper selection"]);
-		writeSubTitle(s, gmenu2x->tr["Select a wallpaper from the list"]);
+		writeTitle(s, gmenu2x.tr["Wallpaper selection"]);
+		writeSubTitle(s, gmenu2x.tr["Select a wallpaper from the list"]);
 
-		buttonbox.paint(s, 5, gmenu2x->resY - 1);
+		buttonbox.paint(s, 5, gmenu2x.resY - 1);
 
 		//Selection
 		iY = selected - firstElement;
 		iY = top + (iY * fontheight);
-		s.box(2, iY, 308, fontheight, gmenu2x->skinConfColors[COLOR_SELECTION_BG]);
+		s.box(2, iY, 308, fontheight, gmenu2x.skinConfColors[COLOR_SELECTION_BG]);
 
 		//Files & Directories
 		s.setClipRect(0, top, 311, height);
 		for (i = firstElement; i < wallpapers.size()
 					&& i < firstElement + nb_elements; i++) {
 			iY = i-firstElement;
-			gmenu2x->font->write(s, wallpapers[i], 5,
+			gmenu2x.font->write(s, wallpapers[i], 5,
 						top + (iY * fontheight),
 						Font::HAlignLeft, Font::VAlignTop);
 		}
 		s.clearClipRect();
 
-		gmenu2x->drawScrollBar(nb_elements, wallpapers.size(), firstElement);
+		gmenu2x.drawScrollBar(nb_elements, wallpapers.size(), firstElement);
 		s.flip();
 
-        switch(gmenu2x->input.waitForPressedButton()) {
+        switch(gmenu2x.input.waitForPressedButton()) {
             case InputManager::CANCEL:
                 close = true;
                 result = false;
@@ -139,15 +139,16 @@ bool WallpaperDialog::exec()
             case InputManager::ACCEPT:
                 close = true;
                 if (wallpapers.size() > 0)
-					wallpaper = gmenu2x->sc.getSkinFilePath("wallpapers/" + wallpapers[selected]);
+					wallpaper = gmenu2x.sc.getSkinFilePath("wallpapers/" + wallpapers[selected]);
                 else result = false;
             default:
                 break;
         }
 	}
 
-	for (uint i=0; i<wallpapers.size(); i++)
-	  gmenu2x->sc.del("skin:wallpapers/" + wallpapers[i]);
+	for (uint i=0; i<wallpapers.size(); i++) {
+	  gmenu2x.sc.del("skin:wallpapers/" + wallpapers[i]);
+	}
 
 	return result;
 }

@@ -40,7 +40,7 @@ class Link {
 public:
 	typedef std::function<void(void)> Action;
 
-	Link(GMenu2X *gmenu2x, Action action);
+	Link(GMenu2X& gmenu2x, Action action);
 	virtual ~Link() {};
 
 	bool isPressed();
@@ -66,7 +66,7 @@ public:
 	void run();
 
 protected:
-	GMenu2X *gmenu2x;
+	GMenu2X& gmenu2x;
 	bool edited;
 	std::string title, description, launchMsg, icon, iconPath;
 

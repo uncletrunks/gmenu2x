@@ -17,7 +17,7 @@ class IconButton {
 public:
 	typedef std::function<void(void)> Action;
 
-	IconButton(GMenu2X *gmenu2x, Touchscreen &ts,
+	IconButton(GMenu2X& gmenu2x, Touchscreen &ts,
 			const std::string &icon, const std::string &label = "",
 			Action action = nullptr);
 
@@ -31,7 +31,7 @@ public:
 private:
 	void recalcRects();
 
-	GMenu2X *gmenu2x;
+	GMenu2X& gmenu2x;
 	Touchscreen &ts;
 	std::string icon, label;
 	Action action;

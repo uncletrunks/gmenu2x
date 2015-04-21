@@ -27,7 +27,7 @@
 using std::string;
 
 MenuSettingImage::MenuSettingImage(
-		GMenu2X *gmenu2x, Touchscreen &ts,
+		GMenu2X& gmenu2x, Touchscreen &ts,
 		const string &name, const string &description,
 		string *value, const string &filter)
 	: MenuSettingFile(gmenu2x, ts, name, description, value, filter)
@@ -40,10 +40,10 @@ void MenuSettingImage::edit() {
 }
 
 void MenuSettingImage::setValue(const string &value) {
-	string skinpath(gmenu2x->sc.getSkinPath(gmenu2x->confStr["skin"]));
+	string skinpath(gmenu2x.sc.getSkinPath(gmenu2x.confStr["skin"]));
 	bool inSkinDir = value.substr(0, skinpath.length()) == skinpath;
-	if (!inSkinDir && gmenu2x->confStr["skin"] != "Default") {
-		skinpath = gmenu2x->sc.getSkinPath("Default");
+	if (!inSkinDir && gmenu2x.confStr["skin"] != "Default") {
+		skinpath = gmenu2x.sc.getSkinPath("Default");
 		inSkinDir = value.substr(0, skinpath.length()) == skinpath;
 	}
 	if (inSkinDir) {

@@ -35,7 +35,7 @@ protected:
 			unsigned int firstRow, unsigned int rowsPerPage);
 
 public:
-	TextDialog(GMenu2X *gmenu2x, const std::string &title,
+	TextDialog(GMenu2X& gmenu2x, const std::string &title,
 			const std::string &description, const std::string &icon,
 			const std::string &text);
 	void exec();

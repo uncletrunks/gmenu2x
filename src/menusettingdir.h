@@ -33,7 +33,7 @@ protected:
 
 public:
 	MenuSettingDir(
-			GMenu2X *gmenu2x, Touchscreen &ts,
+			GMenu2X& gmenu2x, Touchscreen &ts,
 			const std::string &name, const std::string &description,
 			std::string *value);
 	virtual ~MenuSettingDir() {}

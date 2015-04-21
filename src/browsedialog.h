@@ -35,7 +35,7 @@ class Touchscreen;
 class BrowseDialog : protected Dialog {
 protected:
 	BrowseDialog(
-			GMenu2X *gmenu2x, Touchscreen &ts,
+			GMenu2X& gmenu2x, Touchscreen &ts,
 			const std::string &title, const std::string &subtitle);
 	virtual ~BrowseDialog();
 

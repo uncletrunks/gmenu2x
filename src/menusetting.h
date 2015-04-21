@@ -32,7 +32,7 @@ Base class for different kind of option
 */
 class MenuSetting {
 protected:
-	GMenu2X *gmenu2x;
+	GMenu2X& gmenu2x;
 
 	ButtonBox buttonBox;
 
@@ -40,7 +40,7 @@ protected:
 
 public:
 	MenuSetting(
-			GMenu2X *gmenu2x, const std::string &name,
+			GMenu2X& gmenu2x, const std::string &name,
 			const std::string &description);
 	virtual ~MenuSetting();
 

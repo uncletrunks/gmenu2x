@@ -30,13 +30,13 @@ class GMenu2X;
 
 class MessageBox {
 public:
-	MessageBox(GMenu2X *gmenu2x, const std::string &text,
+	MessageBox(GMenu2X& gmenu2x, const std::string &text,
 			const std::string &icon="");
 	void setButton(InputManager::Button button, const std::string &label);
 	int exec();
 
 private:
-	GMenu2X *gmenu2x;
+	GMenu2X& gmenu2x;
 	std::string text, icon;
 	std::string buttons[BUTTON_TYPE_SIZE];
 	std::string buttonLabels[BUTTON_TYPE_SIZE];

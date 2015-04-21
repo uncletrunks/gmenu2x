@@ -32,7 +32,7 @@ private:
 	Touchscreen &ts;
 
 public:
-	WallpaperDialog(GMenu2X *gmenu2x, Touchscreen &ts);
+	WallpaperDialog(GMenu2X& gmenu2x, Touchscreen &ts);
 	std::string wallpaper;
 
 	bool exec();

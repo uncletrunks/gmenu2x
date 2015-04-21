@@ -29,7 +29,7 @@ using std::string;
 using std::unique_ptr;
 
 MenuSettingFile::MenuSettingFile(
-		GMenu2X *gmenu2x, Touchscreen &ts_,
+		GMenu2X& gmenu2x, Touchscreen &ts_,
 		const string &name, const string &description,
 		string *value, const string &filter_)
 	: MenuSettingStringBase(gmenu2x, name, description, value)
@@ -38,12 +38,12 @@ MenuSettingFile::MenuSettingFile(
 {
 	buttonBox.add(unique_ptr<IconButton>(new IconButton(
 			gmenu2x, ts, "skin:imgs/buttons/cancel.png",
-			gmenu2x->tr["Clear"],
+			gmenu2x.tr["Clear"],
 			bind(&MenuSettingFile::clear, this))));
 
 	buttonBox.add(unique_ptr<IconButton>(new IconButton(
 			gmenu2x, ts, "skin:imgs/buttons/accept.png",
-			gmenu2x->tr["Select"],
+			gmenu2x.tr["Select"],
 			bind(&MenuSettingFile::edit, this))));
 }
 

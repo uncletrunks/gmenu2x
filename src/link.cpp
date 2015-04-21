@@ -32,17 +32,17 @@
 using namespace std;
 
 
-Link::Link(GMenu2X *gmenu2x, Action action)
+Link::Link(GMenu2X& gmenu2x, Action action)
 	: gmenu2x(gmenu2x)
-	, ts(gmenu2x->getTouchscreen())
+	, ts(gmenu2x.getTouchscreen())
 	, action(action)
 	, lastTick(0)
 {
-//	ts = gmenu2x->getTouchscreen();
-	rect.w = gmenu2x->skinConfInt["linkWidth"];
-	rect.h = gmenu2x->skinConfInt["linkHeight"];
+//	ts = gmenu2x.getTouchscreen();
+	rect.w = gmenu2x.skinConfInt["linkWidth"];
+	rect.h = gmenu2x.skinConfInt["linkHeight"];
 	edited = false;
-	iconPath = gmenu2x->sc.getSkinFilePath("icons/generic.png");
+	iconPath = gmenu2x.sc.getSkinFilePath("icons/generic.png");
 	iconX = 0;
 	padding = 0;
 
@@ -67,26 +67,26 @@ bool Link::handleTS() {
 }
 
 void Link::paint() {
-	Surface& s = *gmenu2x->s;
+	Surface& s = *gmenu2x.s;
 
 	if (iconSurface) {
 		iconSurface->blit(s, iconX, rect.y+padding, 32,32);
 	}
-	gmenu2x->font->write(s, getTitle(), iconX+16, rect.y + gmenu2x->skinConfInt["linkHeight"]-padding, Font::HAlignCenter, Font::VAlignBottom);
+	gmenu2x.font->write(s, getTitle(), iconX+16, rect.y + gmenu2x.skinConfInt["linkHeight"]-padding, Font::HAlignCenter, Font::VAlignBottom);
 }
 
 void Link::paintHover() {
-	Surface& s = *gmenu2x->s;
+	Surface& s = *gmenu2x.s;
 
-	if (gmenu2x->useSelectionPng)
-		gmenu2x->sc["imgs/selection.png"]->blit(s, rect, Font::HAlignCenter, Font::VAlignMiddle);
+	if (gmenu2x.useSelectionPng)
+		gmenu2x.sc["imgs/selection.png"]->blit(s, rect, Font::HAlignCenter, Font::VAlignMiddle);
 	else
-		s.box(rect.x, rect.y, rect.w, rect.h, gmenu2x->skinConfColors[COLOR_SELECTION_BG]);
+		s.box(rect.x, rect.y, rect.w, rect.h, gmenu2x.skinConfColors[COLOR_SELECTION_BG]);
 }
 
 void Link::updateSurfaces()
 {
-	iconSurface = gmenu2x->sc[getIconPath()];
+	iconSurface = gmenu2x.sc[getIconPath()];
 }
 
 const string &Link::getTitle() {
@@ -117,7 +117,7 @@ const string &Link::getIcon() {
 
 void Link::loadIcon() {
 	if (icon.compare(0, 5, "skin:") == 0) {
-		setIconPath(gmenu2x->sc.getSkinFilePath(icon.substr(5, string::npos)));
+		setIconPath(gmenu2x.sc.getSkinFilePath(icon.substr(5, string::npos)));
 	}
 }
 
@@ -125,7 +125,7 @@ void Link::setIcon(const string &icon) {
 	this->icon = icon;
 
 	if (icon.compare(0, 5, "skin:") == 0)
-		this->iconPath = gmenu2x->sc.getSkinFilePath(
+		this->iconPath = gmenu2x.sc.getSkinFilePath(
 					icon.substr(5, string::npos));
 	else
 		this->iconPath = icon;
@@ -135,7 +135,7 @@ void Link::setIcon(const string &icon) {
 }
 
 const string &Link::searchIcon() {
-	iconPath = gmenu2x->sc.getSkinFilePath("icons/generic.png");
+	iconPath = gmenu2x.sc.getSkinFilePath("icons/generic.png");
 	return iconPath;
 }
 
@@ -148,7 +148,7 @@ void Link::setIconPath(const string &icon) {
 	if (fileExists(icon))
 		iconPath = icon;
 	else
-		iconPath = gmenu2x->sc.getSkinFilePath("icons/generic.png");
+		iconPath = gmenu2x.sc.getSkinFilePath("icons/generic.png");
 	updateSurfaces();
 }
 
@@ -166,7 +166,7 @@ void Link::setPosition(int x, int y) {
 
 void Link::recalcCoordinates() {
 	iconX = rect.x+(rect.w-32)/2;
-	padding = (gmenu2x->skinConfInt["linkHeight"] - 32 - gmenu2x->font->getLineSpacing()) / 3;
+	padding = (gmenu2x.skinConfInt["linkHeight"] - 32 - gmenu2x.font->getLineSpacing()) / 3;
 }
 
 void Link::run() {

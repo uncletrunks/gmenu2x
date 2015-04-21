@@ -39,7 +39,7 @@
 
 using namespace std;
 
-Selector::Selector(GMenu2X *gmenu2x, LinkApp& link, const string &selectorDir)
+Selector::Selector(GMenu2X& gmenu2x, LinkApp& link, const string &selectorDir)
 	: Dialog(gmenu2x)
 	, link(link)
 {
@@ -58,30 +58,30 @@ int Selector::exec(int startSelection) {
 		dir = parentDir(dir);
 	}
 
-	OffscreenSurface bg(*gmenu2x->bg);
+	OffscreenSurface bg(*gmenu2x.bg);
 	drawTitleIcon(bg, link.getIconPath(), true);
 	writeTitle(bg, link.getTitle());
 	writeSubTitle(bg, link.getDescription());
 
 	int x = 5;
 	if (fl.size() != 0) {
-		x = gmenu2x->drawButton(bg, "accept", gmenu2x->tr["Select"], x);
+		x = gmenu2x.drawButton(bg, "accept", gmenu2x.tr["Select"], x);
 	}
 	if (showDirectories) {
-		x = gmenu2x->drawButton(bg, "left", "", x);
-		x = gmenu2x->drawButton(bg, "cancel", gmenu2x->tr["Up one folder"], x);
+		x = gmenu2x.drawButton(bg, "left", "", x);
+		x = gmenu2x.drawButton(bg, "cancel", gmenu2x.tr["Up one folder"], x);
 	} else {
-		x = gmenu2x->drawButton(bg, "cancel", "", x);
+		x = gmenu2x.drawButton(bg, "cancel", "", x);
 	}
-	x = gmenu2x->drawButton(bg, "start", gmenu2x->tr["Exit"], x);
+	x = gmenu2x.drawButton(bg, "start", gmenu2x.tr["Exit"], x);
 
 	unsigned int top, height;
-	tie(top, height) = gmenu2x->getContentArea();
+	tie(top, height) = gmenu2x.getContentArea();
 
-	auto folderIcon = gmenu2x->sc.skinRes("imgs/folder.png");
+	auto folderIcon = gmenu2x.sc.skinRes("imgs/folder.png");
 
 	// Figure out how many items we can fit in the content area.
-	int lineHeight = gmenu2x->font->getLineSpacing();
+	int lineHeight = gmenu2x.font->getLineSpacing();
 	if (showDirectories && folderIcon) {
 		lineHeight = max(lineHeight, folderIcon->height() + 2);
 	}
@@ -97,12 +97,12 @@ int Selector::exec(int startSelection) {
 
 	bool close = false, result = true;
 	while (!close) {
-		OutputSurface& s = *gmenu2x->s;
+		OutputSurface& s = *gmenu2x.s;
 
 		bg.blit(s, 0, 0);
 
 		if (fl.size() == 0) {
-			gmenu2x->font->write(s, "(" + gmenu2x->tr["no items"] + ")",
+			gmenu2x.font->write(s, "(" + gmenu2x.tr["no items"] + ")",
 					4, top + lineHeight / 2,
 					Font::HAlignLeft, Font::VAlignMiddle);
 		} else {
@@ -123,7 +123,7 @@ int Selector::exec(int startSelection) {
 			//Selection
 			int iY = top + (selected - firstElement) * lineHeight;
 			if (selected<fl.size())
-				s.box(1, iY, 309, lineHeight, gmenu2x->skinConfColors[COLOR_SELECTION_BG]);
+				s.box(1, iY, 309, lineHeight, gmenu2x.skinConfColors[COLOR_SELECTION_BG]);
 
 			//Files & Dirs
 			s.setClipRect(0, top, 311, height);
@@ -137,11 +137,11 @@ int Selector::exec(int startSelection) {
 								x, iY + (lineHeight - folderIcon->height()) / 2);
 						x += folderIcon->width() + 2;
 					}
-					gmenu2x->font->write(s, fl[i],
+					gmenu2x.font->write(s, fl[i],
 							x, iY + lineHeight / 2,
 							Font::HAlignLeft, Font::VAlignMiddle);
 				} else {
-					gmenu2x->font->write(s, trimExtension(fl[i]),
+					gmenu2x.font->write(s, trimExtension(fl[i]),
 							x, iY + lineHeight / 2,
 							Font::HAlignLeft, Font::VAlignMiddle);
 				}
@@ -149,10 +149,10 @@ int Selector::exec(int startSelection) {
 			s.clearClipRect();
 		}
 
-		gmenu2x->drawScrollBar(nb_elements, fl.size(), firstElement);
+		gmenu2x.drawScrollBar(nb_elements, fl.size(), firstElement);
 		s.flip();
 
-		switch (gmenu2x->input.waitForPressedButton()) {
+		switch (gmenu2x.input.waitForPressedButton()) {
 			case InputManager::SETTINGS:
 				close = true;
 				result = false;

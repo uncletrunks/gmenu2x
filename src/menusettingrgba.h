@@ -47,7 +47,7 @@ private:
 
 public:
 	MenuSettingRGBA(
-			GMenu2X *gmenu2x, Touchscreen &ts,
+			GMenu2X& gmenu2x, Touchscreen &ts,
 			const std::string &name, const std::string &description,
 			RGBAColor *value);
 	virtual ~MenuSettingRGBA() {};

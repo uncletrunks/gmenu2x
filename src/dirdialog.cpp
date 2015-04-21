@@ -25,7 +25,7 @@
 using namespace std;
 
 DirDialog::DirDialog(
-		GMenu2X *gmenu2x, Touchscreen &ts,
+		GMenu2X& gmenu2x, Touchscreen &ts,
 		const string &text, const string &dir)
 	: BrowseDialog(gmenu2x, ts, "Directory Browser", text)
 {

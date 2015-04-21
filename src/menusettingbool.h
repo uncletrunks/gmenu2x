@@ -39,11 +39,11 @@ private:
 
 public:
 	MenuSettingBool(
-			GMenu2X *gmenu2x, Touchscreen &ts,
+			GMenu2X& gmenu2x, Touchscreen &ts,
 			const std::string &name, const std::string &description,
 			bool *value);
 	MenuSettingBool(
-			GMenu2X *gmenu2x, Touchscreen &ts,
+			GMenu2X& gmenu2x, Touchscreen &ts,
 			const std::string &name, const std::string &description,
 			int *value);
 	virtual ~MenuSettingBool() {}
