@@ -17,7 +17,7 @@ public:
 	/**
 	 * Gets the icon that reflects the current battery status.
 	 */
-	OffscreenSurface const& getIcon();
+	const OffscreenSurface *getIcon();
 
 private:
 	void update();

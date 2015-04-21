@@ -53,7 +53,7 @@ Battery::Battery(SurfaceCollection& sc_)
 	update();
 }
 
-OffscreenSurface const& Battery::getIcon()
+const OffscreenSurface *Battery::getIcon()
 {
 	// Check battery status every 60 seconds.
 	unsigned int now = SDL_GetTicks();
@@ -62,7 +62,7 @@ OffscreenSurface const& Battery::getIcon()
 		update();
 	}
 
-	return *sc.skinRes(iconPath);
+	return sc.skinRes(iconPath);
 }
 
 void Battery::update()

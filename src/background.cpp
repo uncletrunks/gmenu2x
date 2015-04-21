@@ -22,7 +22,10 @@ void Background::paint(Surface& s) {
 			s.width() / 2, gmenu2x.bottomBarTextY,
 			Font::HAlignCenter, Font::VAlignMiddle);
 
-	battery.getIcon().blit(s, s.width() - 19, gmenu2x.bottomBarIconY);
+	auto icon = battery.getIcon();
+	if (icon) {
+		icon->blit(s, s.width() - 19, gmenu2x.bottomBarIconY);
+	}
 }
 
 bool Background::handleButtonPress(InputManager::Button button) {
