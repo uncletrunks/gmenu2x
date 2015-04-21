@@ -95,7 +95,6 @@ private:
 
 	void initCPULimits();
 #endif
-	void browsePath(const std::string &path, std::vector<std::string>* directories, std::vector<std::string>* files);
 
 	/*!
 	Displays a selector and launches the specified executable file
