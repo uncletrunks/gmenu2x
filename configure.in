@@ -61,6 +61,7 @@ case "$GMENU2X_PLATFORM" in
 		AC_DEFINE(PLATFORM_PC)
 		PLATFORM="pc"
 		SCREEN_RES="800x480"
+		CPUFREQ=no
 	;;
 	*)
 		AC_MSG_ERROR([*** Unknown platform.])
