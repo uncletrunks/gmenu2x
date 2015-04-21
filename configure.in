@@ -30,6 +30,11 @@ AC_ARG_ENABLE(platform,
 			  [  --enable-platform=X        specify the targeted platform],
 			  [GMENU2X_PLATFORM="$enableval"], [GMENU2X_PLATFORM="default"])
 
+if test "x$GMENU2X_PLATFORM" == xdefault ; then
+		AC_MSG_WARN([*** No --enable-platform specified. Defaulting to "pc".])
+		GMENU2X_PLATFORM=pc
+fi
+
 case "$GMENU2X_PLATFORM" in
 	a320)
 		AC_DEFINE(PLATFORM_A320)
@@ -50,12 +55,6 @@ case "$GMENU2X_PLATFORM" in
 	pandora)
 		AC_DEFINE(PLATFORM_PANDORA)
 		PLATFORM="pandora"
-		SCREEN_RES="800x480"
-	;;
-	default)
-		AC_MSG_WARN([*** No --enable-platform specified. Defaulting to "pc".])
-		AC_DEFINE(PLATFORM_PC)
-		PLATFORM="pc"
 		SCREEN_RES="800x480"
 	;;
 	pc)
