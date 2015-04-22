@@ -346,10 +346,10 @@ void Menu::freeLinks() {
 }
 
 vector<Link*> *Menu::sectionLinks(int i) {
-	if (i<0 || i>(int)links.size())
+	if (i<0 || i>=(int)links.size())
 		i = selSectionIndex();
 
-	if (i<0 || i>(int)links.size())
+	if (i<0 || i>=(int)links.size())
 		return NULL;
 
 	return &links[i];
@@ -625,6 +625,11 @@ LinkApp *Menu::selLinkApp() {
 }
 
 void Menu::setLinkIndex(int i) {
+	auto links = sectionLinks();
+	if (!links) {
+		// No sections.
+		return;
+	}
 	const int numLinks = static_cast<int>(sectionLinks()->size());
 	if (i < 0)
 		i = numLinks - 1;
