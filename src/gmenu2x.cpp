@@ -1026,13 +1026,10 @@ void GMenu2X::deleteLink() {
 void GMenu2X::addSection() {
 	InputDialog id(*this, input, ts, tr["Insert a name for the new section"]);
 	if (id.exec()) {
-		//only if a section with the same name does not exist
-		if (find(menu->getSections().begin(), menu->getSections().end(), id.getInput())
-				== menu->getSections().end()) {
-			//section directory doesn't exists
-			if (menu->addSection(id.getInput()))
-				menu->setSectionIndex( menu->getSections().size()-1 ); //switch to the new section
-		}
+		// Look up section; create if it doesn't exist yet.
+		auto idx = menu->sectionNamed(id.getInput());
+		// Switch to the new section.
+		menu->setSectionIndex(idx);
 	}
 }
 

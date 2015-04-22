@@ -92,6 +92,13 @@ private:
 	void readLinksOfSection(std::vector<Link*>& links,
 							std::string const& path, bool deletable);
 
+	/**
+	 * Attempts to creates a section directory if it does not exist yet.
+	 * @return The full path of the section directory, or the empty string
+	 *         if the directory could not be created.
+	 */
+	std::string createSectionDir(std::string const& sectionName);
+
 	void decSectionIndex();
 	void incSectionIndex();
 	void linkLeft();
@@ -120,8 +127,21 @@ public:
 	void addActionLink(uint section, const std::string &title,
 			Action action, const std::string &description="",
 			const std::string &icon="");
-	bool addLink(std::string path, std::string file, std::string section="");
-	bool addSection(const std::string &sectionName);
+	bool addLink(std::string path, std::string file, std::string sectionName="");
+
+	/**
+	 * Looks up a section by name, adding it if it doesn't exist yet.
+	 * @return The index of the section.
+	 */
+	int sectionNamed(const char *sectionName);
+	/**
+	 * Looks up a section by name, adding it if it doesn't exist yet.
+	 * @return The index of the section.
+	 */
+	int sectionNamed(const std::string &sectionName) {
+		return sectionNamed(sectionName.c_str());
+	}
+
 	void deleteSelectedLink();
 	void deleteSelectedSection();
 

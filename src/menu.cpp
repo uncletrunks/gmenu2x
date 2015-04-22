@@ -28,6 +28,8 @@
 #include <unistd.h>
 #include <ini.h>
 #include <cassert>
+#include <cerrno>
+#include <cstring>
 
 #ifdef HAVE_LIBOPK
 #include <opk.h>
@@ -127,6 +129,23 @@ void Menu::readSections(std::string parentDir)
 	}
 
 	closedir(dirp);
+}
+
+string Menu::createSectionDir(string const& sectionName)
+{
+	string parentDir = GMenu2X::getHome() + "/sections";
+	if (mkdir(parentDir.c_str(), 0755) && errno != EEXIST) {
+		WARNING("Failed to create parent sections dir: %s\n", strerror(errno));
+		return "";
+	}
+
+	string childDir = parentDir + "/" + sectionName;
+	if (mkdir(parentDir.c_str(), 0755) && errno != EEXIST) {
+		WARNING("Failed to create child section dir: %s\n", strerror(errno));
+		return "";
+	}
+
+	return childDir;
 }
 
 void Menu::skinUpdated() {
@@ -404,13 +423,14 @@ void Menu::addActionLink(uint section, const string &title, Action action, const
 	links[section].push_back(link);
 }
 
-bool Menu::addLink(string path, string file, string section) {
-	if (section.empty()) {
-		section = selSection();
-	} else if (find(sections.begin(),sections.end(),section)==sections.end()) {
-		//section directory doesn't exists
-		if (!addSection(section))
-			return false;
+bool Menu::addLink(string path, string file, string sectionName) {
+	if (sectionName.empty()) {
+		sectionName = selSection();
+	}
+
+	string sectionDir = createSectionDir(sectionName);
+	if (sectionDir.empty()) {
+		return false;
 	}
 
 	//strip the extension from the filename
@@ -422,25 +442,14 @@ bool Menu::addLink(string path, string file, string section) {
 		title = title.substr(0, pos);
 	}
 
-	string linkpath = GMenu2X::getHome() + "/sections";
-	if (!fileExists(linkpath))
-		mkdir(linkpath.c_str(), 0755);
-
-	linkpath = GMenu2X::getHome() + "/sections/" + section;
-	if (!fileExists(linkpath))
-		mkdir(linkpath.c_str(), 0755);
-
-	linkpath += "/" + title;
-	int x=2;
+	string linkpath = sectionDir + "/" + title;
+	int x = 2;
 	while (fileExists(linkpath)) {
 		stringstream ss;
-		linkpath = "";
-		ss << x;
+		ss << sectionDir << '/' << title << x;
 		ss >> linkpath;
-		linkpath = GMenu2X::getHome()+"/sections/"+section+"/"+title+linkpath;
 		x++;
 	}
-
 	INFO("Adding link: '%s'\n", linkpath.c_str());
 
 	if (path[path.length()-1]!='/') path += "/";
@@ -490,15 +499,11 @@ bool Menu::addLink(string path, string file, string section) {
 		if (!manual.empty()) f << "manual=" << manual << endl;
 		f.close();
  		sync();
-		int isection = find(sections.begin(),sections.end(),section) - sections.begin();
-		if (isection>=0 && isection<(int)sections.size()) {
 
-			INFO("Section: '%s(%i)'\n", sections[isection].c_str(), isection);
-
-			LinkApp* link = new LinkApp(gmenu2x, linkpath, true);
-			link->setSize(gmenu2x.skinConfInt["linkWidth"], gmenu2x.skinConfInt["linkHeight"]);
-			links[isection].push_back( link );
-		}
+		auto idx = sectionNamed(sectionName);
+		auto link = new LinkApp(gmenu2x, linkpath, true);
+		link->setSize(gmenu2x.skinConfInt["linkWidth"], gmenu2x.skinConfInt["linkHeight"]);
+		links[idx].push_back(link);
 	} else {
 
 		ERROR("Error while opening the file '%s' for write.\n", linkpath.c_str());
@@ -509,19 +514,15 @@ bool Menu::addLink(string path, string file, string section) {
 	return true;
 }
 
-bool Menu::addSection(const string &sectionName) {
-	string sectiondir = GMenu2X::getHome() + "/sections";
-	if (!fileExists(sectiondir))
-		mkdir(sectiondir.c_str(), 0755);
-
-	sectiondir = sectiondir + "/" + sectionName;
-	if (mkdir(sectiondir.c_str(), 0755) == 0) {
-		sections.push_back(sectionName);
-		vector<Link*> ll;
-		links.push_back(ll);
-		return true;
+int Menu::sectionNamed(const char *sectionName)
+{
+	auto it = find(sections.begin(), sections.end(), sectionName);
+	int idx = it - sections.begin();
+	if (it == sections.end()) {
+		sections.emplace_back(sectionName);
+		links.emplace_back();
 	}
-	return false;
+	return idx;
 }
 
 void Menu::deleteSelectedLink()
@@ -669,10 +670,8 @@ void Menu::openPackage(std::string path, bool order)
 	}
 
 	for (;;) {
-		unsigned int i;
 		bool has_metadata = false;
 		const char *name;
-		LinkApp *link;
 
 		for (;;) {
 			string::size_type pos;
@@ -704,16 +703,11 @@ void Menu::openPackage(std::string path, bool order)
 		// Note: OPK links can only be deleted by removing the OPK itself,
 		//       but that is not something we want to do in the menu,
 		//       so consider this link undeletable.
-		link = new LinkApp(gmenu2x, path, false, opk, name);
+		auto link = new LinkApp(gmenu2x, path, false, opk, name);
 		link->setSize(gmenu2x.skinConfInt["linkWidth"], gmenu2x.skinConfInt["linkHeight"]);
 
-		addSection(link->getCategory());
-		for (i = 0; i < sections.size(); i++) {
-			if (sections[i] == link->getCategory()) {
-				links[i].push_back(link);
-				break;
-			}
-		}
+		auto idx = sectionNamed(link->getCategory());
+		links[idx].push_back(link);
 	}
 
 	opk_close(opk);
