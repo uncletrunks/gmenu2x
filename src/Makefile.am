@@ -32,6 +32,7 @@ noinst_HEADERS = font.h cpu.h dirdialog.h \
 AM_CFLAGS= @CFLAGS@ @SDL_CFLAGS@
 
 AM_CXXFLAGS = @CXXFLAGS@ @SDL_CFLAGS@ \
+	-DGMENU2X_SYSTEM_DIR=\"@datadir@/gmenu2x\" \
 	-fno-exceptions \
 	-Wall -Wextra -Wundef -Wunused-macros -std=c++11
 
