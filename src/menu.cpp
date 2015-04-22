@@ -78,7 +78,6 @@ Menu::Menu(GMenu2X& gmenu2x, Touchscreen &ts)
 	readSections(GMENU2X_SYSTEM_DIR "/sections");
 	readSections(GMenu2X::getHome() + "/sections");
 
-	sort(sections.begin(),sections.end(),case_less());
 	setSectionIndex(0);
 	readLinks();
 
@@ -118,13 +117,9 @@ void Menu::readSections(std::string parentDir)
 	if (!dirp) return;
 
 	while ((dptr = readdir(dirp))) {
-		if (dptr->d_name[0] == '.' || dptr->d_type != DT_DIR)
-			continue;
-
-		if (find(sections.begin(), sections.end(), dptr->d_name) == sections.end()) {
-			sections.emplace_back(dptr->d_name);
-			vector<Link*> ll;
-			links.push_back(ll);
+		if (dptr->d_name[0] != '.' && dptr->d_type == DT_DIR) {
+			// Create section if it doesn't exist yet.
+			sectionNamed(dptr->d_name);
 		}
 	}
 
@@ -516,11 +511,11 @@ bool Menu::addLink(string path, string file, string sectionName) {
 
 int Menu::sectionNamed(const char *sectionName)
 {
-	auto it = find(sections.begin(), sections.end(), sectionName);
+	auto it = lower_bound(sections.begin(), sections.end(), sectionName);
 	int idx = it - sections.begin();
-	if (it == sections.end()) {
-		sections.emplace_back(sectionName);
-		links.emplace_back();
+	if (it == sections.end() || *it != sectionName) {
+		sections.emplace(it, sectionName);
+		links.emplace(links.begin() + idx);
 	}
 	return idx;
 }
