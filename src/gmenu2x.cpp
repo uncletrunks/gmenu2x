@@ -377,41 +377,38 @@ void GMenu2X::initFont() {
 void GMenu2X::initMenu() {
 	//Menu structure handler
 	menu.reset(new Menu(*this, ts));
-	for (uint i=0; i<menu->getSections().size(); i++) {
-		//Add virtual links in the applications section
-		if (menu->getSections()[i]=="applications") {
-			menu->addActionLink(i, "Explorer",
-					bind(&GMenu2X::explorer, this),
-					tr["Launch an application"],
-					"skin:icons/explorer.png");
-		}
 
-		//Add virtual links in the setting section
-		else if (menu->getSections()[i]=="settings") {
-			menu->addActionLink(i, "GMenu2X",
-					bind(&GMenu2X::showSettings, this),
-					tr["Configure GMenu2X's options"],
-					"skin:icons/configure.png");
-			menu->addActionLink(i, tr["Skin"],
-					bind(&GMenu2X::skinMenu, this),
-					tr["Configure skin"],
-					"skin:icons/skin.png");
-			menu->addActionLink(i, tr["Wallpaper"],
-					bind(&GMenu2X::changeWallpaper, this),
-					tr["Change GMenu2X wallpaper"],
-					"skin:icons/wallpaper.png");
-			if (fileExists(LOG_FILE)) {
-				menu->addActionLink(i, tr["Log Viewer"],
-						bind(&GMenu2X::viewLog, this),
-						tr["Displays last launched program's output"],
-						"skin:icons/ebook.png");
-			}
-			menu->addActionLink(i, tr["About"],
-					bind(&GMenu2X::about, this),
-					tr["Info about GMenu2X"],
-					"skin:icons/about.png");
-		}
+	// Add action links in the applications section.
+	auto appIdx = menu->sectionNamed("applications");
+	menu->addActionLink(appIdx, "Explorer",
+			bind(&GMenu2X::explorer, this),
+			tr["Launch an application"],
+			"skin:icons/explorer.png");
+
+	// Add action links in the settings section.
+	auto settingIdx = menu->sectionNamed("settings");
+	menu->addActionLink(settingIdx, "GMenu2X",
+			bind(&GMenu2X::showSettings, this),
+			tr["Configure GMenu2X's options"],
+			"skin:icons/configure.png");
+	menu->addActionLink(settingIdx, tr["Skin"],
+			bind(&GMenu2X::skinMenu, this),
+			tr["Configure skin"],
+			"skin:icons/skin.png");
+	menu->addActionLink(settingIdx, tr["Wallpaper"],
+			bind(&GMenu2X::changeWallpaper, this),
+			tr["Change GMenu2X wallpaper"],
+			"skin:icons/wallpaper.png");
+	if (fileExists(LOG_FILE)) {
+		menu->addActionLink(settingIdx, tr["Log Viewer"],
+				bind(&GMenu2X::viewLog, this),
+				tr["Displays last launched program's output"],
+				"skin:icons/ebook.png");
 	}
+	menu->addActionLink(settingIdx, tr["About"],
+			bind(&GMenu2X::about, this),
+			tr["Info about GMenu2X"],
+			"skin:icons/about.png");
 
 	menu->skinUpdated();
 	menu->orderLinks();
