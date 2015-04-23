@@ -26,7 +26,6 @@
 #include <math.h>
 #include <fstream>
 #include <unistd.h>
-#include <ini.h>
 #include <cassert>
 #include <cerrno>
 #include <cstring>
