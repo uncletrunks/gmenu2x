@@ -78,7 +78,7 @@ private:
 	void freeLinks();
 
 	// Load all the sections of the given "sections" directory.
-	void readSections(std::string parentDir);
+	void readSections(std::string const& parentDir);
 
 #ifdef HAVE_LIBOPK
 	// Load all the .opk packages of the given directory
@@ -113,10 +113,10 @@ public:
 	virtual ~Menu();
 
 #ifdef HAVE_LIBOPK
-	void openPackage(std::string path, bool order = true);
-	void openPackagesFromDir(std::string path);
+	void openPackage(std::string const& path, bool order = true);
+	void openPackagesFromDir(std::string const& path);
 #ifdef ENABLE_INOTIFY
-	void removePackageLink(std::string path);
+	void removePackageLink(std::string const& path);
 #endif
 #endif
 
@@ -124,10 +124,10 @@ public:
 	const std::string &selSection();
 	void setSectionIndex(int i);
 
-	void addActionLink(uint section, const std::string &title,
-			Action action, const std::string &description="",
-			const std::string &icon="");
-	bool addLink(std::string path, std::string file, std::string sectionName="");
+	void addActionLink(uint section, std::string const& title,
+			Action action, std::string const& description="",
+			std::string const& icon="");
+	bool addLink(std::string const& path, std::string const& file);
 
 	/**
 	 * Looks up a section by name, adding it if it doesn't exist yet.
@@ -138,7 +138,7 @@ public:
 	 * Looks up a section by name, adding it if it doesn't exist yet.
 	 * @return The index of the section.
 	 */
-	int sectionNamed(const std::string &sectionName) {
+	int sectionNamed(std::string const& sectionName) {
 		return sectionNamed(sectionName.c_str());
 	}
 
@@ -162,7 +162,7 @@ public:
 	void setLinkIndex(int i);
 
 	const std::vector<std::string> &getSections() { return sections; }
-	void renameSection(int index, const std::string &name);
+	void renameSection(int index, std::string const& name);
 };
 
 #endif // MENU_H

@@ -108,7 +108,7 @@ Menu::~Menu() {
 	freeLinks();
 }
 
-void Menu::readSections(std::string parentDir)
+void Menu::readSections(std::string const& parentDir)
 {
 	DIR *dirp;
 	struct dirent *dptr;
@@ -401,7 +401,9 @@ void Menu::setSectionIndex(int i) {
 /*====================================
    LINKS MANAGEMENT
   ====================================*/
-void Menu::addActionLink(uint section, const string &title, Action action, const string &description, const string &icon) {
+void Menu::addActionLink(uint section, string const& title, Action action,
+		string const& description, string const& icon)
+{
 	assert(section < sections.size());
 
 	Link *link = new Link(gmenu2x, action);
@@ -418,10 +420,9 @@ void Menu::addActionLink(uint section, const string &title, Action action, const
 	links[section].push_back(link);
 }
 
-bool Menu::addLink(string path, string file, string sectionName) {
-	if (sectionName.empty()) {
-		sectionName = selSection();
-	}
+bool Menu::addLink(string const& path, string const& file)
+{
+	string const& sectionName = selSection();
 
 	string sectionDir = createSectionDir(sectionName);
 	if (sectionDir.empty()) {
@@ -447,10 +448,12 @@ bool Menu::addLink(string path, string file, string sectionName) {
 	}
 	INFO("Adding link: '%s'\n", linkpath.c_str());
 
-	if (path[path.length()-1]!='/') path += "/";
+	string dirPath = path;
+	if (dirPath.empty() || dirPath.back() != '/') dirPath += '/';
+
 	//search for a manual
 	pos = file.rfind(".");
-	string exename = path+file.substr(0,pos);
+	string exename = dirPath + file.substr(0, pos);
 	string manual = "";
 	if (fileExists(exename+".man.png")) {
 		manual = exename+".man.png";
@@ -461,21 +464,21 @@ bool Menu::addLink(string path, string file, string sectionName) {
 		FileLister fl;
 		fl.setShowDirectories(false);
 		fl.setFilter(".txt");
-		fl.browse(path);
+		fl.browse(dirPath);
 		bool found = false;
 		for (uint x=0; x<fl.size() && !found; x++) {
 			string lcfilename = fl[x];
 
 			if (lcfilename.find("readme") != string::npos) {
 				found = true;
-				manual = path+fl.getFiles()[x];
+				manual = dirPath + fl.getFiles()[x];
 			}
 		}
 	}
 
 	INFO("Manual: '%s'\n", manual.c_str());
 
-	string shorttitle=title, description="", exec=path+file, icon="";
+	string shorttitle=title, description="", exec=dirPath+file, icon="";
 	if (fileExists(exename+".png")) icon = exename+".png";
 
 	//Reduce title lenght to fit the link width
@@ -642,7 +645,7 @@ void Menu::setLinkIndex(int i) {
 }
 
 #ifdef HAVE_LIBOPK
-void Menu::openPackagesFromDir(std::string path)
+void Menu::openPackagesFromDir(std::string const& path)
 {
 	DEBUG("Opening packages from directory: %s\n", path.c_str());
 	if (readPackages(path)) {
@@ -652,7 +655,7 @@ void Menu::openPackagesFromDir(std::string path)
 	}
 }
 
-void Menu::openPackage(std::string path, bool order)
+void Menu::openPackage(std::string const& path, bool order)
 {
 	/* First try to remove existing links of the same OPK
 	 * (needed for instance when an OPK is modified) */
@@ -748,7 +751,7 @@ bool Menu::readPackages(std::string const& parentDir)
 /* Remove all links that correspond to the given path.
  * If "path" is a directory, it will remove all links that
  * correspond to an OPK present in the directory. */
-void Menu::removePackageLink(std::string path)
+void Menu::removePackageLink(std::string const& path)
 {
 	for (vector< vector<Link*> >::iterator section = links.begin();
 				section < links.end(); section++) {
@@ -845,6 +848,6 @@ void Menu::readLinksOfSection(
 	closedir(dirp);
 }
 
-void Menu::renameSection(int index, const string &name) {
+void Menu::renameSection(int index, string const& name) {
 	sections[index] = name;
 }
