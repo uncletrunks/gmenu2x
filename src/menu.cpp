@@ -104,8 +104,8 @@ Menu::Menu(GMenu2X& gmenu2x, Touchscreen &ts)
 	btnContextMenu.setPosition(gmenu2x.resX - 38, gmenu2x.bottomBarIconY);
 }
 
-Menu::~Menu() {
-	freeLinks();
+Menu::~Menu()
+{
 }
 
 void Menu::readSections(std::string const& parentDir)
@@ -151,11 +151,11 @@ void Menu::skinUpdated() {
 	linkRows = (gmenu2x.resY - 35 - skinConfInt["topBarHeight"]) / skinConfInt["linkHeight"];
 
 	//reload section icons
-	vector<string>::size_type i = 0;
-	for (string sectionName : sections) {
+	decltype(links)::size_type i = 0;
+	for (auto& sectionName : sections) {
 		gmenu2x.sc["skin:sections/" + sectionName + ".png"];
 
-		for (Link *&link : links[i]) {
+		for (auto& link : links[i]) {
 			link->loadIcon();
 		}
 
@@ -233,8 +233,8 @@ void Menu::paint(Surface &s) {
 	sc.skinRes("imgs/section-l.png")->blit(s, 0, 0);
 	sc.skinRes("imgs/section-r.png")->blit(s, width - 10, 0);
 
-	vector<Link*> &sectionLinks = links[iSection];
-	const uint numLinks = sectionLinks.size();
+	auto& sectionLinks = links[iSection];
+	auto numLinks = sectionLinks.size();
 	gmenu2x.drawScrollBar(
 			linkRows, (numLinks + linkColumns - 1) / linkColumns, iFirstDispRow);
 
@@ -353,18 +353,16 @@ bool Menu::handleTouchscreen(Touchscreen &ts) {
 /*====================================
    SECTION MANAGEMENT
   ====================================*/
-void Menu::freeLinks() {
-	for (vector< vector<Link*> >::iterator section = links.begin(); section<links.end(); section++)
-		for (vector<Link*>::iterator link = section->begin(); link<section->end(); link++)
-			delete *link;
-}
 
-vector<Link*> *Menu::sectionLinks(int i) {
-	if (i<0 || i>=(int)links.size())
+vector<unique_ptr<Link>> *Menu::sectionLinks(int i)
+{
+	if (i<0 || i>=(int)links.size()) {
 		i = selSectionIndex();
+	}
 
-	if (i<0 || i>=(int)links.size())
-		return NULL;
+	if (i<0 || i>=(int)links.size()) {
+		return nullptr;
+	}
 
 	return &links[i];
 }
@@ -417,7 +415,7 @@ void Menu::addActionLink(uint section, string const& title, Action action,
 		link->setIcon(icon);
 	}
 
-	links[section].push_back(link);
+	links[section].emplace_back(link);
 }
 
 bool Menu::addLink(string const& path, string const& file)
@@ -501,7 +499,7 @@ bool Menu::addLink(string const& path, string const& file)
 		auto idx = sectionNamed(sectionName);
 		auto link = new LinkApp(gmenu2x, linkpath, true);
 		link->setSize(gmenu2x.skinConfInt["linkWidth"], gmenu2x.skinConfInt["linkHeight"]);
-		links[idx].push_back(link);
+		links[idx].emplace_back(link);
 	} else {
 
 		ERROR("Error while opening the file '%s' for write.\n", linkpath.c_str());
@@ -525,7 +523,6 @@ int Menu::sectionNamed(const char *sectionName)
 
 void Menu::deleteSelectedLink()
 {
-	bool icon_used = false;
 	string iconpath = selLink()->getIconPath();
 
 	INFO("Deleting link '%s'\n", selLink()->getTitle().c_str());
@@ -535,14 +532,17 @@ void Menu::deleteSelectedLink()
 	sectionLinks()->erase( sectionLinks()->begin() + selLinkIndex() );
 	setLinkIndex(selLinkIndex());
 
-	for (vector< vector<Link*> >::iterator section = links.begin();
-				!icon_used && section<links.end(); section++)
-		for (vector<Link*>::iterator link = section->begin();
-					!icon_used && link<section->end(); link++)
-			icon_used = iconpath == (*link)->getIconPath();
-
-	if (!icon_used)
-	  gmenu2x.sc.del(iconpath);
+	bool icon_used = false;
+	for (auto& section : links) {
+		for (auto& link : section) {
+			if (iconpath == link->getIconPath()) {
+				icon_used = true;
+			}
+		}
+	}
+	if (!icon_used) {
+		gmenu2x.sc.del(iconpath);
+	}
 }
 
 void Menu::deleteSelectedSection() {
@@ -555,15 +555,26 @@ void Menu::deleteSelectedSection() {
 }
 
 bool Menu::linkChangeSection(uint linkIndex, uint oldSectionIndex, uint newSectionIndex) {
-	if (oldSectionIndex<sections.size() && newSectionIndex<sections.size() && linkIndex<sectionLinks(oldSectionIndex)->size()) {
-		sectionLinks(newSectionIndex)->push_back( sectionLinks(oldSectionIndex)->at(linkIndex) );
-		sectionLinks(oldSectionIndex)->erase( sectionLinks(oldSectionIndex)->begin()+linkIndex );
-		//Select the same link in the new position
-		setSectionIndex(newSectionIndex);
-		setLinkIndex(sectionLinks(newSectionIndex)->size()-1);
-		return true;
-	}
-	return false;
+	// Fetch sections.
+	auto oldSectionLinks = sectionLinks(oldSectionIndex);
+	if (!oldSectionLinks) return false;
+	auto newSectionLinks = sectionLinks(newSectionIndex);
+	if (!newSectionLinks) return false;
+
+	// Find link in old section.
+	if (linkIndex >= oldSectionLinks->size()) return false;
+	auto it = oldSectionLinks->begin() + linkIndex;
+
+	// Move link.
+	auto link = it->release();
+	oldSectionLinks->erase(it);
+	newSectionLinks->emplace_back(link);
+
+	// Select the same link in the new section.
+	setSectionIndex(newSectionIndex);
+	setLinkIndex(newSectionLinks->size() - 1);
+
+	return true;
 }
 
 void Menu::linkLeft() {
@@ -615,8 +626,12 @@ int Menu::selLinkIndex() {
 }
 
 Link *Menu::selLink() {
-	if (sectionLinks()->size()==0) return NULL;
-	return sectionLinks()->at(iLink);
+	auto curSectionLinks = sectionLinks();
+	if (curSectionLinks->empty()) {
+		return nullptr;
+	} else {
+		return curSectionLinks->at(iLink).get();
+	}
 }
 
 LinkApp *Menu::selLinkApp() {
@@ -705,7 +720,7 @@ void Menu::openPackage(std::string const& path, bool order)
 		link->setSize(gmenu2x.skinConfInt["linkWidth"], gmenu2x.skinConfInt["linkHeight"]);
 
 		auto idx = sectionNamed(link->getCategory());
-		links[idx].push_back(link);
+		links[idx].emplace_back(link);
 	}
 
 	opk_close(opk);
@@ -753,11 +768,9 @@ bool Menu::readPackages(std::string const& parentDir)
  * correspond to an OPK present in the directory. */
 void Menu::removePackageLink(std::string const& path)
 {
-	for (vector< vector<Link*> >::iterator section = links.begin();
-				section < links.end(); section++) {
-		for (vector<Link*>::iterator link = section->begin();
-					link < section->end(); link++) {
-			LinkApp *app = dynamic_cast<LinkApp *> (*link);
+	for (auto section = links.begin(); section != links.end(); ++section) {
+		for (auto link = section->begin(); link != section->end(); ++link) {
+			LinkApp *app = dynamic_cast<LinkApp *>(link->get());
 			if (!app || !app->isOpk() || app->getOpkFile().empty())
 				continue;
 
@@ -766,9 +779,10 @@ void Menu::removePackageLink(std::string const& path)
 							app->getOpkFile().c_str());
 				section->erase(link);
 				if (section - links.begin() == iSection
-							&& iLink == (int) section->size())
+							&& iLink == (int) section->size()) {
 					setLinkIndex(iLink - 1);
-				link--;
+				}
+				--link;
 			}
 		}
 	}
@@ -783,17 +797,19 @@ void Menu::removePackageLink(std::string const& path)
 #endif
 #endif
 
-static bool compare_links(Link *a, Link *b)
+static bool compare_links(unique_ptr<Link> const& a, unique_ptr<Link> const& b)
 {
-	LinkApp *app1 = dynamic_cast<LinkApp *>(a);
-	LinkApp *app2 = dynamic_cast<LinkApp *>(b);
+	LinkApp *app1 = dynamic_cast<LinkApp *>(a.get());
+	LinkApp *app2 = dynamic_cast<LinkApp *>(b.get());
 	bool app1_is_opk = app1 && app1->isOpk(),
 		 app2_is_opk = app2 && app2->isOpk();
 
-	if (app1_is_opk && !app2_is_opk)
-			return false;
-	if (app2_is_opk && !app1_is_opk)
-			return true;
+	if (app1_is_opk && !app2_is_opk) {
+		return false;
+	}
+	if (app2_is_opk && !app1_is_opk) {
+		return true;
+	}
 	return a->getTitle().compare(b->getTitle()) < 0;
 }
 
@@ -825,7 +841,7 @@ void Menu::readLinks()
 }
 
 void Menu::readLinksOfSection(
-		vector<Link*>& links, string const& path, bool deletable)
+		vector<unique_ptr<Link>>& links, string const& path, bool deletable)
 {
 	DIR *dirp = opendir(path.c_str());
 	if (!dirp) return;
@@ -839,7 +855,7 @@ void Menu::readLinksOfSection(
 			link->setSize(
 					gmenu2x.skinConfInt["linkWidth"],
 					gmenu2x.skinConfInt["linkHeight"]);
-			links.push_back(link);
+			links.emplace_back(link);
 		} else {
 			delete link;
 		}

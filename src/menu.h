@@ -60,7 +60,7 @@ private:
 	int iSection, iLink;
 	uint iFirstDispRow;
 	std::vector<std::string> sections;
-	std::vector<std::vector<Link*>> links;
+	std::vector<std::vector<std::unique_ptr<Link>>> links;
 
 	uint linkColumns, linkRows;
 
@@ -72,7 +72,7 @@ private:
 	 */
 	void calcSectionRange(int &leftSection, int &rightSection);
 
-	std::vector<Link*> *sectionLinks(int i = -1);
+	std::vector<std::unique_ptr<Link>> *sectionLinks(int i = -1);
 
 	void readLinks();
 	void freeLinks();
@@ -89,7 +89,7 @@ private:
 #endif
 
 	// Load all the links on the given section directory.
-	void readLinksOfSection(std::vector<Link*>& links,
+	void readLinksOfSection(std::vector<std::unique_ptr<Link>>& links,
 							std::string const& path, bool deletable);
 
 	/**
