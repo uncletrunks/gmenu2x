@@ -74,6 +74,7 @@ int Selector::exec(int startSelection) {
 		x = gmenu2x.drawButton(bg, "cancel", "", x);
 	}
 	x = gmenu2x.drawButton(bg, "start", gmenu2x.tr["Exit"], x);
+	(void)x;
 
 	unsigned int top, height;
 	tie(top, height) = gmenu2x.getContentArea();

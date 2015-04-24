@@ -356,6 +356,7 @@ void GMenu2X::initBG() {
 			serviceX -= 19;
 		}
 	}
+	(void)serviceX;
 
 	bgmain->convertToDisplayFormat();
 }

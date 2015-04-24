@@ -75,6 +75,7 @@ void TextDialog::exec() {
 	x = gmenu2x.drawButton(bg, "down", gmenu2x.tr["Scroll"], x);
 	x = gmenu2x.drawButton(bg, "cancel", "", x);
 	x = gmenu2x.drawButton(bg, "start", gmenu2x.tr["Exit"], x);
+	(void)x;
 
 	bg.convertToDisplayFormat();
 

@@ -86,6 +86,7 @@ void TextManualDialog::exec() {
 	x = gmenu2x.drawButton(bg, "right", gmenu2x.tr["Change page"], x);
 	x = gmenu2x.drawButton(bg, "cancel", "", x);
 	x = gmenu2x.drawButton(bg, "start", gmenu2x.tr["Exit"], x);
+	(void)x;
 
 	bg.convertToDisplayFormat();
 
