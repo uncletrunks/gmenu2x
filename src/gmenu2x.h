@@ -199,7 +199,6 @@ public:
 	void editLink();
 	void deleteLink();
 	void addSection();
-	void renameSection();
 	void deleteSection();
 
 	int drawButton(Surface& s, const std::string &btn, const std::string &text, int x=5, int y=-10);

@@ -1020,38 +1020,6 @@ void GMenu2X::addSection() {
 	}
 }
 
-void GMenu2X::renameSection() {
-	InputDialog id(*this, input, tr["Insert a new name for this section"],menu->selSection());
-	if (id.exec()) {
-		//only if a section with the same name does not exist & !samename
-		if (menu->selSection() != id.getInput()
-		 && find(menu->getSections().begin(),menu->getSections().end(), id.getInput())
-				== menu->getSections().end()) {
-			//section directory doesn't exists
-			string newsectiondir = getHome() + "/sections/" + id.getInput();
-			string sectiondir = getHome() + "/sections/" + menu->selSection();
-
-			if (!rename(sectiondir.c_str(), newsectiondir.c_str())) {
-				string oldpng = menu->selSection() + ".png";
-				string newpng = id.getInput() + ".png";
-				string oldicon = sc.getSkinFilePath(oldpng);
-				string newicon = sc.getSkinFilePath(newpng);
-
-				if (!oldicon.empty() && newicon.empty()) {
-					newicon = oldicon;
-					newicon.replace(newicon.find(oldpng), oldpng.length(), newpng);
-
-					if (!fileExists(newicon)) {
-						rename(oldicon.c_str(), newicon.c_str());
-						sc.move("skin:"+oldpng, "skin:"+newpng);
-					}
-				}
-				menu->renameSection(menu->selSectionIndex(), id.getInput());
-			}
-		}
-	}
-}
-
 void GMenu2X::deleteSection() {
 	MessageBox mb(*this,tr["You will lose all the links in this section."]+"\n"+tr["Are you sure?"]);
 	mb.setButton(InputManager::ACCEPT, tr["Yes"]);

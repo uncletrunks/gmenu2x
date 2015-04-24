@@ -820,7 +820,3 @@ void Menu::readLinksOfSection(
 
 	closedir(dirp);
 }
-
-void Menu::renameSection(int index, string const& name) {
-	sections[index] = name;
-}

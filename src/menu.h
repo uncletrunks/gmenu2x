@@ -160,7 +160,6 @@ public:
 	void setLinkIndex(int i);
 
 	const std::vector<std::string> &getSections() { return sections; }
-	void renameSection(int index, std::string const& name);
 };
 
 #endif // MENU_H
