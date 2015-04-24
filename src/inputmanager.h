@@ -58,7 +58,9 @@ public:
 		ACCEPT, CANCEL,
 		ALTLEFT, ALTRIGHT,
 		MENU, SETTINGS,
-		REPAINT,
+		// Events that are not actually buttons:
+		// (not included in BUTTON_TYPE_SIZE)
+		REPAINT, QUIT,
 	};
 	#define BUTTON_TYPE_SIZE 10
 

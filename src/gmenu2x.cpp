@@ -636,6 +636,9 @@ void GMenu2X::mainLoop() {
 			gotEvent = input.getButton(&button, wait);
 		} while (wait && !gotEvent);
 		if (gotEvent) {
+			if (button == InputManager::QUIT) {
+				break;
+			}
 			for (auto it = layers.rbegin(); it != layers.rend(); ++it) {
 				if ((*it)->handleButtonPress(button)) {
 					break;

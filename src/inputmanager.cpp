@@ -275,6 +275,10 @@ bool InputManager::getButton(Button *button, bool wait) {
 			*button = REPAINT;
 			return true;
 
+		case SDL_QUIT:
+			*button = QUIT;
+			return true;
+
 		default:
 			return false;
 	}
