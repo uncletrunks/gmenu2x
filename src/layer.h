@@ -39,6 +39,8 @@ public:
 	Status getStatus() { return status; }
 
 protected:
+	Layer() {}
+
 	/**
 	 * Request the Layer to be removed from the stack.
 	 * There could be a few more calls to the Layer before it is actually
