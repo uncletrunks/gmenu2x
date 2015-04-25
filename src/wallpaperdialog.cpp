@@ -57,7 +57,7 @@ bool WallpaperDialog::exec()
 
 	vector<string> wallpapers = fl.getFiles();
 
-	DEBUG("Wallpapers: %i\n", wallpapers.size());
+	DEBUG("Wallpapers: %zd\n", wallpapers.size());
 
 	uint i, selected = 0, firstElement = 0, iY;
 
