@@ -1035,11 +1035,6 @@ void GMenu2X::deleteSection() {
 	}
 }
 
-typedef struct {
-	unsigned short batt;
-	unsigned short remocon;
-} MMSP2ADC;
-
 #ifdef ENABLE_CPUFREQ
 void GMenu2X::setClock(unsigned mhz) {
 	mhz = constrain(mhz, cpuFreqMin, confInt["maxClock"]);
