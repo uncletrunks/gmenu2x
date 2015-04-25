@@ -1026,11 +1026,6 @@ void GMenu2X::addSection() {
 
 void GMenu2X::deleteSection()
 {
-	string path = getHome() + "/sections/" + menu->selSection();
-	if (rmdir(path.c_str()) && errno != ENOENT) {
-		WARNING("Removal of section dir \"%s\" failed: %s\n",
-				path.c_str(), strerror(errno));
-	}
 	menu->deleteSelectedSection();
 }
 

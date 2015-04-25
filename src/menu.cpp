@@ -500,13 +500,22 @@ void Menu::deleteSelectedLink()
 	}
 }
 
-void Menu::deleteSelectedSection() {
-	INFO("Deleting section '%s'\n", selSection().c_str());
+void Menu::deleteSelectedSection()
+{
+	string const& sectionName = selSection();
+	INFO("Deleting section '%s'\n", sectionName.c_str());
 
-	gmenu2x.sc.del("sections/"+selSection()+".png");
-	links.erase( links.begin()+selSectionIndex() );
-	sections.erase( sections.begin()+selSectionIndex() );
+	gmenu2x.sc.del("sections/" + sectionName + ".png");
+	auto idx = selSectionIndex();
+	links.erase(links.begin() + idx);
+	sections.erase(sections.begin() + idx);
 	setSectionIndex(0); //reload sections
+
+	string path = GMenu2X::getHome() + "/sections/" + sectionName;
+	if (rmdir(path.c_str()) && errno != ENOENT) {
+		WARNING("Removal of section dir \"%s\" failed: %s\n",
+				path.c_str(), strerror(errno));
+	}
 }
 
 bool Menu::linkChangeSection(uint linkIndex, uint oldSectionIndex, uint newSectionIndex) {
