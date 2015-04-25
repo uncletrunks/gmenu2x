@@ -72,10 +72,6 @@ public:
 
 	bool consoleApp = false;
 
-	const std::string &getExec();
-	void setExec(const std::string &exec);
-	const std::string &getParams();
-	void setParams(const std::string &params);
 	const std::string &getManual();
 	void setManual(const std::string &manual);
 	const std::string &getSelectorDir();

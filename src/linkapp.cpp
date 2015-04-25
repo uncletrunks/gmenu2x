@@ -643,24 +643,6 @@ unique_ptr<Launcher> LinkApp::prepareLaunch(const string &selectedFile) {
 			move(commandLine), consoleApp));
 }
 
-const string &LinkApp::getExec() {
-	return exec;
-}
-
-void LinkApp::setExec(const string &exec) {
-	this->exec = exec;
-	edited = true;
-}
-
-const string &LinkApp::getParams() {
-	return params;
-}
-
-void LinkApp::setParams(const string &params) {
-	this->params = params;
-	edited = true;
-}
-
 const string &LinkApp::getManual() {
 	return manual;
 }
