@@ -81,9 +81,9 @@ Menu::Menu(GMenu2X& gmenu2x)
 
 #ifdef HAVE_LIBOPK
 	{
-		struct dirent *dptr;
 		DIR *dirp = opendir(CARD_ROOT);
 		if (dirp) {
+			struct dirent *dptr;
 			while ((dptr = readdir(dirp))) {
 				if (dptr->d_type != DT_DIR)
 					continue;
@@ -108,12 +108,10 @@ Menu::~Menu()
 
 void Menu::readSections(std::string const& parentDir)
 {
-	DIR *dirp;
-	struct dirent *dptr;
-
-	dirp = opendir(parentDir.c_str());
+	DIR *dirp = opendir(parentDir.c_str());
 	if (!dirp) return;
 
+	struct dirent *dptr;
 	while ((dptr = readdir(dirp))) {
 		if (dptr->d_name[0] != '.' && dptr->d_type == DT_DIR) {
 			// Create section if it doesn't exist yet.
