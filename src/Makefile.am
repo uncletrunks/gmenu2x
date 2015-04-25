@@ -16,7 +16,7 @@ gmenu2x_SOURCES = font.cpp cpu.cpp dirdialog.cpp filedialog.cpp \
 	helppopup.cpp contextmenu.cpp background.cpp battery.cpp
 
 noinst_HEADERS = font.h cpu.h dirdialog.h \
-	filedialog.h filelister.h gmenu2x.h gp2x.h iconbutton.h imagedialog.h \
+	filedialog.h filelister.h gmenu2x.h iconbutton.h imagedialog.h \
 	inputdialog.h inputmanager.h linkapp.h link.h \
 	menu.h menusettingbool.h menusettingdir.h \
 	menusettingfile.h menusetting.h menusettingimage.h menusettingint.h \
