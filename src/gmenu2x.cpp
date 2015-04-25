@@ -259,6 +259,8 @@ GMenu2X::GMenu2X()
 		exit(EXIT_FAILURE);
 	}
 
+	SDL_WM_SetCaption("GMenu2X", nullptr);
+
 	s = OutputSurface::open(resX, resY, confInt["videoBpp"]);
 
 	if (!fileExists(confStr["wallpaper"])) {
