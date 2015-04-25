@@ -414,28 +414,21 @@ void LinkApp::showManual() {
 
 #ifdef HAVE_LIBOPK
 	if (isOPK) {
-		vector<string> readme;
-		char *ptr;
-		struct OPK *opk;
-		int err;
-		void *buf;
-		size_t len;
-
-		opk = opk_open(opkFile.c_str());
+		struct OPK *opk = opk_open(opkFile.c_str());
 		if (!opk) {
 			WARNING("Unable to open OPK to read manual\n");
 			return;
 		}
 
-		err = opk_extract_file(opk, manual.c_str(), &buf, &len);
+		void *buf;
+		size_t len;
+		int err = opk_extract_file(opk, manual.c_str(), &buf, &len);
+		opk_close(opk);
 		if (err < 0) {
-			WARNING("Unable to read manual from OPK\n");
+			WARNING("Unable to extract manual from OPK\n");
 			return;
 		}
-		opk_close(opk);
-
-		ptr = (char *) buf;
-		string str(ptr, len);
+		string str((char *) buf, len);
 		free(buf);
 
 		if (manual.substr(manual.size()-8,8)==".man.txt") {
