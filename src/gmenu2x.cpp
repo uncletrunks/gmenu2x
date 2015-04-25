@@ -1024,15 +1024,14 @@ void GMenu2X::addSection() {
 	}
 }
 
-void GMenu2X::deleteSection() {
-	MessageBox mb(*this,tr["You will lose all the links in this section."]+"\n"+tr["Are you sure?"]);
-	mb.setButton(InputManager::ACCEPT, tr["Yes"]);
-	mb.setButton(InputManager::CANCEL, tr["No"]);
-	if (mb.exec() == InputManager::ACCEPT) {
-
-		if (rmtree(getHome() + "/sections/" + menu->selSection()))
-			menu->deleteSelectedSection();
+void GMenu2X::deleteSection()
+{
+	string path = getHome() + "/sections/" + menu->selSection();
+	if (rmdir(path.c_str()) && errno != ENOENT) {
+		WARNING("Removal of section dir \"%s\" failed: %s\n",
+				path.c_str(), strerror(errno));
 	}
+	menu->deleteSelectedSection();
 }
 
 #ifdef ENABLE_CPUFREQ

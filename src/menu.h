@@ -71,8 +71,6 @@ private:
 	 */
 	void calcSectionRange(int &leftSection, int &rightSection);
 
-	std::vector<std::unique_ptr<Link>> *sectionLinks(int i = -1);
-
 	void readLinks();
 	void freeLinks();
 
@@ -160,6 +158,7 @@ public:
 	void setLinkIndex(int i);
 
 	const std::vector<std::string> &getSections() { return sections; }
+	std::vector<std::unique_ptr<Link>> *sectionLinks(int i = -1);
 };
 
 #endif // MENU_H

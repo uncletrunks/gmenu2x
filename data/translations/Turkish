@@ -97,7 +97,6 @@ Insert a name for the new section=Yeni bölüm için bir isim girin
 Insert a new name for this section=Bu bölüm için yeni isim girin
 Yes=Evet
 No=Hayir
-You will lose all the links in this section.=Bu bölümdeki tüm linkleri kaybedeceksiniz.
 Exit=Çikis
 Link Scanner=Link taramasi
 Scanning SD filesystem...=SD karti taraniyor...

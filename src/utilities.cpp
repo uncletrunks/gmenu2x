@@ -160,34 +160,6 @@ bool fileExists(const string &file) {
 	return access(file.c_str(), F_OK) == 0;
 }
 
-bool rmtree(string path) {
-	DIR *dirp;
-	struct stat st;
-	struct dirent *dptr;
-	string filepath;
-
-	DEBUG("RMTREE: '%s'\n", path.c_str());
-
-	if ((dirp = opendir(path.c_str())) == NULL) return false;
-	if (path[path.length()-1]!='/') path += "/";
-
-	while ((dptr = readdir(dirp))) {
-		filepath = dptr->d_name;
-		if (filepath=="." || filepath=="..") continue;
-		filepath = path+filepath;
-		int statRet = stat(filepath.c_str(), &st);
-		if (statRet == -1) continue;
-		if (S_ISDIR(st.st_mode)) {
-			if (!rmtree(filepath)) return false;
-		} else {
-			if (unlink(filepath.c_str())!=0) return false;
-		}
-	}
-
-	closedir(dirp);
-	return rmdir(path.c_str())==0;
-}
-
 int constrain(int x, int imin, int imax) {
 	return min(imax, max(imin, x));
 }

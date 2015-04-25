@@ -79,7 +79,6 @@ inline std::string trimExtension(std::string const& filename) {
 }
 
 bool fileExists(const std::string &file);
-bool rmtree(std::string path);
 
 int constrain(int x, int imin, int imax);
 

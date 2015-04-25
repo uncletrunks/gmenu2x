@@ -71,9 +71,11 @@ ContextMenu::ContextMenu(GMenu2X &gmenu2x, Menu &menu)
 	options.push_back(std::make_shared<MenuOption>(
 			tr["Add section"],
 			std::bind(&GMenu2X::addSection, &gmenu2x)));
-	options.push_back(std::make_shared<MenuOption>(
-			tr["Delete section"],
-			std::bind(&GMenu2X::deleteSection, &gmenu2x)));
+	if (menu.sectionLinks()->empty()) {
+		options.push_back(std::make_shared<MenuOption>(
+				tr["Delete section"],
+				std::bind(&GMenu2X::deleteSection, &gmenu2x)));
+	}
 
 	// Compute bounding box.
 	int w = 0;
