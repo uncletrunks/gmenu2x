@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <sstream>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <dirent.h>
@@ -391,14 +390,7 @@ bool Menu::addLink(string const& path, string const& file)
 		title = title.substr(0, pos);
 	}
 
-	string linkpath = sectionDir + "/" + title;
-	int x = 2;
-	while (fileExists(linkpath)) {
-		stringstream ss;
-		ss << sectionDir << '/' << title << x;
-		ss >> linkpath;
-		x++;
-	}
+	string linkpath = uniquePath(sectionDir, title);
 	INFO("Adding link: '%s'\n", linkpath.c_str());
 
 	string dirPath = path;
@@ -541,14 +533,7 @@ bool Menu::moveSelectedLink(string const& newSection)
 		return false;
 	}
 
-	string newFileName = sectionDir + "/" + linkTitle;
-	unsigned int x = 2;
-	while (fileExists(newFileName)) {
-		string id = "";
-		stringstream ss; ss << x; ss >> id;
-		newFileName = sectionDir + "/" + linkTitle + id;
-		x++;
-	}
+	string newFileName = uniquePath(sectionDir, linkTitle);
 
 	if (rename(file.c_str(), newFileName.c_str())) {
 		WARNING("Link file move from '%s' to '%s' failed: %s\n",

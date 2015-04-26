@@ -32,6 +32,7 @@
 #include <dirent.h>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <strings.h>
 #include <unistd.h>
 
@@ -158,6 +159,19 @@ string parentDir(string const& dir) {
 
 bool fileExists(const string &file) {
 	return access(file.c_str(), F_OK) == 0;
+}
+
+string uniquePath(string const& dir, string const& name)
+{
+	string path = dir + "/" + name;
+	unsigned int x = 2;
+	while (fileExists(path)) {
+		stringstream ss;
+		ss << dir << '/' << name << x;
+		ss >> path;
+		x++;
+	}
+	return path;
 }
 
 int constrain(int x, int imin, int imax) {

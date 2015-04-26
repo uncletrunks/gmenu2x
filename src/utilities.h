@@ -80,6 +80,11 @@ inline std::string trimExtension(std::string const& filename) {
 
 bool fileExists(const std::string &file);
 
+/**
+ * Constructs a non-existing path in a given directory based on the given name.
+ */
+std::string uniquePath(std::string const& dir, std::string const& name);
+
 int constrain(int x, int imin, int imax);
 
 int evalIntConf(ConfIntHash& hash, const std::string &key, int def, int imin, int imax);
