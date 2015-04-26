@@ -142,6 +142,8 @@ public:
 	void deleteSelectedLink();
 	void deleteSelectedSection();
 
+	bool moveSelectedLink(std::string const& newSection);
+
 	void skinUpdated();
 	void orderLinks();
 
@@ -149,8 +151,6 @@ public:
 	virtual bool runAnimations();
 	virtual void paint(Surface &s);
 	virtual bool handleButtonPress(InputManager::Button button);
-
-	bool linkChangeSection(uint linkIndex, uint oldSectionIndex, uint newSectionIndex);
 
 	int selLinkIndex();
 	Link *selLink();

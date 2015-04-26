@@ -900,11 +900,7 @@ void GMenu2X::editLink() {
 	LinkApp *linkApp = menu->selLinkApp();
 	if (!linkApp) return;
 
-	vector<string> pathV;
-	split(pathV,linkApp->getFile(),"/");
-	string oldSection = "";
-	if (pathV.size()>1)
-		oldSection = pathV[pathV.size()-2];
+	string oldSection = menu->selSection();
 	string newSection = oldSection;
 
 	string linkTitle = linkApp->getTitle();
@@ -978,29 +974,13 @@ void GMenu2X::editLink() {
 		linkApp->setSelectorDir(linkSelDir);
 		linkApp->setSelectorBrowser(linkSelBrowser);
 		linkApp->setClock(linkClock);
-
-		INFO("New Section: '%s'\n", newSection.c_str());
-
-		//if section changed move file and update link->file
-		if (oldSection!=newSection) {
-			vector<string>::const_iterator newSectionIndex = find(menu->getSections().begin(),menu->getSections().end(),newSection);
-			if (newSectionIndex==menu->getSections().end()) return;
-			string newFileName = "sections/"+newSection+"/"+linkTitle;
-			uint x=2;
-			while (fileExists(newFileName)) {
-				string id = "";
-				stringstream ss; ss << x; ss >> id;
-				newFileName = "sections/"+newSection+"/"+linkTitle+id;
-				x++;
-			}
-			rename(linkApp->getFile().c_str(),newFileName.c_str());
-			linkApp->setFile(newFileName);
-
-			INFO("New section index: %zd.\n", newSectionIndex - menu->getSections().begin());
-
-			menu->linkChangeSection(menu->selLinkIndex(), menu->selSectionIndex(), newSectionIndex - menu->getSections().begin());
-		}
 		linkApp->save();
+
+		if (oldSection != newSection) {
+			INFO("Changed section: '%s' -> '%s'\n",
+					oldSection.c_str(), newSection.c_str());
+			menu->moveSelectedLink(newSection);
+		}
 	}
 }
 

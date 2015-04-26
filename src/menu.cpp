@@ -522,25 +522,54 @@ void Menu::deleteSelectedSection()
 	}
 }
 
-bool Menu::linkChangeSection(uint linkIndex, uint oldSectionIndex, uint newSectionIndex) {
-	// Fetch sections.
-	auto oldSectionLinks = sectionLinks(oldSectionIndex);
-	if (!oldSectionLinks) return false;
-	auto newSectionLinks = sectionLinks(newSectionIndex);
-	if (!newSectionLinks) return false;
+bool Menu::moveSelectedLink(string const& newSection)
+{
+	LinkApp *linkApp = selLinkApp();
+	if (!linkApp) {
+		return false;
+	}
 
-	// Find link in old section.
-	if (linkIndex >= oldSectionLinks->size()) return false;
-	auto it = oldSectionLinks->begin() + linkIndex;
+	// Note: Get new index first, since it might move the selected index.
+	auto const newSectionIndex = sectionNamed(newSection);
+	auto const oldSectionIndex = iSection;
+
+	string const& file = linkApp->getFile();
+	string linkTitle = file.substr(file.rfind('/') + 1);
+
+	string sectionDir = createSectionDir(newSection);
+	if (sectionDir.empty()) {
+		return false;
+	}
+
+	string newFileName = sectionDir + "/" + linkTitle;
+	unsigned int x = 2;
+	while (fileExists(newFileName)) {
+		string id = "";
+		stringstream ss; ss << x; ss >> id;
+		newFileName = sectionDir + "/" + linkTitle + id;
+		x++;
+	}
+
+	if (rename(file.c_str(), newFileName.c_str())) {
+		WARNING("Link file move from '%s' to '%s' failed: %s\n",
+				file.c_str(), newFileName.c_str(), strerror(errno));
+		return false;
+	}
+	linkApp->setFile(newFileName);
+
+	// Fetch sections.
+	auto& newSectionLinks = links[newSectionIndex];
+	auto& oldSectionLinks = links[oldSectionIndex];
 
 	// Move link.
+	auto it = oldSectionLinks.begin() + iLink;
 	auto link = it->release();
-	oldSectionLinks->erase(it);
-	newSectionLinks->emplace_back(link);
+	oldSectionLinks.erase(it);
+	newSectionLinks.emplace_back(link);
 
 	// Select the same link in the new section.
 	setSectionIndex(newSectionIndex);
-	setLinkIndex(newSectionLinks->size() - 1);
+	setLinkIndex(newSectionLinks.size() - 1);
 
 	return true;
 }
