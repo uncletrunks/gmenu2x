@@ -93,7 +93,7 @@ public:
 	bool isEditable() { return editable; }
 
 	const std::string &getFile() { return file; }
-	void renameFile(const std::string &name);
+	void setFile(const std::string &name);
 
 private:
 	void drawLaunch(Surface& s);

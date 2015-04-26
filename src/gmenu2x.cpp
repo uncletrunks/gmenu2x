@@ -994,7 +994,7 @@ void GMenu2X::editLink() {
 				x++;
 			}
 			rename(linkApp->getFile().c_str(),newFileName.c_str());
-			linkApp->renameFile(newFileName);
+			linkApp->setFile(newFileName);
 
 			INFO("New section index: %zd.\n", newSectionIndex - menu->getSections().begin());
 

@@ -675,6 +675,6 @@ void LinkApp::setSelectorFilter(const string &selectorfilter) {
 	edited = true;
 }
 
-void LinkApp::renameFile(const string &name) {
+void LinkApp::setFile(const string &name) {
 	file = name;
 }
