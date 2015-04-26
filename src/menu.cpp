@@ -472,6 +472,10 @@ int Menu::sectionNamed(const char *sectionName)
 	if (it == sections.end() || *it != sectionName) {
 		sections.emplace(it, sectionName);
 		links.emplace(links.begin() + idx);
+		// Make sure the selected section doesn't change.
+		if (idx <= iSection) {
+			iSection++;
+		}
 	}
 	return idx;
 }
