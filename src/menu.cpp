@@ -131,7 +131,7 @@ string Menu::createSectionDir(string const& sectionName)
 	}
 
 	string childDir = parentDir + "/" + sectionName;
-	if (mkdir(parentDir.c_str(), 0755) && errno != EEXIST) {
+	if (mkdir(childDir.c_str(), 0755) && errno != EEXIST) {
 		WARNING("Failed to create child section dir: %s\n", strerror(errno));
 		return "";
 	}
