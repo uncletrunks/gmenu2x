@@ -14,20 +14,36 @@ HelpPopup::HelpPopup(GMenu2X& gmenu2x)
 void HelpPopup::paint(Surface& s) {
 	Font& font = *gmenu2x.font;
 	Translator &tr = gmenu2x.tr;
-	int helpBoxHeight = 154;
 
-	s.box(10, 50, 300, helpBoxHeight + 4,
+	static const char *const strings[] = {
+		"CONTROLS",
+		"A: Launch link / Confirm action",
+		"B: Show this help menu",
+		"L, R: Change section",
+		"SELECT: Show contextual menu",
+		"START: Show options menu",
+	};
+
+	unsigned int nb_strings = sizeof(strings) / sizeof(strings[0]);
+	unsigned int spacing = font.getLineSpacing();
+	unsigned int helpBoxHeight = 20 + nb_strings * spacing;
+
+	unsigned int posY = gmenu2x.getContentArea().first;
+
+	/* Center the popup */
+	posY += (gmenu2x.resY - posY - helpBoxHeight) / 2;
+
+	s.box(10, posY, gmenu2x.resX - 20, helpBoxHeight + 4,
 			gmenu2x.skinConfColors[COLOR_MESSAGE_BOX_BG]);
-	s.rectangle(12, 52, 296, helpBoxHeight,
+	s.rectangle(12, posY + 2, gmenu2x.resX - 24, helpBoxHeight,
 			gmenu2x.skinConfColors[COLOR_MESSAGE_BOX_BORDER]);
-	font.write(s, tr["CONTROLS"], 20, 60);
-#if defined(PLATFORM_A320) || defined(PLATFORM_GCW0)
-	font.write(s, tr["A: Launch link / Confirm action"], 20, 80);
-	font.write(s, tr["B: Show this help menu"], 20, 95);
-	font.write(s, tr["L, R: Change section"], 20, 110);
-	font.write(s, tr["SELECT: Show contextual menu"], 20, 155);
-	font.write(s, tr["START: Show options menu"], 20, 170);
-#endif
+
+	posY += 10;
+
+	for (unsigned int i = 0; i < nb_strings; i++) {
+		font.write(s, tr[strings[i]], 20, posY);
+		posY += spacing;
+	}
 }
 
 bool HelpPopup::handleButtonPress(InputManager::Button button) {
