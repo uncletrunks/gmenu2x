@@ -659,9 +659,11 @@ void Menu::openPackagesFromDir(std::string const& path)
 
 void Menu::openPackage(std::string const& path, bool order)
 {
+#ifdef ENABLE_INOTIFY
 	/* First try to remove existing links of the same OPK
 	 * (needed for instance when an OPK is modified) */
 	removePackageLink(path);
+#endif
 
 	struct OPK *opk = opk_open(path.c_str());
 	if (!opk) {
