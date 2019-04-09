@@ -465,7 +465,7 @@ void LinkApp::showManual() {
 		string pageStatus;
 
 		bool close = false, repaint = true;
-		int page = 0, pagecount = pngman->width() / 320;
+		int page = 0, pagecount = pngman->width() / gmenu2x.resX;
 
 		ss << pagecount;
 		string spagecount;
@@ -481,7 +481,7 @@ void LinkApp::showManual() {
 
 			if (repaint) {
 				bg->blit(s, 0, 0);
-				pngman->blit(s, -page*320, 0);
+				pngman->blit(s, -page * gmenu2x.resX, 0);
 
 				gmenu2x.drawBottomBar(s);
 				int x = 5;
@@ -495,7 +495,7 @@ void LinkApp::showManual() {
 				ss << page+1;
 				ss >> pageStatus;
 				pageStatus = gmenu2x.tr["Page"]+": "+pageStatus+"/"+spagecount;
-				gmenu2x.font->write(s, pageStatus, 310, 230, Font::HAlignRight, Font::VAlignMiddle);
+				gmenu2x.font->write(s, pageStatus, gmenu2x.resX-10, gmenu2x.resY-10, Font::HAlignRight, Font::VAlignMiddle);
 
 				s.flip();
 				repaint = false;
