@@ -225,8 +225,13 @@ void Menu::paint(Surface &s) {
 		font.write(s, sections[j], x, topBarHeight - sectionLinkPadding,
 				Font::HAlignCenter, Font::VAlignBottom);
 	}
-	sc.skinRes("imgs/section-l.png")->blit(s, 0, 0);
-	sc.skinRes("imgs/section-r.png")->blit(s, width - 10, 0);
+
+	auto l_button = sc.skinRes("imgs/section-l.png");
+	if (l_button)
+		l_button->blit(s, 0, 0);
+	auto r_button = sc.skinRes("imgs/section-r.png");
+	if (r_button)
+		r_button->blit(s, width - 10, 0);
 
 	auto& sectionLinks = links[iSection];
 	auto numLinks = sectionLinks.size();
