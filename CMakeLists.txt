@@ -12,12 +12,12 @@ if (CPUFREQ)
 	add_compile_definitions(ENABLE_CPUFREQ)
 endif(CPUFREQ)
 
-set(PLATFORMS "pc, a320, gcw0, nanonote")
+set(PLATFORMS "pc, a320, gcw0, nanonote, rs90")
 
 set(PLATFORM "pc" CACHE STRING
 	"One of the available platforms: ${PLATFORMS}"
 )
-set_property(CACHE PLATFORM PROPERTY STRINGS pc a320 gcw0 nanonote)
+set_property(CACHE PLATFORM PROPERTY STRINGS pc a320 gcw0 nanonote rs90)
 
 if (PLATFORM MATCHES "a320")
 	add_compile_definitions(PLATFORM_A320)
@@ -25,6 +25,9 @@ if (PLATFORM MATCHES "a320")
 elseif (PLATFORM MATCHES "gcw0")
 	add_compile_definitions(PLATFORM_GCW0)
 	set(SCREEN_RES "320x240")
+elseif (PLATFORM MATCHES "rs90")
+	add_compile_definitions(PLATFORM_RS90)
+	set(SCREEN_RES "240x160")
 elseif (PLATFORM MATCHES "nanonote")
 	add_compile_definitions(PLATFORM_NANONOTE)
 	set(SCREEN_RES "320x240")
