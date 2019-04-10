@@ -260,6 +260,11 @@ GMenu2X::GMenu2X()
 	SDL_WM_SetCaption("GMenu2X", nullptr);
 
 	s = OutputSurface::open(resX, resY, confInt["videoBpp"]);
+	if (!s) {
+		ERROR("Failed to create main window\n");
+		ERROR("%ux%ux%u\n", resX, resY, confInt["videoBpp"]);
+		exit(EXIT_FAILURE);
+	};
 
 	if (!fileExists(confStr["wallpaper"])) {
 		DEBUG("No wallpaper defined; we will take the default one.\n");
