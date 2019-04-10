@@ -86,10 +86,10 @@ using namespace std;
 
 #ifdef _CARD_ROOT
 const char *CARD_ROOT = _CARD_ROOT;
-#elif defined(PLATFORM_A320) || defined(PLATFORM_GCW0)
-const char *CARD_ROOT = "/media";
-#else
+#elif defined(PLATFORM_NANONOTE)
 const char *CARD_ROOT = "/card";
+#else
+const char *CARD_ROOT = "/media";
 #endif
 
 static GMenu2X *app;
