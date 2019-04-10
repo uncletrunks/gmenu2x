@@ -31,9 +31,11 @@ ContextMenu::ContextMenu(GMenu2X &gmenu2x, Menu &menu)
 
 	// Init menu options:
 
+#ifndef HAVE_LIBOPK
 	options.push_back(std::make_shared<MenuOption>(
 			tr.translate("Add link in $1", menu.selSection().c_str(), NULL),
 			std::bind(&GMenu2X::addLink, &gmenu2x)));
+#endif
 
 	if (app) {
 		if (!app->getManual().empty()) {
@@ -68,6 +70,7 @@ ContextMenu::ContextMenu(GMenu2X &gmenu2x, Menu &menu)
 		}
 	}
 
+#ifndef HAVE_LIBOPK
 	options.push_back(std::make_shared<MenuOption>(
 			tr["Add section"],
 			std::bind(&GMenu2X::addSection, &gmenu2x)));
@@ -76,6 +79,7 @@ ContextMenu::ContextMenu(GMenu2X &gmenu2x, Menu &menu)
 				tr["Delete section"],
 				std::bind(&GMenu2X::deleteSection, &gmenu2x)));
 	}
+#endif
 
 	// Compute bounding box.
 	int w = 0;
@@ -94,6 +98,9 @@ ContextMenu::ContextMenu(GMenu2X &gmenu2x, Menu &menu)
 	// Init background fade animation.
 	tickStart = SDL_GetTicks();
 	fadeAlpha = 0;
+
+	if (options.empty())
+		dismiss();
 }
 
 bool ContextMenu::runAnimations()
