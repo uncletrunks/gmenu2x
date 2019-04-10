@@ -253,9 +253,11 @@ bool InputManager::getButton(Button *button, bool wait) {
 		case SDL_USEREVENT:
 			switch ((enum EventCode) event.user.code) {
 #ifdef HAVE_LIBOPK
+#ifdef ENABLE_INOTIFY
 				case REMOVE_LINKS:
 					menu->removePackageLink((const char *) event.user.data1);
 					break;
+#endif
 				case OPEN_PACKAGE:
 					menu->openPackage((const char *) event.user.data1);
 					break;
