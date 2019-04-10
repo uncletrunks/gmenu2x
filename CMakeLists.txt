@@ -103,10 +103,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 						   ${LIBSDL_GFX_INCLUDE_DIRS}
 )
 
-set(Pdata data/platform/${PLATFORM})
-set(Translations data/translations)
-set(Skins data/skins/${SCREEN_RES})
-
-install(DIRECTORY ${Pdata} ${Translations} ${Skins}
+install(DIRECTORY data/platform/${PLATFORM} data/translations
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/gmenu2x
+)
+install(DIRECTORY data/skins/${SCREEN_RES}/
+		DESTINATION ${CMAKE_INSTALL_DATADIR}/gmenu2x/skins
 )
