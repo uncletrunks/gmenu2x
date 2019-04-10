@@ -103,6 +103,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 						   ${LIBSDL_GFX_INCLUDE_DIRS}
 )
 
+install(TARGETS ${PROJECT_NAME}
+		RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
 install(DIRECTORY data/platform/${PLATFORM} data/translations
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/gmenu2x
 )
