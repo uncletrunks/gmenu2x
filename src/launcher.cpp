@@ -62,10 +62,11 @@ void Launcher::exec()
 	vector<const char *> args;
 	args.reserve(commandLine.size() + 1);
 	for (auto arg : commandLine) {
-		args.push_back(arg.c_str());
+		args.push_back(strdup(arg.c_str()));
 	}
 	args.push_back(nullptr);
-	execvp(commandLine[0].c_str(), (char* const*)&args[0]);
+
+	execvp(commandLine[0].c_str(), (char * const *)args.data());
 	WARNING("Failed to exec '%s': %s\n",
 			commandLine[0].c_str(), strerror(errno));
 }
