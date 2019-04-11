@@ -106,7 +106,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 install(TARGETS ${PROJECT_NAME}
 		RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
-install(DIRECTORY data/platform/${PLATFORM} data/translations
+install(DIRECTORY data/platform/${PLATFORM}/ data/translations
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/gmenu2x
 )
 install(DIRECTORY data/skins/${SCREEN_RES}/
