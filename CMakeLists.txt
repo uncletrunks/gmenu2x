@@ -7,7 +7,7 @@ include(FindPackageHandleStandardArgs)
 set(INSTALL_DATA_DIR "${CMAKE_INSTALL_DATADIR}/gmenu2x"
 	CACHE PATH "Installation directory for platform data")
 
-option(CPUFREQ "Enable CPU frequency control" ON)
+option(CPUFREQ "Enable CPU frequency control" OFF)
 if (CPUFREQ)
 	add_compile_definitions(ENABLE_CPUFREQ)
 endif(CPUFREQ)
