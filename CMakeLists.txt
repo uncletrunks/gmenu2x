@@ -68,6 +68,11 @@ if(LIBOPK_FOUND)
 	set(LIBOPK_LIBRARIES ${LIBOPK_LIBRARY})
 	set(LIBOPK_INCLUDE_DIRS ${LIBOPK_INCLUDE_DIR})
 	add_compile_definitions(HAVE_LIBOPK)
+
+	option(INOTIFY "Monitor OPK folder with inotify" ON)
+	if (INOTIFY)
+		add_compile_definitions(ENABLE_INOTIFY)
+	endif (INOTIFY)
 endif(LIBOPK_FOUND)
 
 find_library(LIBXDGMIME xdgmime)
