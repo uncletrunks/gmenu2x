@@ -638,11 +638,12 @@ void Menu::setLinkIndex(int i) {
 		i = 0;
 	iLink = i;
 
+	int nbRows = static_cast<int>(DIV_ROUND_UP(numLinks, linkColumns));
 	int row = i / linkColumns;
-	if (row >= (int)(iFirstDispRow + linkRows - 1))
-		iFirstDispRow = min(row + 1, (int)DIV_ROUND_UP(numLinks, linkColumns) - 1)
-						- linkRows + 1;
-	else if (row <= (int)iFirstDispRow)
+
+	if (row >= (int)(iFirstDispRow + linkRows))
+		iFirstDispRow = min(row + 1, nbRows - 1) - linkRows + 1;
+	else if (row < (int)iFirstDispRow)
 		iFirstDispRow = max(row - 1, 0);
 }
 
