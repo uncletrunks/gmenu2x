@@ -114,6 +114,7 @@ install(TARGETS ${PROJECT_NAME}
 install(DIRECTORY data/platform/${PLATFORM}/ data/translations
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/gmenu2x
 )
+install(FILES data/about.txt DESTINATION ${CMAKE_INSTALL_DATADIR}/gmenu2x)
 install(DIRECTORY data/skins/${SCREEN_RES}/
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/gmenu2x/skins
 )
