@@ -711,6 +711,8 @@ void Menu::openPackage(std::string const& path, bool order)
 
 		auto idx = sectionNamed(link->getCategory());
 		links[idx].emplace_back(link);
+
+		createSectionDir(link->getCategory());
 	}
 
 	opk_close(opk);
