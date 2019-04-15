@@ -12,6 +12,11 @@ if (CPUFREQ)
 	add_compile_definitions(ENABLE_CPUFREQ)
 endif(CPUFREQ)
 
+option(BIND_CONSOLE "Support for binding/unbinding terminal" OFF)
+if (BIND_CONSOLE)
+	add_compile_definitions(BIND_CONSOLE)
+endif (BIND_CONSOLE)
+
 set(PLATFORMS "pc, a320, gcw0, nanonote, rs90")
 
 set(PLATFORM "pc" CACHE STRING

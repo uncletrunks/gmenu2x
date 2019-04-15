@@ -11,11 +11,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-// Bind and activate the framebuffer console on selected platforms.
-#define BIND_CONSOLE \
-		defined(PLATFORM_A320) || defined(PLATFORM_GCW0)
-
-#if BIND_CONSOLE
+#ifdef BIND_CONSOLE
 #include <linux/vt.h>
 #endif
 
@@ -37,7 +33,7 @@ Launcher::Launcher(vector<string> && commandLine, bool consoleApp)
 void Launcher::exec()
 {
 	if (consoleApp) {
-#if BIND_CONSOLE
+#ifdef BIND_CONSOLE
 		/* Enable the framebuffer console */
 		char c = '1';
 		int fd = open("/sys/devices/virtual/vtconsole/vtcon1/bind", O_WRONLY);
