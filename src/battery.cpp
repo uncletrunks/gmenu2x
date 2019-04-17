@@ -15,26 +15,23 @@
  */
 static unsigned short getBatteryLevel()
 {
-	FILE *batteryHandle = NULL, *usbHandle = NULL;
+	FILE *handle;
 
 #if defined(PLATFORM_A320) || defined(PLATFORM_GCW0) || defined(PLATFORM_NANONOTE)
-	usbHandle = fopen("/sys/class/power_supply/usb/online", "r");
-#endif
-	if (usbHandle) {
+	handle = fopen("/sys/class/power_supply/usb/online", "r");
+	if (handle) {
 		int usbval = 0;
-		fscanf(usbHandle, "%d", &usbval);
-		fclose(usbHandle);
+		fscanf(handle, "%d", &usbval);
+		fclose(handle);
 		if (usbval == 1)
 			return 6;
 	}
 
-#if defined(PLATFORM_A320) || defined(PLATFORM_GCW0) || defined(PLATFORM_NANONOTE)
-	batteryHandle = fopen("/sys/class/power_supply/battery/capacity", "r");
-#endif
-	if (batteryHandle) {
+	handle = fopen("/sys/class/power_supply/battery/capacity", "r");
+	if (handle) {
 		int battval = 0;
-		fscanf(batteryHandle, "%d", &battval);
-		fclose(batteryHandle);
+		fscanf(handle, "%d", &battval);
+		fclose(handle);
 
 		if (battval>90) return 5;
 		if (battval>70) return 4;
@@ -44,6 +41,31 @@ static unsigned short getBatteryLevel()
 	}
 
 	return 0;
+#endif
+
+#ifdef PLATFORM_RS90
+	unsigned long voltage_min, voltage_max, voltage_now;
+
+	handle = fopen("/sys/class/power_supply/jz-battery/voltage_max_design", "r");
+	if (handle) {
+		fscanf(handle, "%lu", &voltage_max);
+		fclose(handle);
+	}
+
+	handle = fopen("/sys/class/power_supply/jz-battery/voltage_min_design", "r");
+	if (handle) {
+		fscanf(handle, "%lu", &voltage_min);
+		fclose(handle);
+	}
+
+	handle = fopen("/sys/class/power_supply/jz-battery/voltage_now", "r");
+	if (handle) {
+		fscanf(handle, "%lu", &voltage_now);
+		fclose(handle);
+	}
+
+	return (voltage_now - voltage_min) * 6 / (voltage_max - voltage_min);
+#endif
 }
 
 Battery::Battery(SurfaceCollection& sc_)
