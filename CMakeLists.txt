@@ -80,7 +80,7 @@ if(LIBOPK_FOUND)
 	endif (INOTIFY)
 endif(LIBOPK_FOUND)
 
-find_library(LIBXDGMIME xdgmime)
+find_library(LIBXDGMIME_LIBRARY xdgmime)
 find_path(LIBXDGMIME_INCLUDE_DIR xdgmime.h /usr/include)
 find_package_handle_standard_args(libxdgmime DEFAULT_MSG
 	LIBXDGMIME_LIBRARY LIBXDGMIME_INCLUDE_DIR)
