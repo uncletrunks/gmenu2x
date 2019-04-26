@@ -37,7 +37,6 @@ Parses links files.
 */
 class LinkApp : public Link {
 private:
-	std::string sclock;
 	int iclock;
 	std::string exec, params, workdir, manual, selectordir, selectorfilter;
 	bool selectorbrowser, deletable, editable;
@@ -81,8 +80,7 @@ public:
 	const std::string &getSelectorFilter();
 	void setSelectorFilter(const std::string &selectorfilter);
 
-	int clock();
-	const std::string &clockStr(int maxClock);
+	int clock() { return iclock; }
 	void setClock(int mhz);
 
 	bool save();

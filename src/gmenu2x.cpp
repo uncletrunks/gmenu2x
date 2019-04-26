@@ -188,38 +188,12 @@ void GMenu2X::run() {
 	}
 }
 
-#ifdef ENABLE_CPUFREQ
-void GMenu2X::initCPULimits() {
-	// Note: These values are for the Dingoo.
-	//       The NanoNote does not have cpufreq enabled in its kernel and
-	//       other devices are not actively maintained.
-	// TODO: Read min and max from sysfs.
-	cpuFreqMin = 30;
-	cpuFreqMax = 500;
-	cpuFreqSafeMax = 420;
-	cpuFreqMenuDefault = 200;
-	cpuFreqAppDefault = 384;
-	cpuFreqMultiple = 24;
-
-	// Round min and max values to the specified multiple.
-	cpuFreqMin = ((cpuFreqMin + cpuFreqMultiple - 1) / cpuFreqMultiple)
-			* cpuFreqMultiple;
-	cpuFreqMax = (cpuFreqMax / cpuFreqMultiple) * cpuFreqMultiple;
-	cpuFreqSafeMax = (cpuFreqSafeMax / cpuFreqMultiple) * cpuFreqMultiple;
-	cpuFreqMenuDefault = (cpuFreqMenuDefault / cpuFreqMultiple) * cpuFreqMultiple;
-	cpuFreqAppDefault = (cpuFreqAppDefault / cpuFreqMultiple) * cpuFreqMultiple;
-}
-#endif
-
 GMenu2X::GMenu2X()
 	: input(*this, powerSaver)
 {
 	usbnet = samba = inet = web = false;
 	useSelectionPng = false;
 
-#ifdef ENABLE_CPUFREQ
-	initCPULimits();
-#endif
 	//load config data
 	readConfig();
 
@@ -289,10 +263,6 @@ GMenu2X::GMenu2X()
 	}
 
 	powerSaver.setScreenTimeout(confInt["backlightTimeout"]);
-
-#ifdef ENABLE_CPUFREQ
-	setClock(confInt["menuClock"]);
-#endif
 }
 
 GMenu2X::~GMenu2X() {
@@ -330,9 +300,9 @@ void GMenu2X::initBG() {
 
 #ifdef ENABLE_CPUFREQ
 	{
-		auto cpu = OffscreenSurface::loadImage(
+		auto cpu_img = OffscreenSurface::loadImage(
 				sc.getSkinFilePath("imgs/cpu.png"));
-		if (cpu) cpu->blit(*bgmain, cpuX, bottomBarIconY);
+		if (cpu_img) cpu_img->blit(*bgmain, cpuX, bottomBarIconY);
 	}
 	cpuX += 19;
 	manualX = cpuX + font->getTextWidth("300MHz") + 5;
@@ -485,12 +455,6 @@ void GMenu2X::readConfig(string conffile) {
 		confStr["skin"] = "Default";
 
 	evalIntConf( confInt, "outputLogs", 0, 0,1 );
-#ifdef ENABLE_CPUFREQ
-	evalIntConf( confInt, "maxClock",
-				 cpuFreqSafeMax, cpuFreqMin, cpuFreqMax );
-	evalIntConf( confInt, "menuClock",
-				 cpuFreqMenuDefault, cpuFreqMin, cpuFreqSafeMax );
-#endif
 	evalIntConf( confInt, "backlightTimeout", 15, 0,120 );
 	evalIntConf( confInt, "buttonRepeatRate", 10, 0, 20 );
 	evalIntConf( confInt, "videoBpp", 32, 16, 32 );
@@ -662,9 +626,6 @@ void GMenu2X::explorer() {
 
 		string command = cmdclean(fd.getPath()+"/"+fd.getFile());
 		chdir(fd.getPath().c_str());
-#ifdef ENABLE_CPUFREQ
-		setClock(cpuFreqAppDefault);
-#endif
 
 		toLaunch.reset(new Launcher(
 				vector<string> { "/bin/sh", "-c", command }));
@@ -683,10 +644,6 @@ void GMenu2X::showHelpPopup() {
 }
 
 void GMenu2X::showSettings() {
-#ifdef ENABLE_CPUFREQ
-	int curMenuClock = confInt["menuClock"];
-#endif
-
 	FileLister fl_tr;
 	fl_tr.setShowDirectories(false);
 	fl_tr.browse(GMENU2X_SYSTEM_DIR "/translations");
@@ -709,16 +666,6 @@ void GMenu2X::showSettings() {
 			*this, tr["Save last selection"],
 			tr["Save the last selected link and section on exit"],
 			&confInt["saveSelection"])));
-#ifdef ENABLE_CPUFREQ
-	sd.addSetting(unique_ptr<MenuSetting>(new MenuSettingInt(
-			*this, tr["Clock for GMenu2X"],
-			tr["Set the cpu working frequency when running GMenu2X"],
-			&confInt["menuClock"], cpuFreqMin, cpuFreqSafeMax, cpuFreqMultiple)));
-	sd.addSetting(unique_ptr<MenuSetting>(new MenuSettingInt(
-			*this, tr["Maximum overclock"],
-			tr["Set the maximum overclock for launching links"],
-			&confInt["maxClock"], cpuFreqMin, cpuFreqMax, cpuFreqMultiple)));
-#endif
 	sd.addSetting(unique_ptr<MenuSetting>(new MenuSettingBool(
 			*this, tr["Output logs"],
 			tr["Logs the output of the links. Use the Log Viewer to read them."],
@@ -733,10 +680,6 @@ void GMenu2X::showSettings() {
 			&confInt["buttonRepeatRate"], 0, 20)));
 
 	if (sd.exec()) {
-#ifdef ENABLE_CPUFREQ
-		if (curMenuClock != confInt["menuClock"]) setClock(confInt["menuClock"]);
-#endif
-
 		powerSaver.setScreenTimeout(confInt["backlightTimeout"]);
 
 		input.repeatRateChanged();
@@ -915,7 +858,6 @@ void GMenu2X::editLink() {
 	string linkSelFilter = linkApp->getSelectorFilter();
 	string linkSelDir = linkApp->getSelectorDir();
 	bool linkSelBrowser = linkApp->getSelectorBrowser();
-	int linkClock = linkApp->clock();
 
 	string diagTitle = tr.translate("Edit $1",linkTitle.c_str(),NULL);
 	string diagIcon = linkApp->getIconPath();
@@ -954,10 +896,13 @@ void GMenu2X::editLink() {
 				&linkSelBrowser)));
 	}
 #ifdef ENABLE_CPUFREQ
-	sd.addSetting(unique_ptr<MenuSetting>(new MenuSettingInt(
+	vector<string> cpufreqs = cpu.getFrequencies();
+	string freq = cpu.freqStr(linkApp->clock());
+
+	sd.addSetting(unique_ptr<MenuSetting>(new MenuSettingMultiString(
 			*this, tr["Clock frequency"],
 			tr["CPU clock frequency for this link"],
-			&linkClock, cpuFreqMin, confInt["maxClock"], cpuFreqMultiple)));
+			&freq, &cpufreqs)));
 #endif
 	if (!linkApp->isOpk()) {
 		sd.addSetting(unique_ptr<MenuSetting>(new MenuSettingString(
@@ -978,7 +923,7 @@ void GMenu2X::editLink() {
 		linkApp->setSelectorFilter(linkSelFilter);
 		linkApp->setSelectorDir(linkSelDir);
 		linkApp->setSelectorBrowser(linkSelBrowser);
-		linkApp->setClock(linkClock);
+		linkApp->setClock(cpu.freqFromStr(freq));
 		linkApp->save();
 
 		if (oldSection != newSection) {
@@ -1013,15 +958,6 @@ void GMenu2X::deleteSection()
 {
 	menu->deleteSelectedSection();
 }
-
-#ifdef ENABLE_CPUFREQ
-void GMenu2X::setClock(unsigned mhz) {
-	mhz = constrain(mhz, cpuFreqMin, confInt["maxClock"]);
-#if defined(PLATFORM_A320) || defined(PLATFORM_GCW0) || defined(PLATFORM_NANONOTE)
-	jz_cpuspeed(mhz);
-#endif
-}
-#endif
 
 string GMenu2X::getDiskFree(const char *path) {
 	string df = "";

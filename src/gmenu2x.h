@@ -22,6 +22,7 @@
 #define GMENU2X_H
 
 #include "contextmenu.h"
+#include "cpu.h"
 #include "surfacecollection.h"
 #include "translator.h"
 #include "inputmanager.h"
@@ -83,16 +84,6 @@ private:
 	@return String containing a human readable representation of the free disk space
 	*/
 	std::string getDiskFree(const char *path);
-#ifdef ENABLE_CPUFREQ
-	unsigned cpuFreqMin; //!< Minimum CPU frequency
-	unsigned cpuFreqMax; //!< Maximum theoretical CPU frequency
-	unsigned cpuFreqSafeMax; //!< Maximum safe CPU frequency
-	unsigned cpuFreqMenuDefault; //!< Default CPU frequency for gmenu2x
-	unsigned cpuFreqAppDefault; //!< Default CPU frequency for launched apps
-	unsigned cpuFreqMultiple; //!< All valid CPU frequencies are a multiple of this
-
-	void initCPULimits();
-#endif
 
 	/*!
 	Displays a selector and launches the specified executable file
@@ -144,6 +135,9 @@ public:
 
 	PowerSaver powerSaver;
 	InputManager input;
+#ifdef ENABLE_CPUFREQ
+	Cpu cpu;
+#endif
 
 	//Configuration hashes
 	ConfStrHash confStr, skinConfStr;
@@ -174,13 +168,6 @@ public:
 	void about();
 	void viewLog();
 	void changeWallpaper();
-
-#ifdef ENABLE_CPUFREQ
-	void setClock(unsigned mhz);
-	void setMenuClock() { setClock(cpuFreqMenuDefault); }
-	void setSafeMaxClock() { setClock(cpuFreqSafeMax); }
-	unsigned getDefaultAppClock() { return cpuFreqAppDefault; }
-#endif
 
 	/**
 	 * Requests that the given application be launched.

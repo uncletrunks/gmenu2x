@@ -89,7 +89,7 @@ LinkApp::LinkApp(GMenu2X& gmenu2x, string const& linkfile, bool deletable)
 	manual = "";
 	file = linkfile;
 #ifdef ENABLE_CPUFREQ
-	setClock(gmenu2x.getDefaultAppClock());
+	setClock(gmenu2x.cpu.getDefaultAppClock());
 #else
 	setClock(0);
 #endif
@@ -305,22 +305,8 @@ const string &LinkApp::searchIcon() {
 	return iconPath;
 }
 
-int LinkApp::clock() {
-	return iclock;
-}
-
-const string &LinkApp::clockStr(int maxClock) {
-	if (iclock>maxClock) setClock(maxClock);
-	return sclock;
-}
-
-void LinkApp::setClock(int mhz) {
-	iclock = mhz;
-	stringstream ss;
-	sclock = "";
-	ss << iclock << "MHz";
-	ss >> sclock;
-
+void LinkApp::setClock(int khz) {
+	iclock = khz;
 	edited = true;
 }
 
@@ -446,11 +432,6 @@ void LinkApp::showManual() {
 
 	// Png manuals
 	if (manual.substr(manual.size()-8,8)==".man.png") {
-#ifdef ENABLE_CPUFREQ
-		//Raise the clock to speed-up the loading of the manual
-		gmenu2x.setSafeMaxClock();
-#endif
-
 		auto pngman = OffscreenSurface::loadImage(manual);
 		if (!pngman) {
 			return;
@@ -470,11 +451,6 @@ void LinkApp::showManual() {
 		ss << pagecount;
 		string spagecount;
 		ss >> spagecount;
-
-#ifdef ENABLE_CPUFREQ
-		//Lower the clock
-		gmenu2x.setMenuClock();
-#endif
 
 		while (!close) {
 			OutputSurface& s = *gmenu2x.s;
@@ -615,9 +591,7 @@ unique_ptr<Launcher> LinkApp::prepareLaunch(const string &selectedFile) {
 		gmenu2x.writeTmp();
 	}
 #ifdef ENABLE_CPUFREQ
-	if (clock() != gmenu2x.confInt["menuClock"]) {
-		gmenu2x.setClock(clock());
-	}
+	gmenu2x.cpu.setCpuSpeed(clock());
 #endif
 
 	vector<string> commandLine;

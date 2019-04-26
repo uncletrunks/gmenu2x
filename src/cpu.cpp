@@ -1,36 +1,79 @@
-#include <errno.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-
-#include <iostream>
+#include <algorithm>
+#include <fstream>
 
 #include "cpu.h"
 #include "debug.h"
+#include "utilities.h"
 
 #define SYSFS_CPUFREQ_DIR "/sys/devices/system/cpu/cpu0/cpufreq"
-#define SYSFS_CPUFREQ_MAX SYSFS_CPUFREQ_DIR "/scaling_max_freq"
+#define SYSFS_CPUFREQ_LIST SYSFS_CPUFREQ_DIR "/scaling_available_frequencies"
 #define SYSFS_CPUFREQ_SET SYSFS_CPUFREQ_DIR "/scaling_setspeed"
+#define SYSFS_CPUFREQ_CUR SYSFS_CPUFREQ_DIR "/scaling_cur_freq"
 
-void writeStringToFile(const char *path, const char *content)
+using namespace std;
+
+Cpu::Cpu() : defaultAppClock(0)
 {
-	int fd = open(path, O_RDWR);
-	if (fd == -1) {
-		WARNING("Failed to open '%s': %s\n", path, strerror(errno));
-	} else {
-		ssize_t written = write(fd, content, strlen(content));
-		if (written == -1) {
-			WARNING("Error writing '%s': %s\n", path, strerror(errno));
-		}
-		close(fd);
+	ifstream fd1(SYSFS_CPUFREQ_CUR, ios_base::in);
+
+	if (fd1.is_open()) {
+		string line;
+
+		getline(fd1, line, '\n');
+		defaultAppClock = stoul(line) / 1000;
+
+		DEBUG("Running at %lu MHz\n", defaultAppClock);
+
+		fd1.close();
+	}
+
+	ifstream fd2(SYSFS_CPUFREQ_LIST, ios_base::in);
+	vector<string> vect;
+
+	if (fd2.is_open()) {
+		string line;
+
+		getline(fd2, line, '\n');
+		fd2.close();
+
+		split(vect, line, " ");
+	}
+
+	for (auto it = vect.begin(); it != vect.end(); it++) {
+		if (!it->empty())
+			frequencies.push_back(stoul(*it) / 1000);
 	}
 }
 
-void jz_cpuspeed(unsigned clockspeed)
+string Cpu::freqStr(unsigned long mhz)
 {
-	char freq[10];
-	sprintf(freq, "%d", clockspeed * 1000);
-	writeStringToFile(SYSFS_CPUFREQ_MAX, freq);
-	writeStringToFile(SYSFS_CPUFREQ_SET, freq);
+	return to_string(mhz) + " MHz";
+}
+
+unsigned long Cpu::freqFromStr(const string& str)
+{
+	return stoul(str);
+}
+
+vector<string> Cpu::getFrequencies()
+{
+	vector<string> freqs;
+
+	for (unsigned long& each: frequencies)
+		freqs.push_back(freqStr(each));
+
+	return freqs;
+}
+
+void Cpu::setCpuSpeed(unsigned long mhz)
+{
+	ofstream outf(SYSFS_CPUFREQ_SET);
+
+	if (outf.is_open()) {
+		DEBUG("Running app at %lu MHz\n", mhz);
+
+		outf << to_string(mhz * 1000) << endl;
+
+		outf.close();
+	}
 }
