@@ -18,9 +18,11 @@ void Background::paint(Surface& s) {
 
 	bgmain.blit(s, 0, 0);
 
+#ifdef ENABLE_CLOCK
 	font.write(s, clock.getTime(),
 			s.width() / 2, gmenu2x.bottomBarTextY,
 			Font::HAlignCenter, Font::VAlignMiddle);
+#endif
 
 	auto icon = battery.getIcon();
 	if (icon) {

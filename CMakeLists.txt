@@ -12,6 +12,11 @@ if (CPUFREQ)
 	add_compile_definitions(ENABLE_CPUFREQ)
 endif(CPUFREQ)
 
+option(CLOCK "Display current time at the bottom of the screen" ON)
+if (CLOCK)
+	add_compile_definitions(ENABLE_CLOCK)
+endif (CLOCK)
+
 option(BIND_CONSOLE "Support for binding/unbinding terminal" OFF)
 if (BIND_CONSOLE)
 	add_compile_definitions(BIND_CONSOLE)

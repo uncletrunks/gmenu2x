@@ -25,7 +25,9 @@ public:
 private:
 	GMenu2X& gmenu2x;
 	Battery battery;
+#ifdef ENABLE_CLOCK
 	Clock clock;
+#endif
 };
 
 #endif // BACKGROUND_H
