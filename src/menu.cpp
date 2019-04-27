@@ -265,7 +265,7 @@ void Menu::paint(Surface &s) {
 	}
 
 	LinkApp *linkApp = selLinkApp();
-	if (linkApp) {
+	if (linkApp && linkApp->isEditable()) {
 #ifdef ENABLE_CPUFREQ
 		font.write(s, gmenu2x.cpu.freqStr(linkApp->clock()),
 				gmenu2x.cpuX, gmenu2x.bottomBarTextY,
