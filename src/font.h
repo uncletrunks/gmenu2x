@@ -8,6 +8,7 @@
 #include <memory>
 #include <string>
 
+class OffscreenSurface;
 class Surface;
 
 /**
@@ -45,6 +46,8 @@ public:
 	int write(Surface& surface,
 				const std::string &text, int x, int y,
 				HAlign halign = HAlignLeft, VAlign valign = VAlignTop);
+
+	std::unique_ptr<OffscreenSurface> render(const std::string& text);
 
 private:
 	Font(TTF_Font *font);

@@ -127,6 +127,7 @@ public:
 	void convertToDisplayFormat();
 
 private:
+	friend class Font;
 	OffscreenSurface(SDL_Surface *raw) : Surface(raw) {}
 };
 
