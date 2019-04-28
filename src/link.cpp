@@ -37,6 +37,9 @@ Link::Link(GMenu2X& gmenu2x, Action action)
 	, action(action)
 	, lastTick(0)
 {
+	setTitle("");
+	setDescription("");
+
 	rect.w = gmenu2x.skinConfInt["linkWidth"];
 	rect.h = gmenu2x.skinConfInt["linkHeight"];
 	edited = false;

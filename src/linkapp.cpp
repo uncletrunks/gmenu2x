@@ -136,15 +136,15 @@ LinkApp::LinkApp(GMenu2X& gmenu2x, string const& linkfile, bool deletable)
 				if (pos != category.npos)
 					category = category.substr(0, pos);
 
-			} else if ((!strncmp(key, "Name", lkey) && title.empty())
+			} else if ((!strncmp(key, "Name", lkey) && getTitle().empty())
 						|| !strncmp(key, ("Name[" + gmenu2x.tr["Lng"] +
 								"]").c_str(), lkey)) {
-				title = buf;
+				setTitle(buf);
 
-			} else if ((!strncmp(key, "Comment", lkey) && description.empty())
+			} else if ((!strncmp(key, "Comment", lkey) && getDescription().empty())
 						|| !strncmp(key, ("Comment[" +
 								gmenu2x.tr["Lng"] + "]").c_str(), lkey)) {
-				description = buf;
+				setDescription(buf);
 
 			} else if (!strncmp(key, "Terminal", lkey)) {
 				consoleApp = !strncmp(val, "true", lval);
@@ -238,9 +238,9 @@ LinkApp::LinkApp(GMenu2X& gmenu2x, string const& linkfile, bool deletable)
 			if (value=="false") selectorbrowser = false;
 		} else if (!isOpk()) {
 			if (name == "title") {
-				title = value;
+				setTitle(value);
 			} else if (name == "description") {
-				description = value;
+				setDescription(value);
 			} else if (name == "launchmsg") {
 				launchMsg = value;
 			} else if (name == "icon") {
@@ -325,8 +325,8 @@ bool LinkApp::save() {
 
 	std::ostringstream out;
 	if (!isOpk()) {
-		if (!title.empty()       ) out << "title="           << title           << endl;
-		if (!description.empty() ) out << "description="     << description     << endl;
+		if (!getTitle().empty()       ) out << "title="      << getTitle()      << endl;
+		if (!getDescription().empty() ) out << "description="<< getDescription()<< endl;
 		if (!launchMsg.empty()   ) out << "launchmsg="       << launchMsg       << endl;
 		if (!icon.empty()        ) out << "icon="            << icon            << endl;
 		if (!exec.empty()        ) out << "exec="            << exec            << endl;

@@ -64,7 +64,7 @@ public:
 protected:
 	GMenu2X& gmenu2x;
 	bool edited;
-	std::string title, description, launchMsg, icon, iconPath;
+	std::string launchMsg, icon, iconPath;
 
 	OffscreenSurface *iconSurface;
 
@@ -80,6 +80,7 @@ private:
 	SDL_Rect rect;
 	uint iconX, padding;
 	int lastTick;
+	std::string title, description;
 };
 
 #endif
