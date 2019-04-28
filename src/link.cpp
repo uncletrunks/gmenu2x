@@ -70,7 +70,7 @@ void Link::updateSurfaces()
 	iconSurface = gmenu2x.sc[getIconPath()];
 }
 
-const string &Link::getTitle() {
+const string &Link::getTitle() const {
 	return title;
 }
 
@@ -79,7 +79,7 @@ void Link::setTitle(const string &title) {
 	edited = true;
 }
 
-const string &Link::getDescription() {
+const string &Link::getDescription() const {
 	return description;
 }
 

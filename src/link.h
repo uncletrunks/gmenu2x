@@ -50,9 +50,9 @@ public:
 	void setSize(int w, int h);
 	void setPosition(int x, int y);
 
-	const std::string &getTitle();
+	const std::string &getTitle() const;
 	void setTitle(const std::string &title);
-	const std::string &getDescription();
+	const std::string &getDescription() const;
 	void setDescription(const std::string &description);
 	const std::string &getLaunchMsg();
 	const std::string &getIcon();

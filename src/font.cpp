@@ -50,7 +50,7 @@ Font::~Font()
 	}
 }
 
-int Font::getTextWidth(const string &text)
+int Font::getTextWidth(const string &text) const
 {
 	if (!font) {
 		return 1;
@@ -187,7 +187,7 @@ string Font::wordWrapSingleLine(const string &text, size_t start, size_t end, in
 	return result;
 }
 
-int Font::getTextHeight(const string &text)
+int Font::getTextHeight(const string &text) const
 {
 	int nLines = 1;
 	size_t pos = 0;

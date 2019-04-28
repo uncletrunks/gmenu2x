@@ -30,10 +30,10 @@ public:
 
 	std::string wordWrap(const std::string &text, int width);
 
-	int getTextWidth(const std::string& text);
-	int getTextHeight(const std::string& text);
+	int getTextWidth(const std::string& text) const;
+	int getTextHeight(const std::string& text) const;
 
-	int getLineSpacing()
+	int getLineSpacing() const
 	{
 		return lineSpacing;
 	}
