@@ -23,6 +23,7 @@
 
 #include <SDL.h>
 
+#include <memory>
 #include <functional>
 #include <string>
 
@@ -44,6 +45,7 @@ public:
 
 	virtual void paint();
 	void paintHover();
+	void paintDescription(int center_x, int center_y);
 
 	virtual void loadIcon();
 
@@ -67,6 +69,8 @@ protected:
 	std::string launchMsg, icon, iconPath;
 
 	OffscreenSurface *iconSurface;
+	std::unique_ptr<OffscreenSurface> textSurface;
+	std::unique_ptr<OffscreenSurface> descSurface;
 
 	virtual const std::string &searchIcon();
 	void setIconPath(const std::string &icon);

@@ -56,7 +56,14 @@ void Link::paint() {
 	if (iconSurface) {
 		iconSurface->blit(s, iconX, rect.y+padding, 32,32);
 	}
-	gmenu2x.font->write(s, getTitle(), iconX+16, rect.y + gmenu2x.skinConfInt["linkHeight"]-padding, Font::HAlignCenter, Font::VAlignBottom);
+
+	SDL_Rect coords = {
+		static_cast<Sint16>(iconX + 16),
+		static_cast<Sint16>(rect.y + gmenu2x.skinConfInt["linkHeight"] - padding),
+		0, 0
+	};
+
+	textSurface->blit(s, coords, Font::HAlignCenter, Font::VAlignBottom);
 }
 
 void Link::paintHover() {
@@ -66,6 +73,18 @@ void Link::paintHover() {
 		gmenu2x.sc["imgs/selection.png"]->blit(s, rect, Font::HAlignCenter, Font::VAlignMiddle);
 	else
 		s.box(rect.x, rect.y, rect.w, rect.h, gmenu2x.skinConfColors[COLOR_SELECTION_BG]);
+}
+
+void Link::paintDescription(int center_x, int center_y)
+{
+	SDL_Rect coords = {
+		static_cast<Sint16>(center_x),
+		static_cast<Sint16>(center_y),
+		0, 0
+	};
+
+	descSurface->blit(*gmenu2x.s, coords,
+			  Font::HAlignCenter, Font::VAlignBottom);
 }
 
 void Link::updateSurfaces()
@@ -78,6 +97,8 @@ const string &Link::getTitle() const {
 }
 
 void Link::setTitle(const string &title) {
+	textSurface = gmenu2x.font->render(title);
+
 	this->title = title;
 	edited = true;
 }
@@ -87,6 +108,8 @@ const string &Link::getDescription() const {
 }
 
 void Link::setDescription(const string &description) {
+	descSurface = gmenu2x.font->render(description);
+
 	this->description = description;
 	edited = true;
 }

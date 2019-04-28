@@ -258,11 +258,8 @@ void Menu::paint(Surface &s) {
 		sectionLinks.at(i)->paint();
 	}
 
-	if (selLink()) {
-		font.write(s, selLink()->getDescription(),
-				width / 2, height - bottomBarHeight + 2,
-				Font::HAlignCenter, Font::VAlignBottom);
-	}
+	if (selLink())
+		selLink()->paintDescription(width / 2, height - bottomBarHeight + 2);
 
 	LinkApp *linkApp = selLinkApp();
 	if (linkApp && linkApp->isEditable()) {
