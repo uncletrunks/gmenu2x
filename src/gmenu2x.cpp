@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "background.h"
+#include "brightnessmanager.h"
 #include "cpu.h"
 #include "debug.h"
 #include "filedialog.h"
@@ -196,6 +197,9 @@ GMenu2X::GMenu2X()
 
 	//load config data
 	readConfig();
+
+	brightnessmanager = std::make_unique<BrightnessManager>(this);
+	confInt["brightnessLevel"] = brightnessmanager->currentBrightness();
 
 	halfX = resX/2;
 	halfY = resY/2;
@@ -678,11 +682,20 @@ void GMenu2X::showSettings() {
 			*this, tr["Button repeat rate"],
 			tr["Set button repetitions per second"],
 			&confInt["buttonRepeatRate"], 0, 20)));
+	if (brightnessmanager->available()) {
+		sd.addSetting(unique_ptr<MenuSetting>(new MenuSettingInt(
+				*this, tr["Brightness level"],
+				tr["Set the brightness level"],
+				&confInt["brightnessLevel"],
+				1, brightnessmanager->maxBrightness())));
+	}
 
 	if (sd.exec()) {
 		powerSaver.setScreenTimeout(confInt["backlightTimeout"]);
 
 		input.repeatRateChanged();
+		if (brightnessmanager->available())
+			brightnessmanager->setBrightness(confInt["brightnessLevel"]);
 
 		if (lang == "English") lang = "";
 		if (lang != tr.lang()) {
