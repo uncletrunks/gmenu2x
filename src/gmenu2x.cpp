@@ -912,10 +912,12 @@ void GMenu2X::editLink() {
 	vector<string> cpufreqs = cpu.getFrequencies();
 	string freq = cpu.freqStr(linkApp->clock());
 
-	sd.addSetting(unique_ptr<MenuSetting>(new MenuSettingMultiString(
-			*this, tr["Clock frequency"],
-			tr["CPU clock frequency for this link"],
-			&freq, &cpufreqs)));
+	if (!cpufreqs.empty()) {
+		sd.addSetting(unique_ptr<MenuSetting>(new MenuSettingMultiString(
+				*this, tr["Clock frequency"],
+				tr["CPU clock frequency for this link"],
+				&freq, &cpufreqs)));
+	}
 #endif
 	if (!linkApp->isOpk()) {
 		sd.addSetting(unique_ptr<MenuSetting>(new MenuSettingString(
