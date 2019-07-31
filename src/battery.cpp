@@ -41,9 +41,7 @@ static unsigned short getBatteryLevel()
 	}
 
 	return 0;
-#endif
-
-#ifdef PLATFORM_RS90
+#elif defined(PLATFORM_RS90)
 	unsigned long voltage_min, voltage_max, voltage_now;
 
 	handle = fopen("/sys/class/power_supply/jz-battery/voltage_max_design", "r");
@@ -65,6 +63,8 @@ static unsigned short getBatteryLevel()
 	}
 
 	return (voltage_now - voltage_min) * 6 / (voltage_max - voltage_min);
+#else
+	return 0;
 #endif
 }
 
