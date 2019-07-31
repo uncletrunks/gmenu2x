@@ -109,11 +109,13 @@ private:
 	void initBG();
 
 	std::string getLocalSkinTopPath() const {
-		return getHome() + "/skins";
+		return getHome() + "/skins/" + std::to_string(width())
+			+ "x" + std::to_string(height());
 	}
 
 	std::string getSystemSkinTopPath() const {
-		return GMENU2X_SYSTEM_DIR "/skins";
+		return GMENU2X_SYSTEM_DIR "/skins/" + std::to_string(width())
+			+ "x" + std::to_string(height());
 	}
 
 public:

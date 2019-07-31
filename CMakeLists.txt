@@ -31,22 +31,16 @@ set_property(CACHE PLATFORM PROPERTY STRINGS pc a320 gcw0 nanonote rs90)
 
 if (PLATFORM MATCHES "a320")
 	add_compile_definitions(PLATFORM_A320)
-	set(SCREEN_RES "320x240")
 elseif (PLATFORM MATCHES "gcw0")
 	add_compile_definitions(PLATFORM_GCW0)
-	set(SCREEN_RES "320x240")
 elseif (PLATFORM MATCHES "rs90")
 	add_compile_definitions(PLATFORM_RS90)
-	set(SCREEN_RES "240x160")
 elseif (PLATFORM MATCHES "nanonote")
 	add_compile_definitions(PLATFORM_NANONOTE)
-	set(SCREEN_RES "320x240")
 elseif (PLATFORM MATCHES "pandora")
 	add_compile_definitions(PLATFORM_PANDORA)
-	set(SCREEN_RES "800x480")
 elseif (PLATFORM MATCHES "pc")
 	add_compile_definitions(PLATFORM_PC)
-	set(SCREEN_RES "800x480")
 else()
 	message(FATAL_ERROR "PLATFORM must be one of the following: ${PLATFORMS}")
 endif(PLATFORM MATCHES "a320")
@@ -125,6 +119,6 @@ install(DIRECTORY data/platform/${PLATFORM}/ data/translations
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/gmenu2x
 )
 install(FILES data/about.txt DESTINATION ${CMAKE_INSTALL_DATADIR}/gmenu2x)
-install(DIRECTORY data/skins/${SCREEN_RES}/
+install(DIRECTORY data/skins/
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/gmenu2x/skins
 )
