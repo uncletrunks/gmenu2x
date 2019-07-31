@@ -201,8 +201,6 @@ GMenu2X::GMenu2X()
 	brightnessmanager = std::make_unique<BrightnessManager>(this);
 	confInt["brightnessLevel"] = brightnessmanager->currentBrightness();
 
-	halfX = resX/2;
-	halfY = resY/2;
 	bottomBarIconY = resY-18;
 	bottomBarTextY = resY-10;
 

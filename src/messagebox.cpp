@@ -75,8 +75,8 @@ int MessageBox::exec() {
 		box.h = max(box.h, (Uint16) (ICON_DIMENSION + 2 * ICON_PADDING));
 		box.w += ICON_DIMENSION + ICON_PADDING;
 	}
-	box.x = gmenu2x.halfX - box.w / 2;
-	box.y = gmenu2x.halfY - box.h / 2;
+	box.x = (gmenu2x.resX - box.w) / 2;
+	box.y = (gmenu2x.resY - box.h) / 2;
 
 	//outer box
 	bg.box(box.x - 2, box.y - 2, box.w + 4, box.h + 4, gmenu2x.skinConfColors[COLOR_MESSAGE_BOX_BG]);
@@ -88,7 +88,7 @@ int MessageBox::exec() {
 	}
 	gmenu2x.font->write(bg, text, box.x + TEXT_PADDING + (gmenu2x.sc[icon] ? ICON_PADDING + ICON_DIMENSION : 0), box.y + (box.h - textHeight) / 2, Font::HAlignLeft, Font::VAlignTop);
 
-	int btnX = gmenu2x.halfX + box.w / 2 - 6;
+	int btnX = box.x - 6;
 	for (uint i = 0; i < BUTTON_TYPE_SIZE; i++) {
 		if (!buttons[i].empty()) {
 			buttonPositions[i].y = box.y+box.h+8;

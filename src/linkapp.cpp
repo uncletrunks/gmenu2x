@@ -371,19 +371,23 @@ void LinkApp::drawLaunch(Surface& s) {
 	int halfBoxW = boxW/2;
 
 	//outer box
-	s.box(gmenu2x.halfX-2-halfBoxW, gmenu2x.halfY-23, halfBoxW*2+5, 47, gmenu2x.skinConfColors[COLOR_MESSAGE_BOX_BG]);
+	s.box(gmenu2x.resX/2 - 2 - halfBoxW, gmenu2x.resY / 2 - 23,
+	      halfBoxW * 2 + 5, 47,
+	      gmenu2x.skinConfColors[COLOR_MESSAGE_BOX_BG]);
 	//inner rectangle
-	s.rectangle(gmenu2x.halfX-halfBoxW, gmenu2x.halfY-21, boxW, 42, gmenu2x.skinConfColors[COLOR_MESSAGE_BOX_BORDER]);
+	s.rectangle(gmenu2x.resX / 2 - halfBoxW, gmenu2x.resY / 2 - 21, boxW,
+		    42, gmenu2x.skinConfColors[COLOR_MESSAGE_BOX_BORDER]);
 
-	int x = gmenu2x.halfX + 10 - halfBoxW;
+	int x = gmenu2x.resX / 2 + 10 - halfBoxW;
 	/*if (!getIcon().empty())
 		gmenu2x.sc[getIcon()]->blit(gmenu2x.s,x,104);
 	else
 		gmenu2x.sc["icons/generic.png"]->blit(gmenu2x.s,x,104);*/
 	if (iconSurface) {
-		iconSurface->blit(s, x, gmenu2x.halfY - 16);
+		iconSurface->blit(s, x, gmenu2x.resY / 2 - 16);
 	}
-	gmenu2x.font->write(s, text, x + 42, gmenu2x.halfY + 1, Font::HAlignLeft, Font::VAlignMiddle);
+	gmenu2x.font->write(s, text, x + 42, gmenu2x.resY / 2 + 1,
+			    Font::HAlignLeft, Font::VAlignMiddle);
 }
 
 void LinkApp::start() {
