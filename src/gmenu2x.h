@@ -134,7 +134,6 @@ public:
 	/*
 	 * Variables needed for elements disposition
 	 */
-	uint resX, resY;
 	uint bottomBarIconY, bottomBarTextY;
 	unsigned short cpuX; //!< Offset for displaying cpu clock information
 	unsigned short manualX; //!< Offset for displaying the manual indicator in the taskbar

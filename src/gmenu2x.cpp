@@ -104,6 +104,12 @@ static const char *colorNames[NUM_COLORS] = {
 	"messageBoxSelection",
 };
 
+static const std::pair<unsigned int, unsigned int> supported_resolutions[] = {
+	{ 800, 480 },
+	{ 320, 240 },
+	{ 240, 160 },
+};
+
 static enum color stringToColor(const string &name)
 {
 	for (unsigned int i = 0; i < NUM_COLORS; i++) {
@@ -196,15 +202,6 @@ GMenu2X::GMenu2X() :
 	usbnet = samba = inet = web = false;
 	useSelectionPng = false;
 
-	//load config data
-	readConfig();
-
-	brightnessmanager = std::make_unique<BrightnessManager>(this);
-	confInt["brightnessLevel"] = brightnessmanager->currentBrightness();
-
-	bottomBarIconY = height() - 18;
-	bottomBarTextY = height() - 10;
-
 	/* Do not clear the screen on exit.
 	 * This may require an SDL patch available at
 	 * https://github.com/mthuurne/opendingux-buildroot/blob
@@ -219,11 +216,6 @@ GMenu2X::GMenu2X() :
 		exit(EXIT_FAILURE);
 	}
 
-	bg = NULL;
-	font = NULL;
-	setSkin(confStr["skin"], !fileExists(confStr["wallpaper"]));
-	layers.insert(layers.begin(), make_shared<Background>(*this));
-
 	/* We enable video at a later stage, so that the menu elements are
 	 * loaded before SDL inits the video; this is made so that we won't show
 	 * a black screen for a couple of seconds. */
@@ -236,18 +228,36 @@ GMenu2X::GMenu2X() :
 
 	SDL_WM_SetCaption("GMenu2X", nullptr);
 
-	s = OutputSurface::open(resX, resY, confInt["videoBpp"]);
+	for (const auto res : supported_resolutions)
+		if (s = OutputSurface::open(res.first, res.second, confInt["videoBpp"]))
+			break;
+
 	if (!s) {
 		ERROR("Failed to create main window\n");
-		ERROR("%ux%ux%u\n", resX, resY, confInt["videoBpp"]);
 		exit(EXIT_FAILURE);
 	};
+
+	DEBUG("%ux%u main window created\n", width(), height());
+
+	//load config data
+	readConfig();
+
+	brightnessmanager = std::make_unique<BrightnessManager>(this);
+	confInt["brightnessLevel"] = brightnessmanager->currentBrightness();
+
+	bottomBarIconY = height() - 18;
+	bottomBarTextY = height() - 10;
 
 	if (!fileExists(confStr["wallpaper"])) {
 		DEBUG("No wallpaper defined; we will take the default one.\n");
 		confStr["wallpaper"] = getSystemSkinPath("Default")
 				     + "/wallpapers/default.png";
 	}
+
+	bg = NULL;
+	font = NULL;
+	setSkin(confStr["skin"], !fileExists(confStr["wallpaper"]));
+	layers.insert(layers.begin(), make_shared<Background>(*this));
 
 	initBG();
 
@@ -464,8 +474,6 @@ void GMenu2X::readConfig(string conffile) {
 	evalIntConf( confInt, "videoBpp", 32, 16, 32 );
 
 	if (confStr["tvoutEncoding"] != "PAL") confStr["tvoutEncoding"] = "NTSC";
-	resX = constrain( confInt["resolutionX"], 240,1920 );
-	resY = constrain( confInt["resolutionY"], 160,1200 );
 }
 
 void GMenu2X::saveSelection() {
