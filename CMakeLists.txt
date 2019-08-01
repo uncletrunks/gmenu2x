@@ -4,9 +4,6 @@ project(gmenu2x LANGUAGES CXX VERSION 1.0)
 include(GNUInstallDirs)
 include(FindPackageHandleStandardArgs)
 
-set(INSTALL_DATA_DIR "${CMAKE_INSTALL_DATADIR}/gmenu2x"
-	CACHE PATH "Installation directory for platform data")
-
 option(CPUFREQ "Enable CPU frequency control" OFF)
 if (CPUFREQ)
 	add_compile_definitions(ENABLE_CPUFREQ)
@@ -115,6 +112,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 						   ${LIBOPK_INCLUDE_DIRS}
 						   ${LIBXDGMIME_INCLUDE_DIRS}
 						   ${LIBSDL_GFX_INCLUDE_DIRS}
+						   ${CMAKE_BINARY_DIR}
 )
 
 install(TARGETS ${PROJECT_NAME}
@@ -127,3 +125,5 @@ install(FILES data/about.txt DESTINATION ${CMAKE_INSTALL_DATADIR}/gmenu2x)
 install(DIRECTORY data/skins/
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/gmenu2x/skins
 )
+
+configure_file(buildopts.h.cmakein ${CMAKE_BINARY_DIR}/buildopts.h @ONLY)

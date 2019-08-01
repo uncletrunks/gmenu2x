@@ -21,6 +21,7 @@
 #ifndef GMENU2X_H
 #define GMENU2X_H
 
+#include "buildopts.h"
 #include "contextmenu.h"
 #include "cpu.h"
 #include "surfacecollection.h"
@@ -44,10 +45,6 @@ class Launcher;
 class Layer;
 class MediaMonitor;
 class Menu;
-
-#ifndef GMENU2X_SYSTEM_DIR
-#define GMENU2X_SYSTEM_DIR "/usr/share/gmenu2x"
-#endif
 
 #ifndef LOG_FILE
 #define LOG_FILE "/var/log/gmenu2x.log"
