@@ -94,6 +94,11 @@ file(GLOB OBJS src/*.cpp)
 
 add_executable(${PROJECT_NAME} ${OBJS})
 
+set_target_properties(${PROJECT_NAME} PROPERTIES
+	CXX_STANDARD 17
+	CXX_STANDARD_REQUIRED ON
+)
+
 target_link_libraries(${PROJECT_NAME} PRIVATE
 					  ${SDL_LIBRARY}
 					  ${SDL_TTF_LIBRARIES}

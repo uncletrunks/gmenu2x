@@ -23,11 +23,13 @@
 #include <dirent.h>
 #include <algorithm>
 #include <math.h>
+#include <filesystem>
 #include <fstream>
 #include <unistd.h>
 #include <cassert>
 #include <cerrno>
 #include <cstring>
+#include <system_error>
 
 #ifdef HAVE_LIBOPK
 #include <opk.h>
@@ -124,19 +126,15 @@ void Menu::readSections(std::string const& parentDir)
 
 string Menu::createSectionDir(string const& sectionName)
 {
-	string parentDir = GMenu2X::getHome() + "/sections";
-	if (mkdir(parentDir.c_str(), 0755) && errno != EEXIST) {
-		WARNING("Failed to create parent sections dir: %s\n", strerror(errno));
+	string dir = GMenu2X::getHome() + "/sections/" + sectionName;
+
+	std::error_code ec;
+	if (!std::filesystem::create_directories(dir, ec) && ec.value()) {
+		WARNING("Failed to create parent sections dir: %d\n", ec.value());
 		return "";
 	}
 
-	string childDir = parentDir + "/" + sectionName;
-	if (mkdir(childDir.c_str(), 0755) && errno != EEXIST) {
-		WARNING("Failed to create child section dir: %s\n", strerror(errno));
-		return "";
-	}
-
-	return childDir;
+	return dir;
 }
 
 void Menu::skinUpdated() {

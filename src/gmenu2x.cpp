@@ -50,8 +50,11 @@
 
 #include <iostream>
 #include <sstream>
+#include <filesystem>
 #include <fstream>
 #include <algorithm>
+#include <system_error>
+
 #include <stdlib.h>
 #include <unistd.h>
 #include <math.h>
@@ -150,8 +153,10 @@ int main(int /*argc*/, char * /*argv*/[]) {
 	}
 
 	gmenu2x_home = (string)home + (string)"/.gmenu2x";
-	if (mkdir(gmenu2x_home.c_str(), 0770) < 0 && errno != EEXIST) {
-		ERROR("Unable to create gmenu2x home directory.\n");
+
+	std::error_code ec;
+	if (!std::filesystem::create_directory(gmenu2x_home, ec) && ec.value()) {
+		ERROR("Unable to create gmenu2x home directory: %d\n", ec.value());
 		return 1;
 	}
 
@@ -489,17 +494,10 @@ void GMenu2X::writeConfig() {
 }
 
 void GMenu2X::writeSkinConfig() {
-	string conffile = getLocalSkinTopPath();
-	if (mkdir(conffile.c_str(), 0770) < 0 && errno != EEXIST) {
-		ERROR("Failed to create directory %s to write skin configuration: %s\n", conffile.c_str(), strerror(errno));
-		return;
-	}
-	conffile = conffile + "/" + confStr["skin"];
-	if (mkdir(conffile.c_str(), 0770) < 0 && errno != EEXIST) {
-		ERROR("Failed to create directory %s to write skin configuration: %s\n", conffile.c_str(), strerror(errno));
-		return;
-	}
-	conffile = conffile + "/skin.conf";
+	string skin_dir = getLocalSkinPath(confStr["skin"]);
+
+	std::filesystem::create_directories(skin_dir);
+	string conffile = skin_dir + "/skin.conf";
 
 	ofstream inf(conffile.c_str());
 	if (inf.is_open()) {
