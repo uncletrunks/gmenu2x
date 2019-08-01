@@ -23,6 +23,7 @@
 #include <string>
 #include <unordered_map>
 
+class GMenu2X;
 class OffscreenSurface;
 class Surface;
 
@@ -35,12 +36,12 @@ Hash Map of surfaces that loads surfaces not already loaded and reuses already l
 */
 class SurfaceCollection {
 public:
-	SurfaceCollection();
+	SurfaceCollection(GMenu2X *gmenu2x);
 	~SurfaceCollection();
 
 	void setSkin(const std::string &skin);
 	std::string getSkinFilePath(const std::string &file, bool useDefault = true);
-	static std::string getSkinPath(const std::string &skin);
+	std::string getSkinPath(const std::string &skin);
 
 	void debug();
 
@@ -58,6 +59,8 @@ private:
 
 	SurfaceHash surfaces;
 	std::string skin;
+
+	GMenu2X *gmenu2x;
 };
 
 #endif

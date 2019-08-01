@@ -80,11 +80,6 @@
 
 using namespace std;
 
-#ifndef DEFAULT_WALLPAPER_PATH
-#define DEFAULT_WALLPAPER_PATH \
-  GMENU2X_SYSTEM_DIR "/skins/Default/wallpapers/default.png"
-#endif
-
 #ifdef _CARD_ROOT
 const char *CARD_ROOT = _CARD_ROOT;
 #elif defined(PLATFORM_NANONOTE)
@@ -189,8 +184,9 @@ void GMenu2X::run() {
 	}
 }
 
-GMenu2X::GMenu2X()
-	: input(*this, powerSaver)
+GMenu2X::GMenu2X() :
+	input(*this, powerSaver),
+	sc(this)
 {
 	usbnet = samba = inet = web = false;
 	useSelectionPng = false;
@@ -244,7 +240,8 @@ GMenu2X::GMenu2X()
 
 	if (!fileExists(confStr["wallpaper"])) {
 		DEBUG("No wallpaper defined; we will take the default one.\n");
-		confStr["wallpaper"] = DEFAULT_WALLPAPER_PATH;
+		confStr["wallpaper"] = getSystemSkinPath("Default")
+				     + "/wallpapers/default.png";
 	}
 
 	initBG();
@@ -453,7 +450,7 @@ void GMenu2X::readConfig(string conffile) {
 	if (!confStr["wallpaper"].empty() && !fileExists(confStr["wallpaper"]))
 		confStr["wallpaper"] = "";
 
-	if (confStr["skin"].empty() || SurfaceCollection::getSkinPath(confStr["skin"]).empty())
+	if (confStr["skin"].empty() || sc.getSkinPath(confStr["skin"]).empty())
 		confStr["skin"] = "Default";
 
 	evalIntConf( confInt, "outputLogs", 0, 0,1 );
@@ -492,12 +489,12 @@ void GMenu2X::writeConfig() {
 }
 
 void GMenu2X::writeSkinConfig() {
-	string conffile = getHome() + "/skins/";
+	string conffile = getLocalSkinTopPath();
 	if (mkdir(conffile.c_str(), 0770) < 0 && errno != EEXIST) {
 		ERROR("Failed to create directory %s to write skin configuration: %s\n", conffile.c_str(), strerror(errno));
 		return;
 	}
-	conffile = conffile + confStr["skin"];
+	conffile = conffile + "/" + confStr["skin"];
 	if (mkdir(conffile.c_str(), 0770) < 0 && errno != EEXIST) {
 		ERROR("Failed to create directory %s to write skin configuration: %s\n", conffile.c_str(), strerror(errno));
 		return;
@@ -709,8 +706,8 @@ void GMenu2X::skinMenu() {
 	FileLister fl_sk;
 	fl_sk.setShowFiles(false);
 	fl_sk.setShowUpdir(false);
-	fl_sk.browse(getHome() + "/skins");
-	fl_sk.browse(GMENU2X_SYSTEM_DIR "/skins", false);
+	fl_sk.browse(getLocalSkinTopPath());
+	fl_sk.browse(getSystemSkinTopPath(), false);
 
 	string curSkin = confStr["skin"];
 
@@ -777,9 +774,8 @@ void GMenu2X::setSkin(const string &skin, bool setWallpaper) {
 
 	/* Load skin settings from user directory if present,
 	 * or from the system directory. */
-	if (!readSkinConfig(getHome() + "/skins/" + skin + "/skin.conf")) {
-		readSkinConfig(GMENU2X_SYSTEM_DIR "/skins/" + skin + "/skin.conf");
-	}
+	if (!readSkinConfig(getLocalSkinPath(skin) + "/skin.conf"))
+		readSkinConfig(getSystemSkinPath(skin) + "/skin.conf");
 
 	if (setWallpaper && !skinConfStr["wallpaper"].empty()) {
 		string fp = sc.getSkinFilePath("wallpapers/" + skinConfStr["wallpaper"]);

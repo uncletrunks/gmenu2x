@@ -108,6 +108,14 @@ private:
 	void initMenu();
 	void initBG();
 
+	std::string getLocalSkinTopPath() const {
+		return getHome() + "/skins";
+	}
+
+	std::string getSystemSkinTopPath() const {
+		return GMENU2X_SYSTEM_DIR "/skins";
+	}
+
 public:
 	static void run();
 
@@ -199,6 +207,14 @@ public:
 
 	void drawTopBar(Surface& s);
 	void drawBottomBar(Surface& s);
+
+	std::string getLocalSkinPath(const std::string& skin) const {
+		return getLocalSkinTopPath() + "/" + skin;
+	}
+
+	std::string getSystemSkinPath(const std::string &skin) const {
+		return getSystemSkinTopPath() + "/" + skin;
+	}
 };
 
 #endif // GMENU2X_H

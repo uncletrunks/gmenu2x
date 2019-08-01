@@ -36,7 +36,8 @@ using namespace std;
 ImageDialog::ImageDialog(
 		GMenu2X& gmenu2x, const string &text,
 		const string &filter, const string &file)
-	: FileDialog(gmenu2x, text, filter, file, "Image Browser")
+	: FileDialog(gmenu2x, text, filter, file, "Image Browser"),
+	previews(&gmenu2x)
 {
 
 	string path;
