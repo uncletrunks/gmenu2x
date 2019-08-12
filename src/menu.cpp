@@ -676,6 +676,11 @@ void Menu::openPackage(std::string const& path, bool order)
 		bool has_metadata = false;
 		const char *name;
 
+		std::vector<std::string> platforms;
+
+		split(platforms, gmenu2x.confStr["opkPlatforms"], ",");
+		platforms.push_back("all");
+
 		for (;;) {
 			string::size_type pos;
 			int ret = opk_open_metadata(opk, &name);
@@ -694,7 +699,8 @@ void Menu::openPackage(std::string const& path, bool order)
 			pos = metadata.rfind('.');
 			metadata = metadata.substr(pos + 1);
 
-			if (metadata == PLATFORM || metadata == "all") {
+			if (std::find(platforms.begin(), platforms.end(),
+				      metadata) != platforms.end()) {
 				has_metadata = true;
 				break;
 			}
