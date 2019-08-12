@@ -87,6 +87,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 					  ${PNG_LIBRARIES}
 					  ${LIBOPK_LIBRARIES}
 					  ${LIBXDGMIME_LIBRARIES}
+					  stdc++fs
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
