@@ -191,6 +191,9 @@ int evalIntConf (ConfIntHash& hash, const std::string &key, int def, int imin, i
 void split(vector<string>& vec, string const& str, string const& delim) {
 	vec.clear();
 
+	if (str.empty())
+		return;
+
 	if (delim.empty()) {
 		vec.push_back(str);
 		return;
