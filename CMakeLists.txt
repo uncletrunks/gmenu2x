@@ -19,6 +19,8 @@ if (BIND_CONSOLE)
 	add_compile_definitions(BIND_CONSOLE)
 endif (BIND_CONSOLE)
 
+set(CARD_ROOT "/media" CACHE STRING "Top-level filesystem directory")
+
 set(PLATFORMS "pc, a320, gcw0, nanonote, rs90")
 
 set(PLATFORM "pc" CACHE STRING

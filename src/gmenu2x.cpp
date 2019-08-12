@@ -20,6 +20,7 @@
 
 #include "background.h"
 #include "brightnessmanager.h"
+#include "buildopts.h"
 #include "cpu.h"
 #include "debug.h"
 #include "filedialog.h"
@@ -64,12 +65,6 @@
 #include <sys/statvfs.h>
 #include <errno.h>
 
-#ifdef PLATFORM_PANDORA
-//#include <pnd_container.h>
-//#include <pnd_conf.h>
-//#include <pnd_discovery.h>
-#endif
-
 //for browsing the filesystem
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -82,14 +77,6 @@
 #include <sys/mman.h>
 
 using namespace std;
-
-#ifdef _CARD_ROOT
-const char *CARD_ROOT = _CARD_ROOT;
-#elif defined(PLATFORM_NANONOTE)
-const char *CARD_ROOT = "/card";
-#else
-const char *CARD_ROOT = "/media";
-#endif
 
 static GMenu2X *app;
 static string gmenu2x_home;
@@ -269,7 +256,7 @@ GMenu2X::GMenu2X() :
 	initMenu();
 
 #ifdef ENABLE_INOTIFY
-	monitor = new MediaMonitor(CARD_ROOT);
+	monitor = new MediaMonitor(GMENU2X_CARD_ROOT);
 #endif
 
 	if (!input.init(menu.get())) {
@@ -566,9 +553,6 @@ void GMenu2X::writeTmp(int selelem, const string &selectordir) {
 }
 
 void GMenu2X::mainLoop() {
-	if (!fileExists(CARD_ROOT))
-		CARD_ROOT = "";
-
 	// Recover last session
 	readTmp();
 	if (lastSelectorElement > -1 && menu->selLinkApp() &&

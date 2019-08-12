@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include "buildopts.h"
 #include "filedialog.h"
-
 #include "filelister.h"
 
 using namespace std;
@@ -29,7 +29,7 @@ FileDialog::FileDialog(
 		const string &filter, const string &file, const string &title)
 	: BrowseDialog(gmenu2x, title, text)
 {
-	string path(CARD_ROOT);
+	string path(GMENU2X_CARD_ROOT);
 	if (!file.empty()) {
 		string::size_type pos = file.rfind("/");
 		if (pos != string::npos)

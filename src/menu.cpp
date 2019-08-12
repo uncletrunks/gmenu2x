@@ -35,6 +35,7 @@
 #include <opk.h>
 #endif
 
+#include "buildopts.h"
 #include "gmenu2x.h"
 #include "linkapp.h"
 #include "menu.h"
@@ -82,7 +83,7 @@ Menu::Menu(GMenu2X& gmenu2x)
 
 #ifdef HAVE_LIBOPK
 	{
-		DIR *dirp = opendir(CARD_ROOT);
+		DIR *dirp = opendir(GMENU2X_CARD_ROOT);
 		if (dirp) {
 			struct dirent *dptr;
 			while ((dptr = readdir(dirp))) {
@@ -92,8 +93,8 @@ Menu::Menu(GMenu2X& gmenu2x)
 				if (!strcmp(dptr->d_name, ".") || !strcmp(dptr->d_name, ".."))
 					continue;
 
-				openPackagesFromDir((string) CARD_ROOT + "/" +
-							dptr->d_name + "/apps");
+				openPackagesFromDir((string) GMENU2X_CARD_ROOT "/"
+						    + dptr->d_name + "/apps");
 			}
 			closedir(dirp);
 		}

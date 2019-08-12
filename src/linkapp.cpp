@@ -21,6 +21,7 @@
 #include "linkapp.h"
 
 #include "debug.h"
+#include "buildopts.h"
 #include "gmenu2x.h"
 #include "launcher.h"
 #include "layer.h"
@@ -167,7 +168,7 @@ LinkApp::LinkApp(GMenu2X& gmenu2x, string const& linkfile, bool deletable)
 
 				for (auto token : tokens) {
 					if (tmp.find(token) != tmp.npos) {
-						selectordir = CARD_ROOT;
+						selectordir = GMENU2X_CARD_ROOT;
 						appTakesFileArg = true;
 						break;
 					}
