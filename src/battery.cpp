@@ -18,7 +18,19 @@ unsigned short Battery::getBatteryLevel()
 	unsigned long voltage_min, voltage_max, voltage_now;
 	FILE *handle;
 
-	std::string path = powerSupplySysfs + "/online";
+	std::string path = powerSupplySysfs + "/status";
+	handle = fopen(path.c_str(), "r");
+	if (handle) {
+		char buf[16];
+
+		buf[sizeof(buf) - 1] = '\0';
+
+		fread(buf, 1, 16, handle);
+		if ((std::string)buf == "Charging")
+			return 6;
+	}
+
+	path = powerSupplySysfs + "/online";
 	handle = fopen(path.c_str(), "r");
 	if (handle) {
 		int usbval = 0;
