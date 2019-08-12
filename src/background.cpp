@@ -8,7 +8,7 @@
 
 Background::Background(GMenu2X& gmenu2x)
 	: gmenu2x(gmenu2x)
-	, battery(gmenu2x.sc)
+	, battery(gmenu2x)
 {
 }
 

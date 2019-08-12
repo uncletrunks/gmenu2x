@@ -1,5 +1,5 @@
 #include "battery.h"
-
+#include "gmenu2x.h"
 #include "surfacecollection.h"
 
 #include <SDL.h>
@@ -13,12 +13,13 @@
  * @return A number representing battery charge: 0 means fully discharged,
  * 5 means fully charged, 6 represents running on external power.
  */
-static unsigned short getBatteryLevel()
+unsigned short Battery::getBatteryLevel()
 {
+	unsigned long voltage_min, voltage_max, voltage_now;
 	FILE *handle;
 
-#if defined(PLATFORM_A320) || defined(PLATFORM_GCW0) || defined(PLATFORM_NANONOTE)
-	handle = fopen("/sys/class/power_supply/usb/online", "r");
+	std::string path = powerSupplySysfs + "/online";
+	handle = fopen(path.c_str(), "r");
 	if (handle) {
 		int usbval = 0;
 		fscanf(handle, "%d", &usbval);
@@ -27,7 +28,8 @@ static unsigned short getBatteryLevel()
 			return 6;
 	}
 
-	handle = fopen("/sys/class/power_supply/battery/capacity", "r");
+	path = powerSupplySysfs + "/capacity";
+	handle = fopen(path.c_str(), "r");
 	if (handle) {
 		int battval = 0;
 		fscanf(handle, "%d", &battval);
@@ -38,39 +40,50 @@ static unsigned short getBatteryLevel()
 		if (battval>50) return 3;
 		if (battval>30) return 2;
 		if (battval>10) return 1;
+
+		return 0;
 	}
 
-	return 0;
-#elif defined(PLATFORM_RS90)
-	unsigned long voltage_min, voltage_max, voltage_now;
+	/*
+	 * No 'capacity' file in sysfs - Do a dumb approximation of the capacity
+	 * using the current voltage reported and the min/max voltages of the
+	 * battery.
+	 */
 
-	handle = fopen("/sys/class/power_supply/jz-battery/voltage_max_design", "r");
+	path = powerSupplySysfs + "/voltage_max_design";
+	handle = fopen(path.c_str(), "r");
 	if (handle) {
 		fscanf(handle, "%lu", &voltage_max);
 		fclose(handle);
 	}
 
-	handle = fopen("/sys/class/power_supply/jz-battery/voltage_min_design", "r");
+	path = powerSupplySysfs + "/voltage_min_design";
+	handle = fopen(path.c_str(), "r");
 	if (handle) {
 		fscanf(handle, "%lu", &voltage_min);
 		fclose(handle);
 	}
 
-	handle = fopen("/sys/class/power_supply/jz-battery/voltage_now", "r");
+	path = powerSupplySysfs + "/voltage_now";
+	handle = fopen(path.c_str(), "r");
 	if (handle) {
 		fscanf(handle, "%lu", &voltage_now);
 		fclose(handle);
 	}
 
 	return (voltage_now - voltage_min) * 6 / (voltage_max - voltage_min);
-#else
-	return 0;
-#endif
 }
 
-Battery::Battery(SurfaceCollection& sc_)
-	: sc(sc_)
+Battery::Battery(GMenu2X& gmenu2x)
+	: sc(gmenu2x.sc),
+	  batterySysfs(gmenu2x.confStr["batterySysfs"]),
+	  powerSupplySysfs(gmenu2x.confStr["powerSupplySysfs"])
 {
+	if (batterySysfs.empty())
+		batterySysfs = "/sys/class/power_supply/BAT0";
+	if (powerSupplySysfs.empty())
+		powerSupplySysfs = "/sys/class/power_supply/AC0";
+
 	lastUpdate = SDL_GetTicks();
 	update();
 }
