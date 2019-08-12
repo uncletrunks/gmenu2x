@@ -6,7 +6,7 @@
 BrightnessManager::BrightnessManager(GMenu2X *gmenu2x)
 	: is_available(false)
 {
-	sysfs_dir = gmenu2x->confStr["brightnessSysfsFile"];
+	sysfs_dir = gmenu2x->confStr["brightnessSysfs"];
 
 	if (sysfs_dir.empty())
 		return;
