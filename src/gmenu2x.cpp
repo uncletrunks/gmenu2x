@@ -783,7 +783,8 @@ void GMenu2X::setSkin(const string &skin, bool setWallpaper) {
 	if (menu != NULL) menu->skinUpdated();
 
 	//Selection png
-	useSelectionPng = sc.addSkinRes("imgs/selection.png", false) != NULL;
+	if (!skinConfInt["selectionBgUseColor"])
+		useSelectionPng = !!sc.addSkinRes("imgs/selection.png", false);
 
 	//font
 	initFont();
