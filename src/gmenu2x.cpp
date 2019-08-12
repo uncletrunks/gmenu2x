@@ -1061,7 +1061,8 @@ void GMenu2X::drawScrollBar(uint pageSize, uint totalSize, uint pagePos) {
 void GMenu2X::drawTopBar(Surface& surface) {
 	Surface *bar = sc.skinRes("imgs/topbar.png", false);
 	if (bar) {
-		bar->blit(surface, 0, 0);
+		for (unsigned int x = 0; x < width(); x++)
+			bar->blit(surface, x, 0);
 	} else {
 		const int h = skinConfInt["topBarHeight"];
 		surface.box(0, 0, width(), h,
@@ -1072,7 +1073,8 @@ void GMenu2X::drawTopBar(Surface& surface) {
 void GMenu2X::drawBottomBar(Surface& surface) {
 	Surface *bar = sc.skinRes("imgs/bottombar.png", false);
 	if (bar) {
-		bar->blit(surface, 0, height() - bar->height());
+		for (unsigned int x = 0; x < width(); x++)
+			bar->blit(surface, x, height() - bar->height());
 	} else {
 		const int h = skinConfInt["bottomBarHeight"];
 		surface.box(0, height() - h, width(), h,
