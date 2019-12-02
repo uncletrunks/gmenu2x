@@ -18,6 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include "powersaver.h"
 #include "utilities.h"
 
 #include "debug.h"
@@ -233,6 +234,9 @@ int intTransition(int from, int to, long tickStart, long duration, long tickNow)
 
 void inject_user_event(enum EventCode code, void *data1, void *data2)
 {
+	if (!PowerSaver::getInstance()->getScreenState())
+		return;
+
 	SDL_UserEvent e = {
 		.type = SDL_USEREVENT,
 		.code = code,

@@ -12,6 +12,8 @@ public:
 	void resetScreenTimer();
 	void setScreenTimeout(unsigned int seconds);
 
+	bool getScreenState() const { return screenState; }
+
 private:
 	PowerSaver();
 
