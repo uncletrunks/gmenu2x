@@ -653,7 +653,7 @@ void Menu::openPackagesFromDir(std::string const& path)
 	DEBUG("Opening packages from directory: %s\n", path.c_str());
 	if (readPackages(path)) {
 #ifdef ENABLE_INOTIFY
-		monitors.emplace_back(new Monitor(path.c_str()));
+		monitors.emplace_back(new Monitor(path.c_str(), this));
 #endif
 	}
 }

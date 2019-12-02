@@ -6,7 +6,7 @@
 
 class MediaMonitor: public Monitor {
 	public:
-		MediaMonitor(std::string dir);
+		MediaMonitor(std::string dir, Menu *menu);
 		virtual ~MediaMonitor() { };
 
 	private:

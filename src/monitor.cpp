@@ -10,15 +10,18 @@
 #include <unistd.h>
 
 #include "inputmanager.h"
+#include "menu.h"
 #include "monitor.h"
 #include "utilities.h"
 
 void Monitor::inject_event(bool is_add, const char *path)
 {
 	if (is_add)
-		inject_user_event(OPEN_PACKAGE, strdup(path));
+		menu->openPackage(path);
 	else
-		inject_user_event(REMOVE_LINKS, strdup(path));
+		menu->removePackageLink(path);
+
+	inject_user_event();
 }
 
 bool Monitor::event_accepted(struct inotify_event &event)
@@ -78,7 +81,8 @@ static void * inotify_thd(void *p)
 	return NULL;
 }
 
-Monitor::Monitor(std::string path, unsigned int flags) : path(path)
+Monitor::Monitor(std::string path, Menu *menu, unsigned int flags)
+	: path(path), menu(menu)
 {
 	mask = flags;
 	pthread_create(&thd, NULL, inotify_thd, (void *) this);

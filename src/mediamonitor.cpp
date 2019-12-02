@@ -1,4 +1,6 @@
 #ifdef ENABLE_INOTIFY
+#include <memory>
+
 #include <sys/inotify.h>
 #include <SDL/SDL.h>
 #include <unistd.h>
@@ -6,10 +8,13 @@
 #include "debug.h"
 #include "inputmanager.h"
 #include "mediamonitor.h"
+#include "menu.h"
 #include "utilities.h"
 
-MediaMonitor::MediaMonitor(std::string dir) :
-	Monitor(dir, IN_MOVE | IN_DELETE | IN_CREATE | IN_ONLYDIR)
+using namespace std;
+
+MediaMonitor::MediaMonitor(string dir, Menu *menu) :
+	Monitor(dir, menu, IN_MOVE | IN_DELETE | IN_CREATE | IN_ONLYDIR)
 {
 }
 
@@ -26,9 +31,11 @@ void MediaMonitor::inject_event(bool is_add, const char *path)
 	sleep(1);
 
 	if (is_add)
-		inject_user_event(OPEN_PACKAGES_FROM_DIR, strdup(path));
+		menu->openPackagesFromDir(((string)path + "/apps").c_str());
 	else
-		inject_user_event(REMOVE_LINKS, strdup(path));
+		menu->removePackageLink(path);
+
+	inject_user_event();
 }
 
 #endif /* ENABLE_INOTIFY */

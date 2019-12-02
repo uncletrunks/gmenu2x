@@ -256,7 +256,7 @@ GMenu2X::GMenu2X() : input(*this), sc(this)
 	initMenu();
 
 #ifdef ENABLE_INOTIFY
-	monitor = new MediaMonitor(GMENU2X_CARD_ROOT);
+	monitor = new MediaMonitor(GMENU2X_CARD_ROOT, menu.get());
 #endif
 
 	if (!input.init(menu.get())) {
