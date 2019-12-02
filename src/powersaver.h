@@ -1,23 +1,28 @@
 #ifndef POWERSAVER_H
 #define POWERSAVER_H
 
+#include <memory>
 #include <SDL.h>
 
 class PowerSaver {
 public:
-	PowerSaver();
+	static std::shared_ptr<PowerSaver> getInstance();
+
 	~PowerSaver();
 	void resetScreenTimer();
 	void setScreenTimeout(unsigned int seconds);
 
 private:
+	PowerSaver();
+
 	void addScreenTimer();
 	void removeScreenTimer();
 	void setScreenBlanking(bool state);
 	void enableScreen();
 	void disableScreen();
 
-	static PowerSaver *instance;
+	static std::shared_ptr<PowerSaver> instance;
+
 	bool screenState;
 	unsigned int screenTimeout;
 	unsigned int timeout_startms;
