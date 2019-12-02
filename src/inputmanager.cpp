@@ -250,29 +250,6 @@ bool InputManager::getButton(Button *button, bool wait) {
 			}
 #endif
 		case SDL_USEREVENT:
-			switch ((enum EventCode) event.user.code) {
-#ifdef HAVE_LIBOPK
-#ifdef ENABLE_INOTIFY
-				case REMOVE_LINKS:
-					menu->removePackageLink((const char *) event.user.data1);
-					break;
-#endif
-				case OPEN_PACKAGE:
-					menu->openPackage((const char *) event.user.data1);
-					break;
-				case OPEN_PACKAGES_FROM_DIR:
-					menu->openPackagesFromDir(
-								((string) (const char *) event.user.data1
-								 + "/apps").c_str());
-					break;
-#endif /* HAVE_LIBOPK */
-				case REPAINT_MENU:
-				default:
-					break;
-			}
-
-			if (event.user.data1)
-				free(event.user.data1);
 			*button = REPAINT;
 			return true;
 

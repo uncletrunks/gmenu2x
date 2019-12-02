@@ -21,7 +21,7 @@ void Monitor::inject_event(bool is_add, const char *path)
 	else
 		menu->removePackageLink(path);
 
-	inject_user_event();
+	request_repaint();
 }
 
 bool Monitor::event_accepted(struct inotify_event &event)

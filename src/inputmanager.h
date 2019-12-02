@@ -31,13 +31,6 @@ class GMenu2X;
 class Menu;
 class InputManager;
 
-enum EventCode {
-	REMOVE_LINKS,
-	OPEN_PACKAGE,
-	OPEN_PACKAGES_FROM_DIR,
-	REPAINT_MENU,
-};
-
 #ifndef SDL_JOYSTICK_DISABLED
 #define AXIS_STATE_POSITIVE 0
 #define AXIS_STATE_NEGATIVE 1

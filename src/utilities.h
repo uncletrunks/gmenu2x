@@ -103,7 +103,6 @@ void split(std::vector<std::string>& vec, std::string const& str,
 int intTransition(int from, int to, long int tickStart, long duration=500,
 		long tickNow=-1);
 
-void inject_user_event(enum EventCode code = REPAINT_MENU,
-			void *data1 = NULL, void *data2 = NULL);
+void request_repaint();
 
 #endif // UTILITIES_H

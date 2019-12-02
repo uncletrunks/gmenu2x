@@ -232,16 +232,13 @@ int intTransition(int from, int to, long tickStart, long duration, long tickNow)
 	//                    elapsed                 increments
 }
 
-void inject_user_event(enum EventCode code, void *data1, void *data2)
+void request_repaint()
 {
 	if (!PowerSaver::getInstance()->getScreenState())
 		return;
 
 	SDL_UserEvent e = {
 		.type = SDL_USEREVENT,
-		.code = code,
-		.data1 = data1,
-		.data2 = data2,
 	};
 
 	/* Inject an user event, that will be handled as a "repaint"

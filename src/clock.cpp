@@ -113,7 +113,8 @@ unsigned int Clock::Timer::update()
 unsigned int Clock::Timer::callback()
 {
 	unsigned int ms = update();
-	inject_user_event();
+
+	request_repaint();
 
 	// TODO: SDL timer forgets adjusted interval if a timer was inserted or
 	//       removed during the callback. So we should either fix that bug

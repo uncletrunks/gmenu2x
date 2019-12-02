@@ -35,7 +35,7 @@ void MediaMonitor::inject_event(bool is_add, const char *path)
 	else
 		menu->removePackageLink(path);
 
-	inject_user_event();
+	request_repaint();
 }
 
 #endif /* ENABLE_INOTIFY */
