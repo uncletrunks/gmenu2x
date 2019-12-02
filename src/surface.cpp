@@ -340,7 +340,7 @@ unique_ptr<OutputSurface> OutputSurface::open(
 {
 	SDL_ShowCursor(SDL_DISABLE);
 	SDL_Surface *raw = SDL_SetVideoMode(
-		width, height, bitsPerPixel, SDL_HWSURFACE | SDL_DOUBLEBUF);
+		width, height, bitsPerPixel, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
 	return unique_ptr<OutputSurface>(raw ? new OutputSurface(raw) : nullptr);
 }
 
