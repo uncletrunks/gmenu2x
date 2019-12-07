@@ -34,29 +34,40 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <strings.h>
+#include <cctype>
+#include <filesystem>
 #include <unistd.h>
 
 using namespace std;
 
 bool case_less::operator()(const string &left, const string &right) const {
-	return strcasecmp(left.c_str(), right.c_str()) < 0;
+	return std::equal(left.begin(), left.end(), right.begin(), right.end(), 
+		[](string::value_type c1, string::value_type c2) { return std::tolower(c1) < std::tolower(c2);
+	});
+}
+
+std::string case_less::to_lower(std::string data)
+{
+	std::transform(data.begin(), data.end(), data.begin(), 
+		[](std::string::value_type c) { return std::tolower(c); }
+	);
+	return data;
 }
 
 string trim(const string& s) {
-  auto b = s.find_first_not_of(" \t\r");
-  auto e = s.find_last_not_of(" \t\r");
-  return b == string::npos ? "" : string(s, b, e + 1 - b);
+	auto b = s.find_first_not_of(" \t\r");
+	auto e = s.find_last_not_of(" \t\r");
+	return b == string::npos ? "" : string(s, b, e + 1 - b);
 }
 
 string ltrim(const string& s) {
-  auto b = s.find_first_not_of(" \t\r");
-  return b == string::npos ? "" : string(s, b);
+	auto b = s.find_first_not_of(" \t\r");
+	return b == string::npos ? "" : string(s, b);
 }
 
 string rtrim(const string& s) {
-  auto e = s.find_last_not_of(" \t\r");
-  return e == string::npos ? "" : string(s, 0, e + 1);
+	auto e = s.find_last_not_of(" \t\r");
+	return e == string::npos ? "" : string(s, 0, e + 1);
 }
 
 // See this article for a performance comparison of different approaches:
@@ -219,7 +230,7 @@ string strreplace (string orig, const string &search, const string &replace) {
 
 string cmdclean (string cmdline) {
 	string spchars = "\\`$();|{}&'\"*?<>[]!^~-#\n\r ";
-	for (uint i=0; i<spchars.length(); i++) {
+	for (size_t i=0; i<spchars.length(); i++) {
 		string curchar = spchars.substr(i,1);
 		cmdline = strreplace(cmdline, curchar, "\\"+curchar);
 	}
@@ -237,9 +248,7 @@ void request_repaint()
 	if (!PowerSaver::getInstance()->getScreenState())
 		return;
 
-	SDL_UserEvent e = {
-		.type = SDL_USEREVENT,
-	};
+	SDL_UserEvent e = { SDL_USEREVENT };
 
 	/* Inject an user event, that will be handled as a "repaint"
 	 * event by the InputManager */
