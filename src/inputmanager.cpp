@@ -306,7 +306,7 @@ void InputManager::startTimer(Joystick *joystick)
 				keyRepeatCallback, joystick);
 }
 
-Uint32 InputManager::joystickRepeatCallback(Uint32 timeout __attribute__((unused)), struct Joystick *joystick)
+Uint32 InputManager::joystickRepeatCallback([[maybe_unused]] Uint32 timeout, struct Joystick *joystick)
 {
 	Uint8 hatState;
 
@@ -322,10 +322,10 @@ Uint32 InputManager::joystickRepeatCallback(Uint32 timeout __attribute__((unused
 		hatState = joystick->hatState;
 
 	SDL_JoyHatEvent e = {
-		.type = SDL_JOYHATMOTION,
-		.which = (Uint8) SDL_JoystickIndex(joystick->joystick),
-		.hat = 0,
-		.value = hatState,
+		SDL_JOYHATMOTION,
+		(Uint8) SDL_JoystickIndex(joystick->joystick),
+		0,
+		hatState,
 	};
 	SDL_PushEvent((SDL_Event *) &e);
 
