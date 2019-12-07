@@ -11,6 +11,7 @@
 #include <SDL.h>
 #include <png.h>
 #include <cassert>
+#include <memory>
 
 #ifdef HAVE_LIBOPK
 #include <opk.h>
@@ -148,14 +149,15 @@ SDL_Surface *loadPNG(const std::string &path, bool loadAlpha) {
 	//       if it is in the outer scope.
 	{
 		// Compute row pointers.
-		png_bytep rowPointers[height];
+		auto rowPointers = std::make_unique<png_bytep[]>(height);
+
 		for (png_uint_32 y = 0; y < height; y++) {
 			rowPointers[y] =
 				static_cast<png_bytep>(surface->pixels) + y * surface->pitch;
 		}
 
 		// Read the entire image in one go.
-		png_read_image(png, rowPointers);
+		png_read_image(png, rowPointers.get());
 	}
 
 	// Read rest of file, and get additional chunks in the info struct.

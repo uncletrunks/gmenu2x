@@ -132,10 +132,9 @@ bool FileLister::browse(const string& path, bool clean)
 			if (ext) ext++; else ext = "";
 
 			for (auto& filterExt : filter) {
-				// Note: strcasecmp can't compare multi-byte UTF-8 characters,
-				//       but the filtered file extensions don't contain any of
-				//       those.
-				if (strcasecmp(ext, filterExt.c_str()) == 0) {
+				// Note: this won't work with UTF8 characters but there shouldn't
+				// be any 
+				if (case_less::to_lower(ext) == case_less::to_lower(filterExt)) {
 					fileSet.insert(string(dptr->d_name));
 					break;
 				}
@@ -164,7 +163,7 @@ bool FileLister::browse(const string& path, bool clean)
 	return true;
 }
 
-string FileLister::operator[](uint x)
+string FileLister::operator[](size_t x)
 {
 	const auto dirCount = directories.size();
 	return x < dirCount ? directories[x] : files[x - dirCount];

@@ -54,7 +54,7 @@ public:
 		// (not included in BUTTON_TYPE_SIZE)
 		REPAINT, QUIT,
 	};
-	#define BUTTON_TYPE_SIZE 10
+	static constexpr size_t BUTTON_TYPE_SIZE = 10;
 
 	InputManager(GMenu2X& gmenu2x);
 	~InputManager();

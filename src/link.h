@@ -82,7 +82,7 @@ private:
 	Action action;
 
 	SDL_Rect rect;
-	uint iconX, padding;
+	uint32_t iconX, padding;
 	int lastTick;
 	std::string title, description;
 };

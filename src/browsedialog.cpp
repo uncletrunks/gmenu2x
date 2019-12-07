@@ -60,7 +60,7 @@ bool BrowseDialog::exec()
 	rowHeight = gmenu2x.font->getLineSpacing() + 1; // gp2x=15+1 / pandora=19+1
 	rowHeight = constrain(rowHeight, 20, 40);
 	numRows = (gmenu2x.height() - topBarHeight - 20) / rowHeight;
-	clipRect = (SDL_Rect) {
+	clipRect = SDL_Rect{
 		0,
 		static_cast<Sint16>(topBarHeight + 1),
 		static_cast<Uint16>(gmenu2x.width() - 9),

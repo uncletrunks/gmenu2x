@@ -61,7 +61,7 @@ bool WallpaperDialog::exec()
 
 	DEBUG("Wallpapers: %zd\n", wallpapers.size());
 
-	uint i, selected = 0, firstElement = 0, iY;
+	uint32_t i, selected = 0, firstElement = 0, iY;
 
 	ButtonBox buttonbox;
 	buttonbox.add(unique_ptr<IconButton>(new IconButton(gmenu2x, "skin:imgs/buttons/accept.png", gmenu2x.tr["Select"])));
@@ -147,7 +147,7 @@ bool WallpaperDialog::exec()
         }
 	}
 
-	for (uint i=0; i<wallpapers.size(); i++) {
+	for (size_t i=0; i<wallpapers.size(); i++) {
 	  gmenu2x.sc.del("skin:wallpapers/" + wallpapers[i]);
 	}
 

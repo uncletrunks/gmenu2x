@@ -244,7 +244,7 @@ void InputDialog::confirm() {
 		close = true;
 	} else {
 		int xc = 0;
-		for (uint x = 0; x < kb->at(selRow).length(); x++) {
+		for (size_t x = 0; x < kb->at(selRow).length(); x++) {
 			bool utf8 = utf8Code(kb->at(selRow)[x]);
 			if (xc == selCol) input += kb->at(selRow).substr(x, utf8 ? 2 : 1);
 			if (utf8) x++;
@@ -286,9 +286,9 @@ void InputDialog::drawVirtualKeyboard() {
 	}
 
 	//keys
-	for (uint l=0; l<kb->size(); l++) {
+	for (size_t l=0; l<kb->size(); l++) {
 		string line = kb->at(l);
-		for (uint x=0, xc=0; x<line.length(); x++) {
+		for (size_t x=0, xc=0; x<line.length(); x++) {
 			string charX;
 			//utf8 characters
 			if (utf8Code(line[x])) {

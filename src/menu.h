@@ -57,11 +57,11 @@ private:
 	GMenu2X& gmenu2x;
 	IconButton btnContextMenu;
 	int iSection, iLink;
-	uint iFirstDispRow;
+	uint32_t iFirstDispRow;
 	std::vector<std::string> sections;
 	std::vector<std::vector<std::unique_ptr<Link>>> links;
 
-	uint linkColumns, linkRows;
+	uint32_t linkColumns, linkRows;
 
 	Animation sectionAnimation;
 
@@ -121,7 +121,7 @@ public:
 	const std::string &selSection();
 	void setSectionIndex(int i);
 
-	void addActionLink(uint section, std::string const& title,
+	void addActionLink(uint32_t section, std::string const& title,
 			Action action, std::string const& description="",
 			std::string const& icon="");
 	bool addLink(std::string const& path, std::string const& file);

@@ -180,7 +180,7 @@ bool Menu::runAnimations() {
 }
 
 void Menu::paint(Surface &s) {
-	const uint width = s.width(), height = s.height();
+	const uint32_t width = s.width(), height = s.height();
 	Font &font = *gmenu2x.font;
 	SurfaceCollection &sc = gmenu2x.sc;
 
@@ -206,10 +206,10 @@ void Menu::paint(Surface &s) {
 
 	// Paint section headers.
 	s.box(width / 2  - linkWidth / 2, 0, linkWidth, topBarHeight, selectionBgColor);
-	const uint sectionLinkPadding = (topBarHeight - 32 - font.getLineSpacing()) / 3;
-	const uint numSections = sections.size();
+	const uint32_t sectionLinkPadding = (topBarHeight - 32 - font.getLineSpacing()) / 3;
+	const uint32_t numSections = sections.size();
 	for (int i = leftSection; i <= rightSection; i++) {
-		uint j = (centerSection + numSections + i) % numSections;
+		uint32_t j = (centerSection + numSections + i) % numSections;
 		string sectionIcon = "skin:sections/" + sections[j] + ".png";
 		Surface *icon = sc.exists(sectionIcon)
 				? sc[sectionIcon]
@@ -242,19 +242,19 @@ void Menu::paint(Surface &s) {
 			linkRows, (numLinks + linkColumns - 1) / linkColumns, iFirstDispRow);
 
 	//Links
-	const uint linksPerPage = linkColumns * linkRows;
+	const uint32_t linksPerPage = linkColumns * linkRows;
 	const int linkSpacingX = (width - 10 - linkColumns * linkWidth) / linkColumns;
 	const int linkMarginX = (
 			width - linkWidth * linkColumns - linkSpacingX * (linkColumns - 1)
 			) / 2;
 	const int linkSpacingY = (height - 35 - topBarHeight - linkRows * linkHeight) / linkRows;
-	for (uint i = iFirstDispRow * linkColumns; i < iFirstDispRow * linkColumns + linksPerPage && i < numLinks; i++) {
+	for (uint32_t i = iFirstDispRow * linkColumns; i < iFirstDispRow * linkColumns + linksPerPage && i < numLinks; i++) {
 		const int ir = i - iFirstDispRow * linkColumns;
 		const int x = linkMarginX + (ir % linkColumns) * (linkWidth + linkSpacingX);
 		const int y = ir / linkColumns * (linkHeight + linkSpacingY) + topBarHeight + 2;
 		sectionLinks.at(i)->setPosition(x, y);
 
-		if (i == (uint)iLink) {
+		if (i == (uint32_t)iLink) {
 			sectionLinks.at(i)->paintHover();
 		}
 
@@ -358,7 +358,7 @@ void Menu::setSectionIndex(int i) {
 /*====================================
    LINKS MANAGEMENT
   ====================================*/
-void Menu::addActionLink(uint section, string const& title, Action action,
+void Menu::addActionLink(uint32_t section, string const& title, Action action,
 		string const& description, string const& icon)
 {
 	assert(section < sections.size());
@@ -416,7 +416,7 @@ bool Menu::addLink(string const& path, string const& file)
 		fl.setFilter(".txt");
 		fl.browse(dirPath);
 		bool found = false;
-		for (uint x=0; x<fl.size() && !found; x++) {
+		for (size_t x=0; x<fl.size() && !found; x++) {
 			string lcfilename = fl[x];
 
 			if (lcfilename.find("readme") != string::npos) {
@@ -823,7 +823,7 @@ void Menu::readLinks()
 	iLink = 0;
 	iFirstDispRow = 0;
 
-	for (uint i=0; i<links.size(); i++) {
+	for (size_t i=0; i<links.size(); i++) {
 		links[i].clear();
 
 		int correct = (i>sections.size() ? iSection : i);

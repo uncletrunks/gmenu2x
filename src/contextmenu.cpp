@@ -136,7 +136,7 @@ void ContextMenu::paint(Surface &s)
 	s.box(selbox, gmenu2x.skinConfColors[COLOR_MESSAGE_BOX_SELECTION]);
 
 	// List options.
-	for (uint i = 0; i < options.size(); i++) {
+	for (size_t i = 0; i < options.size(); i++) {
 		font.write(s, options[i]->text, box.x + 12, box.y + 5 + (h + 2) * i,
 				Font::HAlignLeft, Font::VAlignTop);
 	}

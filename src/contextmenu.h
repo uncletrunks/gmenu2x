@@ -12,7 +12,6 @@
 class GMenu2X;
 class Menu;
 
-
 /**
  * A popup dialog containing action on the current section or link.
  */
