@@ -6,8 +6,8 @@
 
 #include <SDL.h>
 #include <atomic>
-#include <sys/time.h>
-
+#include <chrono>
+#include <algorithm>
 
 class Clock::Timer {
 public:
@@ -53,10 +53,7 @@ extern "C" Uint32 callbackFunc(Uint32 /*timeout*/, void */*d*/)
 }
 
 Clock::Timer::Timer()
-	: timerID(NULL)
-{
-	tzset();
-}
+	: timerID(NULL) { }
 
 Clock::Timer::~Timer()
 {
@@ -87,16 +84,18 @@ void Clock::Timer::getTime(unsigned int &hours, unsigned int &minutes)
 
 unsigned int Clock::Timer::update()
 {
-	struct timeval tv;
-	struct tm result;
-	gettimeofday(&tv, NULL);
-	localtime_r(&tv.tv_sec, &result);
+	using namespace std::chrono;
+	
+	auto time = system_clock::now();
+	time_t tt = system_clock::to_time_t(time);
+	tm local = *localtime(&tt);
+	
 	timestamp.store({
-		static_cast<unsigned char>(result.tm_hour),
-		static_cast<unsigned char>(result.tm_min)
+		static_cast<unsigned char>(local.tm_hour),
+		static_cast<unsigned char>(local.tm_min)
 		});
 	DEBUG("Time updated: %02i:%02i:%02i\n",
-			result.tm_hour, result.tm_min, result.tm_sec);
+		local.tm_hour, local.tm_min, local.tm_sec);
 
 	// Compute number of milliseconds to next minute boundary.
 	// We don't need high precision, but it is important that any deviation is
@@ -107,7 +106,7 @@ unsigned int Clock::Timer::update()
 	// Clamping it at 1 sec both avoids overloading the system in case our
 	// computation goes haywire and avoids passing 0 to SDL, which would stop
 	// the recurring timer.
-	return std::max(1, (60 - result.tm_sec)) * 1000;
+	return std::max(1, (60 - local.tm_sec)) * 1000;
 }
 
 unsigned int Clock::Timer::callback()

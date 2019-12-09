@@ -64,17 +64,17 @@ public:
 
 	void box(SDL_Rect re, RGBAColor c);
 	void box(Sint16 x, Sint16 y, Uint16 w, Uint16 h, RGBAColor c) {
-		box((SDL_Rect){ x, y, w, h }, c);
+		box(SDL_Rect{ x, y, w, h }, c);
 	}
 	void box(Sint16 x, Sint16 y, Uint16 w, Uint16 h, Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
-		box((SDL_Rect){ x, y, w, h }, RGBAColor(r, g, b, a));
+		box(SDL_Rect{ x, y, w, h }, RGBAColor(r, g, b, a));
 	}
 	void rectangle(SDL_Rect re, RGBAColor c);
 	void rectangle(Sint16 x, Sint16 y, Uint16 w, Uint16 h, RGBAColor c) {
-		rectangle((SDL_Rect){ x, y, w, h }, c);
+		rectangle(SDL_Rect{ x, y, w, h }, c);
 	}
 	void rectangle(Sint16 x, Sint16 y, Uint16 w, Uint16 h, Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
-		rectangle((SDL_Rect){ x, y, w, h }, RGBAColor(r, g, b, a));
+		rectangle(SDL_Rect{ x, y, w, h }, RGBAColor(r, g, b, a));
 	}
 
 protected:

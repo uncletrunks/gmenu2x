@@ -46,15 +46,15 @@ bool SettingsDialog::exec() {
 	bg.convertToDisplayFormat();
 
 	bool close = false;
-	uint i, sel = 0, firstElement = 0;
+	uint32_t i, sel = 0, firstElement = 0;
 
 	const int topBarHeight = gmenu2x.skinConfInt["topBarHeight"];
-	uint rowHeight = gmenu2x.font->getLineSpacing() + 1; // gp2x=15+1 / pandora=19+1
-	uint numRows = (gmenu2x.height() - topBarHeight - 20) / rowHeight;
+	uint32_t rowHeight = gmenu2x.font->getLineSpacing() + 1; // gp2x=15+1 / pandora=19+1
+	uint32_t numRows = (gmenu2x.height() - topBarHeight - 20) / rowHeight;
 
-	uint maxNameWidth = 0;
+	uint32_t maxNameWidth = 0;
 	for (auto it = settings.begin(); it != settings.end(); it++) {
-		maxNameWidth = max(maxNameWidth, (uint) gmenu2x.font->getTextWidth((*it)->getName()));
+		maxNameWidth = std::max(maxNameWidth, (uint32_t) gmenu2x.font->getTextWidth((*it)->getName()));
 	}
 
 	while (!close) {
@@ -73,7 +73,7 @@ bool SettingsDialog::exec() {
 		if (sel<firstElement) firstElement=sel;
 
 		//selection
-		uint iY = topBarHeight + 2 + (sel - firstElement) * rowHeight;
+		uint32_t iY = topBarHeight + 2 + (sel - firstElement) * rowHeight;
 
 		//selected option
 		settings[sel]->drawSelected(maxNameWidth + 15, iY, rowHeight);

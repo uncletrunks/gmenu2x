@@ -38,9 +38,9 @@ public:
 private:
 	GMenu2X& gmenu2x;
 	std::string text, icon;
-	std::string buttons[BUTTON_TYPE_SIZE];
-	std::string buttonLabels[BUTTON_TYPE_SIZE];
-	SDL_Rect buttonPositions[BUTTON_TYPE_SIZE];
+	std::string buttons[InputManager::BUTTON_TYPE_SIZE];
+	std::string buttonLabels[InputManager::BUTTON_TYPE_SIZE];
+	SDL_Rect buttonPositions[InputManager::BUTTON_TYPE_SIZE];
 };
 
 #endif // MESSAGEBOX_H

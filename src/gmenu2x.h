@@ -131,7 +131,7 @@ public:
 	/*
 	 * Variables needed for elements disposition
 	 */
-	uint bottomBarIconY, bottomBarTextY;
+	uint32_t bottomBarIconY, bottomBarTextY;
 	unsigned short cpuX; //!< Offset for displaying cpu clock information
 	unsigned short manualX; //!< Offset for displaying the manual indicator in the taskbar
 
@@ -201,7 +201,7 @@ public:
 
 	int drawButton(Surface& s, const std::string &btn, const std::string &text, int x=5, int y=-10);
 	int drawButtonRight(Surface& s, const std::string &btn, const std::string &text, int x=5, int y=-10);
-	void drawScrollBar(uint pageSize, uint totalSize, uint pagePos);
+	void drawScrollBar(uint32_t pageSize, uint32_t totalSize, uint32_t pagePos);
 
 	void drawTopBar(Surface& s);
 	void drawBottomBar(Surface& s);

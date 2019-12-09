@@ -22,6 +22,9 @@
 #include "gmenu2x.h"
 #include "surface.h"
 
+#include <chrono>
+#include <thread>
+#include <algorithm>
 #include <unistd.h>
 
 using namespace std;
@@ -35,7 +38,7 @@ MessageBox::MessageBox(GMenu2X& gmenu2x, const string &text, const string &icon)
 	, text(text)
 	, icon(icon)
 {
-	for (uint i = 0; i < BUTTON_TYPE_SIZE; i++) {
+	for (uint32_t i = 0; i < InputManager::BUTTON_TYPE_SIZE; i++) {
 		buttons[i] = "";
 		buttonLabels[i] = "";
 		buttonPositions[i].h = gmenu2x.font->getLineSpacing();
@@ -89,7 +92,7 @@ int MessageBox::exec() {
 	gmenu2x.font->write(bg, text, box.x + TEXT_PADDING + (gmenu2x.sc[icon] ? ICON_PADDING + ICON_DIMENSION : 0), box.y + (box.h - textHeight) / 2, Font::HAlignLeft, Font::VAlignTop);
 
 	int btnX = box.x - 6;
-	for (uint i = 0; i < BUTTON_TYPE_SIZE; i++) {
+	for (size_t i = 0; i < InputManager::BUTTON_TYPE_SIZE; i++) {
 		if (!buttons[i].empty()) {
 			buttonPositions[i].y = box.y+box.h+8;
 			buttonPositions[i].w = btnX;
@@ -113,7 +116,7 @@ int MessageBox::exec() {
 			result = button;
 		}
 
-		usleep(LOOP_DELAY);
+		std::this_thread::sleep_for(std::chrono::microseconds(LOOP_DELAY));
 	}
 
 	return result;

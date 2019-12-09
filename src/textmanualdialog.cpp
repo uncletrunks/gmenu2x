@@ -33,7 +33,7 @@ TextManualDialog::TextManualDialog(GMenu2X& gmenu2x, const string &title, const 
 	: TextDialog(gmenu2x, title, "", icon, text)
 {
 	//split the text in multiple pages
-	for (uint i=0; i<this->text.size(); i++) {
+	for (size_t i=0; i<this->text.size(); i++) {
 		string line = trim(this->text.at(i));
 		if (line[0]=='[' && line[line.length()-1]==']') {
 			ManualPage mp;

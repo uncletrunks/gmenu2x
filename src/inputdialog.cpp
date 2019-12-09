@@ -117,7 +117,7 @@ InputDialog::InputDialog(GMenu2X& gmenu2x, InputManager &inputMgr_,
 }
 
 void InputDialog::setKeyboard(int kb) {
-	kb = constrain(kb, 0, keyboard.size() - 1);
+	kb = std::clamp(kb, 0, (int)keyboard.size() - 1);
 	curKeyboard = kb;
 	this->kb = &(keyboard[kb]);
 	kbLength = this->kb->at(0).length();
@@ -244,7 +244,7 @@ void InputDialog::confirm() {
 		close = true;
 	} else {
 		int xc = 0;
-		for (uint x = 0; x < kb->at(selRow).length(); x++) {
+		for (size_t x = 0; x < kb->at(selRow).length(); x++) {
 			bool utf8 = utf8Code(kb->at(selRow)[x]);
 			if (xc == selCol) input += kb->at(selRow).substr(x, utf8 ? 2 : 1);
 			if (utf8) x++;
@@ -286,9 +286,9 @@ void InputDialog::drawVirtualKeyboard() {
 	}
 
 	//keys
-	for (uint l=0; l<kb->size(); l++) {
+	for (size_t l=0; l<kb->size(); l++) {
 		string line = kb->at(l);
-		for (uint x=0, xc=0; x<line.length(); x++) {
+		for (size_t x=0, xc=0; x<line.length(); x++) {
 			string charX;
 			//utf8 characters
 			if (utf8Code(line[x])) {

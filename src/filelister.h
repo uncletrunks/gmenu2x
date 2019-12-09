@@ -42,13 +42,13 @@ public:
 	 */
 	bool browse(const std::string& path, bool clean = true);
 
-	unsigned int size() { return files.size() + directories.size(); }
-	unsigned int dirCount() { return directories.size(); }
-	unsigned int fileCount() { return files.size(); }
+	size_t size() const { return files.size() + directories.size(); }
+	size_t dirCount() const { return directories.size(); }
+	size_t fileCount() const { return files.size(); }
 
-	std::string operator[](unsigned int);
-	bool isFile(unsigned int x) { return x >= directories.size(); }
-	bool isDirectory(unsigned int x) { return x < directories.size(); }
+	std::string operator[](size_t);
+	bool isFile(size_t x) const { return x >= directories.size(); }
+	bool isDirectory(size_t x) const { return x < directories.size(); }
 
 	void setFilter(const std::string &filter);
 
@@ -56,8 +56,8 @@ public:
 	void setShowUpdir(bool enabled) { showUpdir = enabled; }
 	void setShowFiles(bool enabled) { showFiles = enabled; }
 
-	const std::vector<std::string> &getDirectories() { return directories; }
-	const std::vector<std::string> &getFiles() { return files; }
+	const std::vector<std::string> &getDirectories() const { return directories; }
+	const std::vector<std::string> &getFiles() const { return files; }
 };
 
 #endif // FILELISTER_H
