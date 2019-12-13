@@ -40,7 +40,7 @@ unsigned short Battery::getBatteryLevel()
 			return 6;
 	}
 
-	path = powerSupplySysfs + "/capacity";
+	path = batterySysfs + "/capacity";
 	handle = fopen(path.c_str(), "r");
 	if (handle) {
 		int battval = 0;
@@ -62,21 +62,21 @@ unsigned short Battery::getBatteryLevel()
 	 * battery.
 	 */
 
-	path = powerSupplySysfs + "/voltage_max_design";
+	path = batterySysfs + "/voltage_max_design";
 	handle = fopen(path.c_str(), "r");
 	if (handle) {
 		fscanf(handle, "%lu", &voltage_max);
 		fclose(handle);
 	}
 
-	path = powerSupplySysfs + "/voltage_min_design";
+	path = batterySysfs + "/voltage_min_design";
 	handle = fopen(path.c_str(), "r");
 	if (handle) {
 		fscanf(handle, "%lu", &voltage_min);
 		fclose(handle);
 	}
 
-	path = powerSupplySysfs + "/voltage_now";
+	path = batterySysfs + "/voltage_now";
 	handle = fopen(path.c_str(), "r");
 	if (handle) {
 		fscanf(handle, "%lu", &voltage_now);
