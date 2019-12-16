@@ -379,7 +379,7 @@ void GMenu2X::initMenu() {
 			bind(&GMenu2X::changeWallpaper, this),
 			tr["Change GMenu2X wallpaper"],
 			"skin:icons/wallpaper.png");
-	if (fileExists(LOG_FILE)) {
+	if (fileExists(getLogFile())) {
 		menu->addActionLink(settingIdx, tr["Log Viewer"],
 				bind(&GMenu2X::viewLog, this),
 				tr["Displays last launched program's output"],
@@ -407,7 +407,7 @@ void GMenu2X::about() {
 }
 
 void GMenu2X::viewLog() {
-	string text(readFileAsString(LOG_FILE));
+	string text(readFileAsString(getLogFile()));
 
 	TextDialog td(*this, tr["Log Viewer"],
 			tr["Displays last launched program's output"],
@@ -419,7 +419,7 @@ void GMenu2X::viewLog() {
 	mb.setButton(InputManager::ACCEPT, tr["Yes"]);
 	mb.setButton(InputManager::CANCEL, tr["No"]);
 	if (mb.exec() == InputManager::ACCEPT) {
-		unlink(LOG_FILE);
+		unlink(getLogFile().c_str());
 		menu->deleteSelectedLink();
 	}
 }

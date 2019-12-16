@@ -585,9 +585,11 @@ unique_ptr<Launcher> LinkApp::prepareLaunch(const string &selectedFile) {
 	}
 
 	if (gmenu2x.confInt["outputLogs"] && !consoleApp) {
-		int fd = open(LOG_FILE, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+		int fd = open(GMenu2X::getLogFile().c_str(),
+			      O_WRONLY | O_TRUNC | O_CREAT, 0644);
 		if (fd < 0) {
-			ERROR("Unable to open log file for write: %s\n", LOG_FILE);
+			ERROR("Unable to open log file for write: %s\n",
+			      GMenu2X::getLogFile().c_str());
 		} else {
 			fflush(stdout);
 			dup2(fd, STDOUT_FILENO);

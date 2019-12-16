@@ -46,10 +46,6 @@ class Layer;
 class MediaMonitor;
 class Menu;
 
-#ifndef LOG_FILE
-#define LOG_FILE "/var/log/gmenu2x.log"
-#endif
-
 const int LOOP_DELAY = 30000;
 
 extern const char *CARD_ROOT;
@@ -123,6 +119,10 @@ public:
 
 	GMenu2X();
 	~GMenu2X();
+
+	static const std::string getLogFile() {
+		return getHome() + "/gmenu2x.log";
+	}
 
 	/* Returns the home directory of gmenu2x, usually
 	 * ~/.gmenu2x */
