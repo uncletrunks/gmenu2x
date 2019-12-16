@@ -41,9 +41,8 @@
 using namespace std;
 
 bool case_less::operator()(const string &left, const string &right) const {
-	return std::equal(left.begin(), left.end(), right.begin(), right.end(), 
-		[](string::value_type c1, string::value_type c2) { return std::tolower(c1) < std::tolower(c2);
-	});
+	return std::lexicographical_compare(left.begin(), left.end(),
+					    right.begin(), right.end());
 }
 
 std::string case_less::to_lower(std::string data)
