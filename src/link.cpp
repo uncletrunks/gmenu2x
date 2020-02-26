@@ -83,8 +83,10 @@ void Link::paintDescription(int center_x, int center_y)
 		0, 0
 	};
 
-	descSurface->blit(*gmenu2x.s, coords,
-			  Font::HAlignCenter, Font::VAlignBottom);
+	if (descSurface != nullptr) {
+		descSurface->blit(*gmenu2x.s, coords,
+				  Font::HAlignCenter, Font::VAlignBottom);
+	}
 }
 
 void Link::updateSurfaces()
