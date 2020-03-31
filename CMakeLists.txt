@@ -19,6 +19,21 @@ if (BIND_CONSOLE)
 	add_compile_definitions(BIND_CONSOLE)
 endif (BIND_CONSOLE)
 
+option(WINDOWED_MODE "Run windowed" OFF)
+if (WINDOWED_MODE)
+	add_compile_definitions(G2X_BUILD_OPTION_WINDOWED_MODE)
+endif ()
+
+set(SCREEN_WIDTH "" CACHE STRING "Screen / window width (empty: max available)")
+if (SCREEN_WIDTH)
+	add_compile_definitions(G2X_BUILD_OPTION_SCREEN_WIDTH=${SCREEN_WIDTH})
+endif ()
+
+set(SCREEN_HEIGHT "" CACHE STRING "Screen / window height (empty: max available)")
+if (SCREEN_HEIGHT)
+	add_compile_definitions(G2X_BUILD_OPTION_SCREEN_HEIGHT=${SCREEN_HEIGHT})
+endif ()
+
 set(CARD_ROOT "/media" CACHE STRING "Top-level filesystem directory")
 
 set(PLATFORMS "pc, a320, gcw0, nanonote, rs90")
