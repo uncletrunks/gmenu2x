@@ -104,6 +104,8 @@ Menu::Menu(GMenu2X& gmenu2x)
 
 	btnContextMenu.setPosition(gmenu2x.width() - 38,
 				   gmenu2x.bottomBarIconY);
+
+	updateSectionTextSurfaces();
 }
 
 Menu::~Menu()
@@ -160,6 +162,14 @@ void Menu::fontChanged() {
 	for (auto &section_links : links)
 		for (auto& link : section_links)
 			link->updateTextSurfaces();
+	updateSectionTextSurfaces();
+}
+
+void Menu::updateSectionTextSurfaces() {
+	auto &font = *gmenu2x.font;
+	section_text_surfaces.resize(sections.size());
+	for (std::size_t i = 0; i < sections.size(); ++i)
+		section_text_surfaces[i] = font.render(sections[i]);
 }
 
 void Menu::calcSectionRange(int &leftSection, int &rightSection) {
@@ -226,8 +236,14 @@ void Menu::paint(Surface &s) {
 			x += (((t * t) / linkWidth) * t) / linkWidth;
 		}
 		icon->blit(s, x - 16, sectionLinkPadding, 32, 32);
-		font.write(s, sections[j], x, topBarHeight - sectionLinkPadding,
-				Font::HAlignCenter, Font::VAlignBottom);
+		
+		// Center text horizontally and align to bottom.
+		const auto *text_surface = section_text_surfaces[j].get();
+		text_surface->blit(
+			s,
+			x - text_surface->width() / 2,
+			topBarHeight - sectionLinkPadding - text_surface->height()
+		);
 	}
 
 	if (!gmenu2x.skinConfInt["hideLR"]) {

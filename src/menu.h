@@ -59,6 +59,7 @@ private:
 	int iSection, iLink;
 	uint32_t iFirstDispRow;
 	std::vector<std::string> sections;
+	std::vector<std::unique_ptr<OffscreenSurface>> section_text_surfaces;
 	std::vector<std::vector<std::unique_ptr<Link>>> links;
 
 	uint32_t linkColumns, linkRows;
@@ -103,6 +104,7 @@ private:
 	void linkUp();
 	void linkDown();
 
+	void updateSectionTextSurfaces();
 public:
 	typedef std::function<void(void)> Action;
 
