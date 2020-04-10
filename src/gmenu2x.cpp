@@ -338,7 +338,7 @@ void GMenu2X::initBG() {
 	bgmain->convertToDisplayFormat();
 }
 
-void GMenu2X::initFont() {
+bool GMenu2X::initFont() {
 	std::string path = skinConfStr["font"];
 	if (path.empty())
 		path = DEFAULT_FONT_PATH;
@@ -349,7 +349,9 @@ void GMenu2X::initFont() {
 		size = DEFAULT_FONT_SIZE;
 	if (font == nullptr || font->size() != size || font->path() != path) {
 		font.reset(new Font(std::move(path), size));
+		return true;
 	}
+	return false;
 }
 
 void GMenu2X::initMenu() {
@@ -781,14 +783,15 @@ void GMenu2X::setSkin(const string &skin, bool setWallpaper) {
 	evalIntConf(skinConfInt, "linkHeight", 50, 32, 120);
 	evalIntConf(skinConfInt, "linkWidth", 80, 32, 120);
 
-	if (menu != NULL) menu->skinUpdated();
+	const bool fontChanged = initFont();
+	if (menu != nullptr) {
+		menu->skinUpdated();
+		if (fontChanged) menu->fontChanged();
+	}
 
 	//Selection png
 	if (!skinConfInt["selectionBgUseColor"])
 		useSelectionPng = !!sc.addSkinRes("imgs/selection.png", false);
-
-	//font
-	initFont();
 }
 
 bool GMenu2X::readSkinConfig(const string& conffile)

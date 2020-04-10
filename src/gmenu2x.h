@@ -101,7 +101,10 @@ private:
 	void readTmp();
 
 	void initServices();
-	void initFont();
+	
+	// Returns true if the font has changed.
+	bool initFont();
+	
 	void initMenu();
 	void initBG();
 
