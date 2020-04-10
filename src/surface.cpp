@@ -20,12 +20,12 @@
 
 #include "surface.h"
 
+#include "compat-algorithm.h"
 #include "debug.h"
 #include "imageio.h"
 #include "utilities.h"
 #include "buildopts.h"
 
-#include <algorithm>
 #include <cassert>
 #include <iomanip>
 #include <utility>
@@ -37,14 +37,14 @@ using namespace std;
 
 RGBAColor RGBAColor::fromString(const string &strColor) {
 	return {
-		uint8_t(std::clamp(std::stoi(strColor.substr(0, 2), nullptr, 16),
-		                  0, 255)),
-		uint8_t(std::clamp(std::stoi(strColor.substr(2, 2).c_str(), nullptr, 16),
-		                  0, 255)),
-		uint8_t(std::clamp(std::stoi(strColor.substr(4, 2).c_str(), nullptr, 16),
-		                  0, 255)),
-		uint8_t(std::clamp(std::stoi(strColor.substr(6, 2).c_str(), nullptr, 16),
-		                  0, 255)),
+		uint8_t(compat::clamp(std::stoi(strColor.substr(0, 2), nullptr, 16),
+		                     0, 255)),
+		uint8_t(compat::clamp(std::stoi(strColor.substr(2, 2).c_str(), nullptr, 16),
+		                     0, 255)),
+		uint8_t(compat::clamp(std::stoi(strColor.substr(4, 2).c_str(), nullptr, 16),
+		                     0, 255)),
+		uint8_t(compat::clamp(std::stoi(strColor.substr(6, 2).c_str(), nullptr, 16),
+		                     0, 255)),
 	};
 }
 

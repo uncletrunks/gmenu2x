@@ -20,6 +20,7 @@
 
 #include "selector.h"
 
+#include "compat-algorithm.h"
 #include "debug.h"
 #include "filelister.h"
 #include "gmenu2x.h"
@@ -29,7 +30,6 @@
 #include "utilities.h"
 
 #include <SDL.h>
-#include <algorithm>
 
 //for browsing the filesystem
 #include <sys/stat.h>
@@ -94,7 +94,7 @@ int Selector::exec(int startSelection) {
 	bg.convertToDisplayFormat();
 
 	unsigned int firstElement = 0;
-	unsigned int selected = std::clamp(startSelection, 0, (int)fl.size() - 1);
+	unsigned int selected = compat::clamp(startSelection, 0, (int)fl.size() - 1);
 
 	bool close = false, result = true;
 	while (!close) {

@@ -20,6 +20,7 @@
 
 #include "menusettingint.h"
 
+#include "compat-algorithm.h"
 #include "gmenu2x.h"
 #include "iconbutton.h"
 #include "surface.h"
@@ -104,7 +105,7 @@ void MenuSettingInt::dec()
 
 void MenuSettingInt::setValue(int value)
 {
-	*_value = std::clamp(value,min,max);
+	*_value = compat::clamp(value,min,max);
 	stringstream ss;
 	ss << *_value;
 	strvalue = "";

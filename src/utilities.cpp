@@ -24,7 +24,7 @@
 #include "debug.h"
 
 #include <SDL.h>
-#include <algorithm>
+#include "compat-algorithm.h"
 
 //for browsing the filesystem
 #include <sys/stat.h>
@@ -191,7 +191,7 @@ int evalIntConf (ConfIntHash& hash, const std::string &key, int def, int imin, i
 	if (it == hash.end()) {
 		return hash[key] = def;
 	} else {
-		return it->second = std::clamp(it->second, imin, imax);
+		return it->second = compat::clamp(it->second, imin, imax);
 	}
 }
 
@@ -234,7 +234,7 @@ string cmdclean (string cmdline) {
 
 int intTransition(int from, int to, long tickStart, long duration, long tickNow) {
 	if (tickNow<0) tickNow = SDL_GetTicks();
-	return std::clamp((int)(((tickNow-tickStart) * (to-from)) / duration), from, to);
+	return compat::clamp((int)(((tickNow-tickStart) * (to-from)) / duration), from, to);
 	//                    elapsed                 increments
 }
 

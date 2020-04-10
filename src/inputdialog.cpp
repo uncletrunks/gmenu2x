@@ -20,6 +20,7 @@
 
 #include "inputdialog.h"
 
+#include "compat-algorithm.h"
 #include "buttonbox.h"
 #include "gmenu2x.h"
 #include "iconbutton.h"
@@ -117,7 +118,7 @@ InputDialog::InputDialog(GMenu2X& gmenu2x, InputManager &inputMgr_,
 }
 
 void InputDialog::setKeyboard(int kb) {
-	kb = std::clamp(kb, 0, (int)keyboard.size() - 1);
+	kb = compat::clamp(kb, 0, (int)keyboard.size() - 1);
 	curKeyboard = kb;
 	this->kb = &(keyboard[kb]);
 	kbLength = this->kb->at(0).length();

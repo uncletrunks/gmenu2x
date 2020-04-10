@@ -20,6 +20,7 @@
 
 #include "menusettingrgba.h"
 
+#include "compat-algorithm.h"
 #include "gmenu2x.h"
 #include "iconbutton.h"
 #include "surface.h"
@@ -111,7 +112,7 @@ bool MenuSettingRGBA::handleButtonPress(InputManager::Button button)
 
 void MenuSettingRGBA::update_value(int value)
 {
-	setSelPart(std::clamp(getSelPart() + value, 0, 255));
+	setSelPart(compat::clamp(getSelPart() + value, 0, 255));
 }
 
 void MenuSettingRGBA::dec()
@@ -126,12 +127,12 @@ void MenuSettingRGBA::inc()
 
 void MenuSettingRGBA::leftComponent()
 {
-	selPart = std::clamp(selPart-1,0,3);
+	selPart = compat::clamp(selPart-1,0,3);
 }
 
 void MenuSettingRGBA::rightComponent()
 {
-	selPart = std::clamp(selPart+1,0,3);
+	selPart = compat::clamp(selPart+1,0,3);
 }
 
 void MenuSettingRGBA::setR(unsigned short r)
