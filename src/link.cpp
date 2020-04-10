@@ -46,6 +46,11 @@ Link::Link(GMenu2X& gmenu2x, Action action)
 	updateSurfaces();
 }
 
+void Link::updateTextSurfaces() {
+	updateTitleSurface();
+	updateDescriptionSurface();
+}
+
 void Link::updateTitleSurface() {
 	if (!title.empty()) {
 		titleSurface = gmenu2x.font->render(title);

@@ -61,6 +61,8 @@ public:
 	void setIcon(const std::string &icon);
 	const std::string &getIconPath();
 
+	void updateTextSurfaces();
+
 	void run();
 
 protected:

@@ -156,7 +156,11 @@ void Menu::skinUpdated() {
 	}
 }
 
-void Menu::fontChanged() { }
+void Menu::fontChanged() {
+	for (auto &section_links : links)
+		for (auto& link : section_links)
+			link->updateTextSurfaces();
+}
 
 void Menu::calcSectionRange(int &leftSection, int &rightSection) {
 	ConfIntHash &skinConfInt = gmenu2x.skinConfInt;
