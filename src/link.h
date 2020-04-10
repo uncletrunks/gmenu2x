@@ -69,8 +69,8 @@ protected:
 	std::string launchMsg, icon, iconPath;
 
 	OffscreenSurface *iconSurface;
-	std::unique_ptr<OffscreenSurface> textSurface;
-	std::unique_ptr<OffscreenSurface> descSurface;
+	std::unique_ptr<OffscreenSurface> titleSurface;
+	std::unique_ptr<OffscreenSurface> descriptionSurface;
 
 	virtual const std::string &searchIcon();
 	void setIconPath(const std::string &icon);
@@ -78,6 +78,8 @@ protected:
 
 private:
 	void recalcCoordinates();
+	void updateTitleSurface();
+	void updateDescriptionSurface();
 
 	Action action;
 

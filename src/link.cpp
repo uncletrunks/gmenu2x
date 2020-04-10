@@ -36,19 +36,30 @@ Link::Link(GMenu2X& gmenu2x, Action action)
 	: gmenu2x(gmenu2x)
 	, action(action)
 	, iconPath(gmenu2x.sc.getSkinFilePath("icons/generic.png"))
+	, edited(false)
 	, rect {
 		0, 0,
 		static_cast<decltype(SDL_Rect().w)>(gmenu2x.skinConfInt["linkWidth"]),
 		static_cast<decltype(SDL_Rect().h)>(gmenu2x.skinConfInt["linkHeight"])
 	}
-	, iconX(0)
-	, padding(0)
-	, lastTick(0)
 {
-	setTitle("");
-	setDescription("");
-	edited = false;
 	updateSurfaces();
+}
+
+void Link::updateTitleSurface() {
+	if (!title.empty()) {
+		titleSurface = gmenu2x.font->render(title);
+	} else {
+		titleSurface = nullptr;
+	}
+}
+
+void Link::updateDescriptionSurface() {
+	if (!description.empty()) {
+		descriptionSurface = gmenu2x.font->render(description);
+	} else {
+		descriptionSurface = nullptr;
+	}
 }
 
 void Link::paint() {
@@ -64,7 +75,7 @@ void Link::paint() {
 		0, 0
 	};
 
-	textSurface->blit(s, coords, Font::HAlignCenter, Font::VAlignBottom);
+	titleSurface->blit(s, coords, Font::HAlignCenter, Font::VAlignBottom);
 }
 
 void Link::paintHover() {
@@ -84,8 +95,8 @@ void Link::paintDescription(int center_x, int center_y)
 		0, 0
 	};
 
-	if (descSurface != nullptr) {
-		descSurface->blit(*gmenu2x.s, coords,
+	if (descriptionSurface != nullptr) {
+		descriptionSurface->blit(*gmenu2x.s, coords,
 				  Font::HAlignCenter, Font::VAlignBottom);
 	}
 }
@@ -100,9 +111,8 @@ const string &Link::getTitle() const {
 }
 
 void Link::setTitle(const string &title) {
-	textSurface = gmenu2x.font->render(title);
-
 	this->title = title;
+	updateTitleSurface();
 	edited = true;
 }
 
@@ -111,9 +121,8 @@ const string &Link::getDescription() const {
 }
 
 void Link::setDescription(const string &description) {
-	descSurface = gmenu2x.font->render(description);
-
 	this->description = description;
+	updateDescriptionSurface();
 	edited = true;
 }
 
