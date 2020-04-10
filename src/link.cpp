@@ -35,18 +35,19 @@ using namespace std;
 Link::Link(GMenu2X& gmenu2x, Action action)
 	: gmenu2x(gmenu2x)
 	, action(action)
+	, iconPath(gmenu2x.sc.getSkinFilePath("icons/generic.png"))
+	, rect {
+		0, 0,
+		static_cast<decltype(SDL_Rect().w)>(gmenu2x.skinConfInt["linkWidth"]),
+		static_cast<decltype(SDL_Rect().h)>(gmenu2x.skinConfInt["linkHeight"])
+	}
+	, iconX(0)
+	, padding(0)
 	, lastTick(0)
 {
 	setTitle("");
 	setDescription("");
-
-	rect.w = gmenu2x.skinConfInt["linkWidth"];
-	rect.h = gmenu2x.skinConfInt["linkHeight"];
 	edited = false;
-	iconPath = gmenu2x.sc.getSkinFilePath("icons/generic.png");
-	iconX = 0;
-	padding = 0;
-
 	updateSurfaces();
 }
 
