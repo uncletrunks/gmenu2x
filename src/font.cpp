@@ -11,18 +11,10 @@
 #include <cassert>
 #include <vector>
 
-/* TODO: Let the theme choose the font and font size */
-#define TTF_FONT "/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed.ttf"
-#define TTF_FONT_SIZE 12
-
 using namespace std;
 
-unique_ptr<Font> Font::defaultFont()
-{
-	return unique_ptr<Font>(new Font(TTF_FONT, TTF_FONT_SIZE));
-}
-
-Font::Font(const std::string &path, unsigned int size)
+Font::Font(std::string path, unsigned int size) :
+path_(std::move(path)), size_(size)
 {
 	font = nullptr;
 	lineSpacing = 1;
@@ -34,9 +26,9 @@ Font::Font(const std::string &path, unsigned int size)
 		return;
 	}
 
-	font = TTF_OpenFont(path.c_str(), size);
+	font = TTF_OpenFont(path_.c_str(), size);
 	if (!font) {
-		ERROR("Unable to open font '%s'\n", TTF_FONT);
+		ERROR("Unable to open font '%s'\n", path.c_str());
 		TTF_Quit();
 		return;
 	}

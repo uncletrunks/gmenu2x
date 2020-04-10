@@ -21,12 +21,7 @@ public:
 	enum HAlign { HAlignLeft, HAlignRight,  HAlignCenter };
 	enum VAlign { VAlignTop,  VAlignBottom, VAlignMiddle };
 
-	/**
-	 * Returns a newly created Font object for the default font.
-	 */
-	static std::unique_ptr<Font> defaultFont();
-
-	Font(const std::string &path, unsigned int size);
+	Font(std::string path, unsigned int size);
 	~Font();
 
 	std::string wordWrap(const std::string &text, int width);
@@ -49,6 +44,14 @@ public:
 
 	std::unique_ptr<OffscreenSurface> render(const std::string& text);
 
+	const std::string &path() const {
+		return path_;
+	}
+
+	unsigned int size() const {
+		return size_;
+	}
+
 private:
 	Font(TTF_Font *font);
 
@@ -64,6 +67,8 @@ private:
 
 	TTF_Font *font;
 	int lineSpacing;
+	std::string path_;
+	unsigned int size_;
 };
 
 #endif /* FONT_H */

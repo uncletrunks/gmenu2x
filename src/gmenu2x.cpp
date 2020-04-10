@@ -69,6 +69,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#define DEFAULT_FONT_PATH "/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed.ttf"
+#define DEFAULT_FONT_SIZE 12
+
 using namespace std;
 
 static GMenu2X *app;
@@ -336,16 +339,16 @@ void GMenu2X::initBG() {
 }
 
 void GMenu2X::initFont() {
-	string path = skinConfStr["font"];
-	if (!path.empty()) {
-		unsigned int size = skinConfInt["fontsize"];
-		if (!size)
-			size = 12;
-		if (path.substr(0,5)=="skin:")
-			path = sc.getSkinFilePath(path.substr(5));
-		font.reset(new Font(path, size));
-	} else {
-		font = Font::defaultFont();
+	std::string path = skinConfStr["font"];
+	if (path.empty())
+		path = DEFAULT_FONT_PATH;
+	else if (path.rfind("skin:", 0) == 0)
+		path = sc.getSkinFilePath(path.substr(5));
+	unsigned int size = skinConfInt["fontsize"];
+	if (size == 0)
+		size = DEFAULT_FONT_SIZE;
+	if (font == nullptr || font->size() != size || font->path() != path) {
+		font.reset(new Font(std::move(path), size));
 	}
 }
 
