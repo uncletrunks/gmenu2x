@@ -42,7 +42,7 @@ public:
 				const std::string &text, int x, int y,
 				HAlign halign = HAlignLeft, VAlign valign = VAlignTop);
 
-	std::unique_ptr<OffscreenSurface> render(const std::string& text);
+	std::unique_ptr<OffscreenSurface> render(const std::string& text) const;
 
 	const std::string &path() const {
 		return path_;

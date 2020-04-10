@@ -166,7 +166,7 @@ void Menu::fontChanged() {
 }
 
 void Menu::updateSectionTextSurfaces() {
-	auto &font = *gmenu2x.font;
+	const auto &font = *gmenu2x.font;
 	section_text_surfaces.resize(sections.size());
 	for (std::size_t i = 0; i < sections.size(); ++i)
 		section_text_surfaces[i] = font.render(sections[i]);

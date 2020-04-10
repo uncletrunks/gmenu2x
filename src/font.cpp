@@ -306,7 +306,7 @@ static inline uint32_t *get_pixel32(SDL_Surface *s, int row, int col)
 	return (uint32_t *)row_addr + col;
 }
 
-std::unique_ptr<OffscreenSurface> Font::render(const std::string& line)
+std::unique_ptr<OffscreenSurface> Font::render(const std::string& line) const
 {
 	SDL_Color color = { 0, 0, 0 };
 	SDL_Surface *s, *raw;
