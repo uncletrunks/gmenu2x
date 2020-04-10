@@ -49,9 +49,10 @@
 #include "wallpaperdialog.h"
 #include "utilities.h"
 
+#include "compat-filesystem.h"
+
 #include <iostream>
 #include <sstream>
-#include <filesystem>
 #include <fstream>
 #include <algorithm>
 #include <system_error>
@@ -140,7 +141,7 @@ int main(int /*argc*/, char * /*argv*/[]) {
 	gmenu2x_home = (string)home + "/.gmenu2x";
 
 	std::error_code ec;
-	if (!std::filesystem::create_directory(gmenu2x_home, ec) && ec.value()) {
+	if (!compat::filesystem::create_directory(gmenu2x_home, ec) && ec.value()) {
 		ERROR("Unable to create gmenu2x home directory: %d\n", ec.value());
 		return 1;
 	}
@@ -488,7 +489,7 @@ void GMenu2X::writeConfig() {
 void GMenu2X::writeSkinConfig() {
 	string skin_dir = getLocalSkinPath(confStr["skin"]);
 
-	std::filesystem::create_directories(skin_dir);
+	compat::filesystem::create_directories(skin_dir);
 	string conffile = skin_dir + "/skin.conf";
 
 	ofstream inf(conffile.c_str());
@@ -961,7 +962,7 @@ void GMenu2X::deleteSection()
 string GMenu2X::getDiskFree(const char *path) {
 	
 	std::error_code ec;
-	auto space = std::filesystem::space(path, ec);
+	auto space = compat::filesystem::space(path, ec);
 
 	string df = "";
 
