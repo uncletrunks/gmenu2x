@@ -22,6 +22,7 @@
 
 #include "gmenu2x.h"
 #include "utilities.h"
+#include "word_wrap.h"
 
 #include <algorithm>
 
@@ -30,9 +31,7 @@ using namespace std;
 TextDialog::TextDialog(GMenu2X& gmenu2x, const string &title, const string &description, const string &icon, const string &text)
 	: Dialog(gmenu2x)
 {
-	split(this->text,
-	      gmenu2x.font->wordWrap(text, gmenu2x.width() - 15),
-	      "\n");
+	split(this->text, wordWrap(*gmenu2x.font, text, gmenu2x.width() - 15), "\n");
 	this->title = title;
 	this->description = description;
 	this->icon = icon;

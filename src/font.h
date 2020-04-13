@@ -24,8 +24,6 @@ public:
 	Font(std::string path, unsigned int size);
 	~Font();
 
-	std::string wordWrap(const std::string &text, int width) const;
-
 	int getTextWidth(const std::string& text) const;
 	int getTextHeight(const std::string& text) const;
 
@@ -54,9 +52,6 @@ public:
 
 private:
 	Font(TTF_Font *font);
-
-	std::string wordWrapSingleLine(const std::string &text,
-				size_t start, size_t end, int width) const;
 
 	/**
 	 * Draws a single line of text on a surface in this font.
