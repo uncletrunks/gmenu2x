@@ -69,7 +69,7 @@ int Font::getTextWidth(const string &text) const
 	}
 }
 
-string Font::wordWrap(const string &text, int width)
+string Font::wordWrap(const string &text, int width) const
 {
 	const size_t len = text.length();
 	string result;
@@ -89,7 +89,7 @@ string Font::wordWrap(const string &text, int width)
 	return result;
 }
 
-string Font::wordWrapSingleLine(const string &text, size_t start, size_t end, int width)
+string Font::wordWrapSingleLine(const string &text, size_t start, size_t end, int width) const
 {
 	string result;
 	result.reserve(end - start);
@@ -188,7 +188,7 @@ int Font::getTextHeight(const string &text) const
 }
 
 int Font::write(Surface& surface, const string &text,
-			int x, int y, HAlign halign, VAlign valign)
+			int x, int y, HAlign halign, VAlign valign) const
 {
 	if (!font) {
 		return 0;
@@ -214,7 +214,7 @@ int Font::write(Surface& surface, const string &text,
 }
 
 int Font::writeLine(Surface& surface, std::string const& text,
-				int x, int y, HAlign halign, VAlign valign)
+				int x, int y, HAlign halign, VAlign valign) const
 {
 	if (text.empty()) {
 		// SDL_ttf will return a nullptr when rendering the empty string.

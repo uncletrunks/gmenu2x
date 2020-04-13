@@ -24,7 +24,7 @@ public:
 	Font(std::string path, unsigned int size);
 	~Font();
 
-	std::string wordWrap(const std::string &text, int width);
+	std::string wordWrap(const std::string &text, int width) const;
 
 	int getTextWidth(const std::string& text) const;
 	int getTextHeight(const std::string& text) const;
@@ -40,7 +40,7 @@ public:
 	 */
 	int write(Surface& surface,
 				const std::string &text, int x, int y,
-				HAlign halign = HAlignLeft, VAlign valign = VAlignTop);
+				HAlign halign = HAlignLeft, VAlign valign = VAlignTop) const;
 
 	std::unique_ptr<OffscreenSurface> render(const std::string& text) const;
 
@@ -56,14 +56,14 @@ private:
 	Font(TTF_Font *font);
 
 	std::string wordWrapSingleLine(const std::string &text,
-				size_t start, size_t end, int width);
+				size_t start, size_t end, int width) const;
 
 	/**
 	 * Draws a single line of text on a surface in this font.
 	 * @return The width of the text in pixels.
 	 */
 	int writeLine(Surface& surface, std::string const& text,
-				int x, int y, HAlign halign, VAlign valign);
+				int x, int y, HAlign halign, VAlign valign) const;
 
 	TTF_Font *font;
 	int lineSpacing;
