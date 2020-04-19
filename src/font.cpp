@@ -13,8 +13,7 @@
 
 using namespace std;
 
-Font::Font(std::string path, unsigned int size) :
-path_(std::move(path)), size_(size)
+Font::Font(FontSpec spec) : spec_(std::move(spec))
 {
 	font = nullptr;
 	lineSpacing = 1;
@@ -26,9 +25,9 @@ path_(std::move(path)), size_(size)
 		return;
 	}
 
-	font = TTF_OpenFont(path_.c_str(), size);
+	font = TTF_OpenFont(spec_.path.c_str(), spec_.size);
 	if (!font) {
-		ERROR("Unable to open font '%s'\n", path.c_str());
+		ERROR("Unable to open font '%s'\n", spec_.path.c_str());
 		TTF_Quit();
 		return;
 	}
