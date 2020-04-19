@@ -351,8 +351,9 @@ bool GMenu2X::initFont() {
 	unsigned int size = skinConfInt["fontsize"];
 	if (size == 0)
 		size = DEFAULT_FONT_SIZE;
-	if (font == nullptr || font->size() != size || font->path() != path) {
-		font.reset(new Font(std::move(path), size));
+	FontSpec spec = {std::move(path), size};
+	if (font == nullptr || font->spec() != spec) {
+		font.reset(new Font(std::move(spec)));
 		return true;
 	}
 	return false;

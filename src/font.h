@@ -4,9 +4,12 @@
 #ifndef FONT_H
 #define FONT_H
 
-#include <SDL_ttf.h>
 #include <memory>
 #include <string>
+
+#include <SDL_ttf.h>
+
+#include "font_spec.h"
 
 class OffscreenSurface;
 class Surface;
@@ -21,7 +24,7 @@ public:
 	enum HAlign { HAlignLeft, HAlignRight,  HAlignCenter };
 	enum VAlign { VAlignTop,  VAlignBottom, VAlignMiddle };
 
-	Font(std::string path, unsigned int size);
+	explicit Font(FontSpec spec);
 	~Font();
 
 	int getTextWidth(const std::string& text) const;
@@ -42,13 +45,7 @@ public:
 
 	std::unique_ptr<OffscreenSurface> render(const std::string& text) const;
 
-	const std::string &path() const {
-		return path_;
-	}
-
-	unsigned int size() const {
-		return size_;
-	}
+	const FontSpec& spec() const { return spec_; }
 
 private:
 	Font(TTF_Font *font);
@@ -62,8 +59,7 @@ private:
 
 	TTF_Font *font;
 	int lineSpacing;
-	std::string path_;
-	unsigned int size_;
+	FontSpec spec_;
 };
 
 #endif /* FONT_H */
