@@ -1,6 +1,7 @@
 #include "font.h"
 
 #include "debug.h"
+#include "split_by_char.h"
 #include "surface.h"
 #include "utilities.h"
 
@@ -49,23 +50,23 @@ int Font::getTextWidth(const string &text) const
 		return 1;
 	}
 
-	int w;
-	size_t pos = text.find('\n', 0);
-	if (pos == string::npos) {
+	if (text.find('\n') == string::npos) {
+		int w;
 		TTF_SizeUTF8(font, text.c_str(), &w, nullptr);
 		return w;
-	} else {
-		int maxWidth = 1;
-		size_t prev = 0;
-		do {
-			TTF_SizeUTF8(font, text.substr(prev, pos - prev).c_str(), &w, nullptr);
-			maxWidth = max(w, maxWidth);
-			prev = pos + 1;
-			pos = text.find('\n', prev);
-		} while (pos != string::npos);
-		TTF_SizeUTF8(font, text.substr(prev).c_str(), &w, nullptr);
-		return max(w, maxWidth);
 	}
+
+	int maxWidth = 1;
+	std::string text_copy = text;
+	for (auto line : SplitByChar(text_copy, '\n')) {
+		// TTF_SizeUTF8 expects a null-terminated char*.
+		text_copy[line.data() - text.data() + line.size()] = '\0';
+
+		int w;
+		TTF_SizeUTF8(font, line.data(), &w, nullptr);
+		maxWidth = std::max(w, maxWidth);
+	}
+	return maxWidth;
 }
 
 int Font::getTextHeight(const string &text) const
@@ -81,23 +82,17 @@ int Font::write(Surface& surface, const string &text,
 		return 0;
 	}
 
-	size_t pos = text.find('\n', 0);
-	if (pos == string::npos) {
+	if (text.find('\n') == string::npos)
 		return writeLine(surface, text, x, y, halign, valign);
-	} else {
-		int maxWidth = 0;
-		size_t prev = 0;
-		do {
-			maxWidth = max(maxWidth,
-					writeLine(surface, text.substr(prev, pos - prev),
-						x, y, halign, valign));
-			y += lineSpacing;
-			prev = pos + 1;
-			pos = text.find('\n', prev);
-		} while (pos != string::npos);
-		return max(maxWidth,
-				writeLine(surface, text.substr(prev), x, y, halign, valign));
+
+	int maxWidth = 0;
+	for (auto line : SplitByChar(text, '\n')) {
+		const int width =
+		    writeLine(surface, std::string(line), x, y, halign, valign);
+		maxWidth = std::max(maxWidth, width);
+		y += lineSpacing;
 	}
+	return maxWidth;
 }
 
 int Font::writeLine(Surface& surface, std::string const& text,
