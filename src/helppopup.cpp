@@ -12,7 +12,7 @@ HelpPopup::HelpPopup(GMenu2X& gmenu2x)
 }
 
 void HelpPopup::paint(Surface& s) {
-	Font& font = *gmenu2x.font;
+	auto& font = *gmenu2x.font;
 	Translator &tr = gmenu2x.tr;
 
 	static const char *const strings[] = {

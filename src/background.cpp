@@ -13,7 +13,7 @@ Background::Background(GMenu2X& gmenu2x)
 }
 
 void Background::paint(Surface& s) {
-	Font& font = *gmenu2x.font;
+	auto& font = *gmenu2x.font;
 	const auto& bgmain = gmenu2x.bgmain;
 
 	bgmain->blit(s, 0, 0);

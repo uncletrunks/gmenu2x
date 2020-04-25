@@ -26,7 +26,7 @@ ContextMenu::ContextMenu(GMenu2X &gmenu2x, Menu &menu)
 	, selected(0)
 {
 	Translator &tr = gmenu2x.tr;
-	Font& font = *gmenu2x.font;
+	auto& font = *gmenu2x.font;
 	LinkApp* app = menu.selLinkApp();
 
 	// Init menu options:
@@ -114,7 +114,7 @@ bool ContextMenu::runAnimations()
 
 void ContextMenu::paint(Surface &s)
 {
-	Font& font = *gmenu2x.font;
+	auto& font = *gmenu2x.font;
 
 	// Darken background.
 	s.box(0, 0, gmenu2x.width(), gmenu2x.height(),

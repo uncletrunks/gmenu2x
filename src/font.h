@@ -4,6 +4,7 @@
 #ifndef FONT_H
 #define FONT_H
 
+#include <cstdint>
 #include <memory>
 #include <string>
 
@@ -11,6 +12,7 @@
 
 #include "font_spec.h"
 
+class FontStack;
 class OffscreenSurface;
 class Surface;
 
@@ -24,26 +26,27 @@ public:
 	enum HAlign { HAlignLeft, HAlignRight,  HAlignCenter };
 	enum VAlign { VAlignTop,  VAlignBottom, VAlignMiddle };
 
-	explicit Font(FontSpec spec);
-	~Font();
+	Font() = default;
 
-	int getTextWidth(const std::string& text) const;
-	int getTextHeight(const std::string& text) const;
+	// Returns `true` on success.
+	bool Load(FontSpec spec);
+
+	// Moveable but not copyable.
+	Font(const Font &other) = delete;
+	Font(Font &&other) noexcept;
+	Font& operator=(const Font& other) = delete;
+	Font& operator=(Font&& other) noexcept;
+
+	~Font();
 
 	int getLineSpacing() const
 	{
 		return lineSpacing;
 	}
 
-	/**
-	 * Draws a text on a surface in this font.
-	 * @return The width of the text in pixels.
-	 */
-	int write(Surface& surface,
-				const std::string &text, int x, int y,
-				HAlign halign = HAlignLeft, VAlign valign = VAlignTop) const;
-
-	std::unique_ptr<OffscreenSurface> render(const std::string& text) const;
+	bool HasGlyph(std::uint16_t code_point) const {
+		return TTF_GlyphIsProvided(font, code_point);
+	}
 
 	const FontSpec& spec() const { return spec_; }
 
@@ -54,12 +57,14 @@ private:
 	 * Draws a single line of text on a surface in this font.
 	 * @return The width of the text in pixels.
 	 */
-	int writeLine(Surface& surface, std::string const& text,
-				int x, int y, HAlign halign, VAlign valign) const;
+	int writeLine(Surface& surface, const std::uint16_t *text, int x, int y,
+	              HAlign halign, VAlign valign) const;
 
 	TTF_Font *font;
 	int lineSpacing;
 	FontSpec spec_;
+
+	friend class FontStack;
 };
 
 #endif /* FONT_H */

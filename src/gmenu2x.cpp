@@ -25,7 +25,8 @@
 #include "debug.h"
 #include "filedialog.h"
 #include "filelister.h"
-#include "font.h"
+#include "font_stack.h"
+#include "font_spec.h"
 #include "gmenu2x.h"
 #include "helppopup.h"
 #include "iconbutton.h"
@@ -71,6 +72,10 @@
 
 #define DEFAULT_FONT_PATH "/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed.ttf"
 #define DEFAULT_FONT_SIZE 12
+
+#ifndef DEFAULT_FALLBACK_FONTS
+#define DEFAULT_FALLBACK_FONTS ,{"/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf",13},{"/usr/share/fonts/truetype/droid/DroidSansFallback.ttf",13}
+#endif
 
 using namespace std;
 
@@ -351,12 +356,8 @@ bool GMenu2X::initFont() {
 	unsigned int size = skinConfInt["fontsize"];
 	if (size == 0)
 		size = DEFAULT_FONT_SIZE;
-	FontSpec spec = {std::move(path), size};
-	if (font == nullptr || font->spec() != spec) {
-		font.reset(new Font(std::move(spec)));
-		return true;
-	}
-	return false;
+	if (font == nullptr) font = std::make_unique<FontStack>();
+	return font->LoadFonts({FontSpec{std::move(path), size} DEFAULT_FALLBACK_FONTS });
 }
 
 void GMenu2X::initMenu() {
