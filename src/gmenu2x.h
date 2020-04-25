@@ -38,7 +38,7 @@
 
 class BrightnessManager;
 class Button;
-class Font;
+class FontStack;
 class HelpPopup;
 class IconButton;
 class Launcher;
@@ -170,7 +170,7 @@ public:
 	std::unique_ptr<OffscreenSurface> bg;
 	/** Background with empty top bar and a partially filled bottom bar. */
 	std::unique_ptr<OffscreenSurface> bgmain;
-	std::unique_ptr<Font> font;
+	std::unique_ptr<FontStack> font;
 
 	//Status functions
 	void mainLoop();

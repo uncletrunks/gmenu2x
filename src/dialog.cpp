@@ -2,7 +2,7 @@
 
 #include "dialog.h"
 #include "gmenu2x.h"
-#include "font.h"
+#include "font_stack.h"
 #include "word_wrap.h"
 
 Dialog::Dialog(GMenu2X& gmenu2x) : gmenu2x(gmenu2x)

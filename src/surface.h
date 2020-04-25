@@ -22,7 +22,7 @@
 #ifndef SURFACE_H
 #define SURFACE_H
 
-#include "font.h"
+#include "font_stack.h"
 
 #include <SDL.h>
 
@@ -127,7 +127,7 @@ public:
 	void convertToDisplayFormat();
 
 private:
-	friend class Font;
+	friend class FontStack;
 	OffscreenSurface(SDL_Surface *raw) : Surface(raw) {}
 };
 

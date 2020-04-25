@@ -2,11 +2,12 @@
 
 #include <algorithm>
 
+#include "font_stack.h"
 #include "utilities.h"
 
 namespace {
 
-std::string wordWrapSingleLine(const Font &font, const std::string &text,
+std::string wordWrapSingleLine(const FontStack &font, const std::string &text,
                                size_t start, size_t end, int width) {
 	std::string result;
 	result.reserve(end - start);
@@ -103,7 +104,8 @@ std::string wordWrapSingleLine(const Font &font, const std::string &text,
 
 }  // namespace
 
-std::string wordWrap(const Font &font, const std::string &text, int width) {
+std::string wordWrap(const FontStack &font, const std::string &text,
+                     int width) {
 	const size_t len = text.length();
 	std::string result;
 	result.reserve(len);

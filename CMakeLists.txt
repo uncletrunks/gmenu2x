@@ -34,6 +34,11 @@ if (SCREEN_HEIGHT)
 	add_compile_definitions(G2X_BUILD_OPTION_SCREEN_HEIGHT=${SCREEN_HEIGHT})
 endif ()
 
+set(DEFAULT_FALLBACK_FONTS "" CACHE STRING "A list of fallback font paths")
+if(DEFAULT_FALLBACK_FONTS)
+	add_compile_definitions(DEFAULT_FALLBACK_FONTS=${DEFAULT_FALLBACK_FONTS})
+endif ()
+
 set(CARD_ROOT "/media" CACHE STRING "Top-level filesystem directory")
 
 find_package(SDL REQUIRED)

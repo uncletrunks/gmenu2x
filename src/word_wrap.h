@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "font.h"
+class FontStack;
 
-std::string wordWrap(const Font &font, const std::string &text, int width);
+std::string wordWrap(const FontStack &font, const std::string &text, int width);
 
 #endif  // _WORD_WRAP_H_
