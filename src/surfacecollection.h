@@ -20,14 +20,13 @@
 #ifndef SURFACECOLLECTION_H
 #define SURFACECOLLECTION_H
 
+#include <memory>
 #include <string>
 #include <unordered_map>
 
 class GMenu2X;
 class OffscreenSurface;
 class Surface;
-
-typedef std::unordered_map<std::string, OffscreenSurface *> SurfaceHash;
 
 /**
 Hash Map of surfaces that loads surfaces not already loaded and reuses already loaded ones.
@@ -55,6 +54,8 @@ public:
 	OffscreenSurface *skinRes(const std::string &key, bool useDefault = true);
 
 private:
+	using SurfaceHash = std::unordered_map<std::string, std::unique_ptr<OffscreenSurface>>;
+
 	OffscreenSurface *add(const std::string &path);
 
 	SurfaceHash surfaces;
