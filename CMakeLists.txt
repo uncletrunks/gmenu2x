@@ -115,6 +115,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 						   ${CMAKE_BINARY_DIR}
 )
 
+target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:Debug>:-fsanitize=undefined;-fsanitize=address;-fsanitize-recover=address>")
+target_link_libraries(${PROJECT_NAME} PUBLIC "$<$<CONFIG:Debug>:-fsanitize=undefined;-fsanitize=address;-fsanitize-recover=address>")
+
 install(TARGETS ${PROJECT_NAME}
 		RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
