@@ -492,6 +492,8 @@ int Menu::sectionNamed(const char *sectionName)
 		if (idx <= iSection) {
 			iSection++;
 		}
+
+		updateSectionTextSurfaces();
 	}
 	return idx;
 }
