@@ -36,13 +36,6 @@ endif ()
 
 set(CARD_ROOT "/media" CACHE STRING "Top-level filesystem directory")
 
-set(PLATFORMS "pc, a320, gcw0, nanonote, rs90")
-
-set(PLATFORM "pc" CACHE STRING
-	"One of the available platforms: ${PLATFORMS}"
-)
-set_property(CACHE PLATFORM PROPERTY STRINGS pc a320 gcw0 nanonote rs90)
-
 find_package(SDL REQUIRED)
 find_package(SDL_ttf REQUIRED)
 find_package(PNG REQUIRED)
@@ -121,12 +114,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC "$<$<CONFIG:Debug>:-fsanitize=undef
 install(TARGETS ${PROJECT_NAME}
 		RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
-install(DIRECTORY data/platform/${PLATFORM}/ data/translations
-		DESTINATION ${CMAKE_INSTALL_DATADIR}/gmenu2x
-)
-install(FILES data/about.txt DESTINATION ${CMAKE_INSTALL_DATADIR}/gmenu2x)
-install(DIRECTORY data/skins/
-		DESTINATION ${CMAKE_INSTALL_DATADIR}/gmenu2x/skins
-)
+install(DIRECTORY data/ DESTINATION ${CMAKE_INSTALL_DATADIR}/gmenu2x)
 
 configure_file(buildopts.h.cmakein ${CMAKE_BINARY_DIR}/buildopts.h @ONLY)
