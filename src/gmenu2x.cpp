@@ -90,6 +90,7 @@ static const char *colorNames[NUM_COLORS] = {
 static const std::pair<unsigned int, unsigned int> supported_resolutions[] = {
 	{ 1280, 720 },
 	{ 800, 480 },
+	{ 640, 480 },
 	{ 320, 240 },
 	{ 240, 160 },
 };
