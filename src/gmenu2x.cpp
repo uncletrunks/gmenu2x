@@ -217,9 +217,11 @@ GMenu2X::GMenu2X() : input(*this), sc(this)
 	s = OutputSurface::open(G2X_BUILD_OPTION_SCREEN_WIDTH, G2X_BUILD_OPTION_SCREEN_HEIGHT, 0);
 #else
 	// find largest resolution available
-	for (const auto res : supported_resolutions)
-		if (s = OutputSurface::open(res.first, res.second, 0))
+	for (const auto res : supported_resolutions) {
+		if (OutputSurface::resolutionSupported(res.first, res.second) &&
+		    (s = OutputSurface::open(res.first, res.second, 0)))
 			break;
+	}
 #endif
 
 	if (!s) {

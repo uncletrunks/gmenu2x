@@ -139,6 +139,8 @@ public:
 	static std::unique_ptr<OutputSurface> open(
 			int width, int height, int bitsPerPixel);
 
+	static bool resolutionSupported(int width, int height);
+
 	/**
 	 * Offers the current buffer to the video system to be presented and
 	 * acquires a new buffer to draw into.

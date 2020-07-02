@@ -333,6 +333,10 @@ void OffscreenSurface::convertToDisplayFormat() {
 	}
 }
 
+bool OutputSurface::resolutionSupported(int width, int height)
+{
+	return !!SDL_VideoModeOK(width, height, 32, SDL_ANYFORMAT);
+}
 
 // OutputSurface:
 
