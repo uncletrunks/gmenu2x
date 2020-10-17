@@ -346,7 +346,7 @@ vector<unique_ptr<Link>> *Menu::sectionLinks(int i)
 }
 
 void Menu::decSectionIndex() {
-	sectionAnimation.adjust(-1 << 16);
+	sectionAnimation.adjust(-(1 << 16));
 	setSectionIndex(iSection - 1);
 }
 
