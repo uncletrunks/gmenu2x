@@ -1,6 +1,8 @@
 #include "battery.h"
+#include "compat-filesystem.h"
 #include "gmenu2x.h"
 #include "surfacecollection.h"
+#include "utilities.h"
 
 #include <SDL.h>
 #include <cstdio>
@@ -87,15 +89,31 @@ unsigned short Battery::getBatteryLevel()
 	return (voltage_now - voltage_min) * 6 / (voltage_max - voltage_min);
 }
 
-Battery::Battery(GMenu2X& gmenu2x)
-	: sc(gmenu2x.sc),
-	  batterySysfs(gmenu2x.confStr["batterySysfs"]),
-	  powerSupplySysfs(gmenu2x.confStr["powerSupplySysfs"])
+Battery::Battery(GMenu2X& gmenu2x) : sc(gmenu2x.sc)
 {
-	if (batterySysfs.empty())
-		batterySysfs = "/sys/class/power_supply/BAT0";
-	if (powerSupplySysfs.empty())
-		powerSupplySysfs = "/sys/class/power_supply/AC0";
+	std::vector<std::string> bat_paths;
+	std::vector<std::string> pw_paths;
+
+	split(pw_paths, gmenu2x.confStr["powerSupplySysfs"], ",");
+	split(bat_paths, gmenu2x.confStr["batterySysfs"], ",");
+
+	/* Default values */
+	batterySysfs = "/sys/class/power_supply/BAT0";
+	powerSupplySysfs = "/sys/class/power_supply/AC0";
+
+	for (const std::string &path : pw_paths) {
+		if (compat::filesystem::is_directory(path)) {
+			powerSupplySysfs = path;
+			break;
+		}
+	}
+
+	for (const std::string &path : bat_paths) {
+		if (compat::filesystem::is_directory(path)) {
+			batterySysfs = path;
+			break;
+		}
+	}
 
 	lastUpdate = SDL_GetTicks();
 	update();
