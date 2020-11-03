@@ -26,6 +26,7 @@ unsigned short Battery::getBatteryLevel()
 		buf[sizeof(buf) - 1] = '\0';
 
 		fread(buf, 1, 16, handle);
+		fclose(handle);
 		if ((std::string)buf == "Charging")
 			return 6;
 	}
