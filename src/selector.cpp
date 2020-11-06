@@ -124,10 +124,10 @@ int Selector::exec(int startSelection) {
 			//Selection
 			int iY = top + (selected - firstElement) * lineHeight;
 			if (selected<fl.size())
-				s.box(1, iY, 309, lineHeight, gmenu2x.skinConfColors[COLOR_SELECTION_BG]);
+				s.box(1, iY, gmenu2x.width()-11, lineHeight, gmenu2x.skinConfColors[COLOR_SELECTION_BG]);
 
 			//Files & Dirs
-			s.setClipRect(0, top, 311, height);
+			s.setClipRect(0, top, gmenu2x.width()-9, height);
 			for (unsigned int i = firstElement;
 					i < fl.size() && i < firstElement + nb_elements; i++) {
 				iY = top + (i - firstElement) * lineHeight;
