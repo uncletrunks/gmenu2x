@@ -114,22 +114,27 @@ bool InputManager::readConfFile(const string &conffile) {
 				continue;
 			}
 
-			pos = line.find(",");
-			string sourceStr = trim(line.substr(0,pos));
-			line = trim(line.substr(pos+1));
+			std::vector<std::string> input_devs;
+			split(input_devs, line, ";");
 
-			if (sourceStr == "keyboard") {
-				buttonMap[button].kb_mapped = true;
-				buttonMap[button].kb_code = std::stoi(line);
-	#ifndef SDL_JOYSTICK_DISABLED
-			} else if (sourceStr == "joystick") {
-				buttonMap[button].js_mapped = true;
-				buttonMap[button].js_code = std::stoi(line);
-	#endif
-			} else {
-				WARNING("InputManager: Ignoring unknown button source \"%s\"\n",
-						sourceStr.c_str());
-				continue;
+			for (const std::string& dev : input_devs) {
+				pos = dev.find(",");
+				string sourceStr = trim(dev.substr(0,pos));
+				line = trim(dev.substr(pos+1));
+
+				if (sourceStr == "keyboard") {
+					buttonMap[button].kb_mapped = true;
+					buttonMap[button].kb_code = std::stoi(line);
+		#ifndef SDL_JOYSTICK_DISABLED
+				} else if (sourceStr == "joystick") {
+					buttonMap[button].js_mapped = true;
+					buttonMap[button].js_code = std::stoi(line);
+		#endif
+				} else {
+					WARNING("InputManager: Ignoring unknown button source \"%s\"\n",
+							sourceStr.c_str());
+					continue;
+				}
 			}
 		}
 
