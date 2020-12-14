@@ -465,6 +465,7 @@ void GMenu2X::readConfig(string conffile) {
 		confStr["skin"] = "Default";
 
 	evalIntConf( confInt, "outputLogs", 0, 0,1 );
+	evalIntConf( confInt, "trimExt", 0, 0,1);
 	evalIntConf( confInt, "backlightTimeout", 15, 0,120 );
 	evalIntConf( confInt, "buttonRepeatRate", 10, 0, 20 );
 	evalIntConf( confInt, "videoBpp", 32, 16, 32 );
@@ -668,6 +669,10 @@ void GMenu2X::showSettings() {
 			*this, tr["Output logs"],
 			tr["Logs the output of the links. Use the Log Viewer to read them."],
 			&confInt["outputLogs"])));
+	sd.addSetting(unique_ptr<MenuSetting>(new MenuSettingBool(
+			*this, tr["Trim extensions"],
+			tr["Trim extensions in the file explorer."],
+			&confInt["trimExt"])));
 	sd.addSetting(unique_ptr<MenuSetting>(new MenuSettingInt(
 			*this, tr["Screen Timeout"],
 			tr["Set screen's backlight timeout in seconds"],

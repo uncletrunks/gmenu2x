@@ -142,7 +142,7 @@ int Selector::exec(int startSelection) {
 							x, iY + lineHeight / 2,
 							Font::HAlignLeft, Font::VAlignMiddle);
 				} else {
-					gmenu2x.font->write(s, trimExtension(fl[i]),
+					gmenu2x.font->write(s, (gmenu2x.confInt["trimExt"] ? trimExtension(fl[i]) : fl[i]),
 							x, iY + lineHeight / 2,
 							Font::HAlignLeft, Font::VAlignMiddle);
 				}
